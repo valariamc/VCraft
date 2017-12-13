@@ -1,0 +1,36 @@
+From 55f65fd8a4e105887b6424d09efc41b5a0a7a9b8 Mon Sep 17 00:00:00 2001
+From: Shane Freeder <theboyetronic@gmail.com>
+Date: Wed, 13 Dec 2017 11:24:36 +0000
+Subject: [PATCH] Update pom
+
+
+diff --git a/pom.xml b/pom.xml
+index fe9d6d26..4e11f85b 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -4,17 +4,17 @@
+     <modelVersion>4.0.0</modelVersion>
+ 
+     <parent>
+-        <groupId>org.github.paperspigot</groupId>
+-        <artifactId>paperspigot-parent</artifactId>
++        <groupId>pw.alphheim</groupId>
++        <artifactId>alphheimcraft-parent</artifactId>
+         <version>dev-SNAPSHOT</version>
+     </parent>
+ 
+-    <groupId>org.github.paperspigot</groupId>
+-    <artifactId>paperspigot-api</artifactId>
++    <groupId>pw.alphheim</groupId>
++    <artifactId>alphheimcraft-api</artifactId>
+     <version>1.8.8-R0.1-SNAPSHOT</version>
+     <packaging>jar</packaging>
+ 
+-    <name>PaperSpigot-API</name>
++    <name>Alphheim-API</name>
+     <url>https://hub.spigotmc.org/stash/projects/PAPER/</url>
+     <description>An enhanced plugin API for Minecraft servers.</description>
+ 
+-- 
+2.15.1
+

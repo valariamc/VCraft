@@ -76,14 +76,38 @@ echo "Importing MC Dev"
 ./scripts/importmcdev.sh "$basedir" >/dev/null 2>&1
 
 # Apply paper
-cd "$basedir"
+cd "$workdir/Paper"
+basedir=$(pwd)
 (
-	applyPatch "work/Spigot/Spigot-API" Paper-API HEAD &&
-	applyPatch "work/Spigot/Spigot-Server" Paper-Server HEAD
+	applyPatch ../Spigot/Spigot-API PaperSpigot-API HEAD &&
+	applyPatch ../Spigot/Spigot-Server PaperSpigot-Server HEAD
     enableCommitSigningIfNeeded
 ) || (
 	echo "Failed to apply Paper Patches"
     enableCommitSigningIfNeeded
 	exit 1
 ) || exit 1
+
+
+# Move out of Paper
+basedir="$1"
+cd "$basedir"
+
+
+
+
+# Apply Alphheim
+
+cd "$basedir"
+(
+	applyPatch "work/Paper/PaperSpigot-API" AlphheimCraft-API HEAD &&
+	applyPatch "work/Paper/PaperSpigot-Server" AlphheimCraft-Server HEAD
+    enableCommitSigningIfNeeded
+) || (
+	echo "Failed to apply Alphheim Patches"
+    enableCommitSigningIfNeeded
+	exit 1
+) || exit 1
+
+
 )

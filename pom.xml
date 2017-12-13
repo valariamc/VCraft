@@ -9,18 +9,18 @@
         <version>7</version>
     </parent>
 
-    <groupId>com.destroystokyo.paper</groupId>
-    <artifactId>paper-parent</artifactId>
+    <groupId>pw.alphheim</groupId>
+    <artifactId>alphheimcraft-parent</artifactId>
     <version>dev-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Paper-Parent</name>
+    <name>AlphheimCraft-Parent</name>
     <description>Parent project for all Paper modules.</description>
     <url>https://github.com/PaperMC/Paper</url>
 
     <modules>
-        <module>Paper-Server</module>
-        <module>Paper-API</module>
+        <module>AlphheimCraft-Server</module>
+        <module>AlphheimCraft-API</module>
     </modules>
 
     <build>

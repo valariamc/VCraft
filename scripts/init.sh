@@ -39,7 +39,7 @@ do
     set -e
 
     cp "$nms/$file" "$cb/$file"
-    "$patch" -s -d src/main/java/ "net/minecraft/server/$file" < "$patchFile"
+    "$patch" -d src/main/java/ "net/minecraft/server/$file" < "$patchFile"
 done
 
 git add src

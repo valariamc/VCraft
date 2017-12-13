@@ -64,12 +64,12 @@ fi
 # JAR CHECK
 #
 
-jar="$basedir/Paper-Server/target/paper-${minecraftversion}.jar"
+jar="$basedir/AlphheimCraft-Server/target/AlphheimCraft-${minecraftversion}.jar"
 if [ ! -f "$jar" ] || [ "$2" == "build" ] || [ "$3" == "build" ]; then
 (
     echo "Building Paper"
     cd "$basedir"
-    ./paper patch
+    ./acraft patch
     mvn clean install
 )
 fi
