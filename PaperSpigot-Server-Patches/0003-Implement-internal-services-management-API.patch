@@ -1,0 +1,123 @@
+From 0c40c342dde5d9459b62111849410c61516b8379 Mon Sep 17 00:00:00 2001
+From: Shane Freeder <theboyetronic@gmail.com>
+Date: Sun, 17 Dec 2017 08:07:57 +0000
+Subject: [PATCH] Implement internal services management API
+
+
+diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
+index 088beb22b..78c9c5134 100644
+--- a/src/main/java/net/minecraft/server/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/DedicatedServer.java
+@@ -199,6 +199,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+ 
+             // Spigot Start - Move DedicatedPlayerList up and bring plugin loading from CraftServer to here
+             // this.a((PlayerList) (new DedicatedPlayerList(this))); // CraftBukkit
++            server.initInternalServices(); // Alphheim
+             server.loadPlugins();
+             server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
+             // Spigot End
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 69485fa69..80f576272 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -124,6 +124,8 @@ import io.netty.buffer.Unpooled;
+ import io.netty.handler.codec.base64.Base64;
+ import jline.console.ConsoleReader;
+ import net.md_5.bungee.api.chat.BaseComponent;
++import pw.alphheim.api.services.InternalServicesManager;
++import pw.alphheim.services.CraftInternalServicesManager;
+ 
+ public final class CraftServer implements Server {
+     private static final Player[] EMPTY_PLAYER_ARRAY = new Player[0];
+@@ -165,6 +167,7 @@ public final class CraftServer implements Server {
+     private final UUID invalidUserUUID = UUID.nameUUIDFromBytes("InvalidUsername".getBytes(Charsets.UTF_8));
+     private final List<CraftPlayer> playerView;
+     public int reloadCount;
++    private CraftInternalServicesManager internalServices; // Alphheim
+ 
+     private final class BooleanWrapper {
+         private boolean value = true;
+@@ -764,6 +767,8 @@ public final class CraftServer implements Server {
+                 "This plugin is not properly shutting down its async tasks when it is being reloaded.  This may cause conflicts with the newly loaded version of the plugin"
+             ));
+         }
++        initInternalServices(); // Alphheim
++
+         loadPlugins();
+         enablePlugins(PluginLoadOrder.STARTUP);
+         enablePlugins(PluginLoadOrder.POSTWORLD);
+@@ -1830,4 +1835,15 @@ public final class CraftServer implements Server {
+     {
+         return spigot;
+     }
++
++    // Alphheim start
++    @Override
++    public CraftInternalServicesManager getInternalServices() {
++        return internalServices;
++    }
++
++    public void initInternalServices() {
++
++    }
++    // Alphhem end
+ }
+diff --git a/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
+new file mode 100644
+index 000000000..73ef40723
+--- /dev/null
++++ b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
+@@ -0,0 +1,50 @@
++package pw.alphheim.services;
++
++import com.google.common.base.Preconditions;
++import pw.alphheim.api.services.InternalService;
++import pw.alphheim.api.services.InternalServicesManager;
++
++import java.util.HashMap;
++import java.util.Map;
++
++public class CraftInternalServicesManager<T extends InternalService> implements InternalServicesManager<T> {
++
++    private Map<Class<T>, T> registeredServices = new HashMap<>();
++    private Map<Class<T>, T> defaultServices = new HashMap<>();
++
++
++    @Override
++    public T getService(Class<T> service) {
++        InternalService requestedService = registeredServices.get(service);
++
++        if (requestedService == null) {
++            requestedService = defaultServices.get(service);
++        }
++
++        return (T) requestedService;
++
++    }
++
++    @Override
++    public void registerDefaultService(Class<T> serviceType, T service ) {
++        Preconditions.checkArgument(InternalService.class.isAssignableFrom(serviceType), serviceType.getName() + " is not applicable to the type" + InternalService.class.getName());
++
++        InternalService internalService = defaultServices.get(serviceType);
++        if (internalService != null) {
++            throw new IllegalStateException("A default service for " + serviceType.getName() + " is already registered!");
++        }
++
++        defaultServices.put(serviceType, service);
++
++    }
++
++    @Override
++    public void registerService(Class<T> serviceType, T service ) {
++        registeredServices.put(serviceType, service);
++    }
++
++    @Override
++    public boolean unregisterService(Class<T> serviceType, T service) {
++        return registeredServices.remove(serviceType, service);
++    }
++}
+-- 
+2.15.1
+

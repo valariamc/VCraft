@@ -1,0 +1,103 @@
+From 26f1f265e2dd989e07e7d383ca9e5346c6eb0fcd Mon Sep 17 00:00:00 2001
+From: Shane Freeder <theboyetronic@gmail.com>
+Date: Sun, 17 Dec 2017 08:13:55 +0000
+Subject: [PATCH] internal services management API
+
+
+diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
+index 8fbc8283..1ea20cff 100644
+--- a/src/main/java/org/bukkit/Bukkit.java
++++ b/src/main/java/org/bukkit/Bukkit.java
+@@ -42,6 +42,8 @@ import org.bukkit.generator.ChunkGenerator;
+ 
+ import org.bukkit.inventory.ItemFactory;
+ import org.bukkit.inventory.meta.ItemMeta;
++import pw.alphheim.api.services.InternalService;
++import pw.alphheim.api.services.InternalServicesManager;
+ 
+ /**
+  * Represents the Bukkit core, for version and Server singleton handling
+@@ -1166,4 +1168,14 @@ public final class Bukkit {
+     {
+         return server.spigot();
+     }
++
++    // Alphheim start
++
++    /**
++     * @return the internal services manager
++     */
++    public static InternalServicesManager getInternalServiceManager() {
++        return server.getInternalServices();
++    }
++    // Alphheim end
+ }
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index 1b62463a..9aa509e0 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -43,6 +43,7 @@ import org.bukkit.generator.ChunkGenerator;
+ 
+ import org.bukkit.inventory.ItemFactory;
+ import org.bukkit.inventory.meta.ItemMeta;
++import pw.alphheim.api.services.InternalServicesManager;
+ 
+ /**
+  * Represents a server implementation.
+@@ -1007,4 +1008,8 @@ public interface Server extends PluginMessageRecipient {
+     }
+ 
+     Spigot spigot();
++
++
++    InternalServicesManager getInternalServices(); // Alphheim
++
+ }
+diff --git a/src/main/java/pw/alphheim/api/services/InternalService.java b/src/main/java/pw/alphheim/api/services/InternalService.java
+new file mode 100644
+index 00000000..be519386
+--- /dev/null
++++ b/src/main/java/pw/alphheim/api/services/InternalService.java
+@@ -0,0 +1,4 @@
++package pw.alphheim.api.services;
++
++public interface InternalService {
++}
+diff --git a/src/main/java/pw/alphheim/api/services/InternalServicesManager.java b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
+new file mode 100644
+index 00000000..3d05248a
+--- /dev/null
++++ b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
+@@ -0,0 +1,29 @@
++package pw.alphheim.api.services;
++
++public interface InternalServicesManager<T> {
++
++    /**
++     * @param serviceType service type
++     * @return registered service, or default if there is no registered service but a default implementation exists, or null
++     */
++    T getService(Class<T> serviceType);
++
++    /**
++     * @param serviceType service type to register
++     * @param service     service implementation
++     */
++    void registerDefaultService(Class<T> serviceType, T service);
++
++    /**
++     * @param serviceType service type to register
++     * @param service     service implementation
++     */
++    void registerService(Class<T> serviceType, T service);
++
++    /**
++     * @param serviceType service type to un-register
++     * @param service     service implementation to un-register
++     */
++    boolean unregisterService(Class<T> serviceType, T service);
++
++}
+-- 
+2.15.1
+
