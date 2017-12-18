@@ -1,4 +1,4 @@
-From 1977435bfeb5014309b4f9ee7c52e3b18cdafa7a Mon Sep 17 00:00:00 2001
+From cfad2002158af4cde40ff3cb7c9fd2b345b4b88d Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -16,29 +16,123 @@ index 088beb22b..78c9c5134 100644
              server.loadPlugins();
              server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
              // Spigot End
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 65093c89c..c637c2bd5 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -3,7 +3,6 @@ package net.minecraft.server;
+ import com.google.common.collect.Lists;
+ import com.google.common.primitives.Doubles;
+ import com.google.common.primitives.Floats;
+-import com.google.common.util.concurrent.Futures;
+ import io.netty.buffer.Unpooled;
+ import io.netty.util.concurrent.Future;
+ import io.netty.util.concurrent.GenericFutureListener;
+@@ -64,6 +63,7 @@ import co.aikar.timings.SpigotTimings; // Spigot
+ // CraftBukkit end
+ 
+ import org.github.paperspigot.PaperSpigotConfig; // PaperSpigot
++import pw.alphheim.api.services.Chat; // Alphheim
+ 
+ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerListBox {
+ 
+@@ -1107,64 +1107,16 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
+         } else if (this.player.getChatFlags() == EntityHuman.EnumChatVisibility.SYSTEM) {
+             // Do nothing, this is coming from a plugin
+         } else {
+-            Player player = this.getPlayer();
+-            AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(async, player, s, new LazyPlayerSet());
+-            this.server.getPluginManager().callEvent(event);
+-
+-            if (PlayerChatEvent.getHandlerList().getRegisteredListeners().length != 0) {
+-                // Evil plugins still listening to deprecated event
+-                final PlayerChatEvent queueEvent = new PlayerChatEvent(player, event.getMessage(), event.getFormat(), event.getRecipients());
+-                queueEvent.setCancelled(event.isCancelled());
+-                Waitable waitable = new Waitable() {
+-                    @Override
+-                    protected Object evaluate() {
+-                        org.bukkit.Bukkit.getPluginManager().callEvent(queueEvent);
+-
+-                        if (queueEvent.isCancelled()) {
+-                            return null;
+-                        }
+-
+-                        String message = String.format(queueEvent.getFormat(), queueEvent.getPlayer().getDisplayName(), queueEvent.getMessage());
+-                        PlayerConnection.this.minecraftServer.console.sendMessage(message);
+-                        if (((LazyPlayerSet) queueEvent.getRecipients()).isLazy()) {
+-                            for (Object player : PlayerConnection.this.minecraftServer.getPlayerList().players) {
+-                                ((EntityPlayer) player).sendMessage(CraftChatMessage.fromString(message));
+-                            }
+-                        } else {
+-                            for (Player player : queueEvent.getRecipients()) {
+-                                player.sendMessage(message);
+-                            }
+-                        }
+-                        return null;
+-                    }};
+-                if (async) {
+-                    minecraftServer.processQueue.add(waitable);
+-                } else {
+-                    waitable.run();
+-                }
+-                try {
+-                    waitable.get();
+-                } catch (InterruptedException e) {
+-                    Thread.currentThread().interrupt(); // This is proper habit for java. If we aren't handling it, pass it on!
+-                } catch (ExecutionException e) {
+-                    throw new RuntimeException("Exception processing chat event", e.getCause());
+-                }
+-            } else {
+-                if (event.isCancelled()) {
+-                    return;
+-                }
+-
+-                s = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
+-                minecraftServer.console.sendMessage(s);
+-                if (((LazyPlayerSet) event.getRecipients()).isLazy()) {
+-                    for (Object recipient : minecraftServer.getPlayerList().players) {
+-                        ((EntityPlayer) recipient).sendMessage(CraftChatMessage.fromString(s));
+-                    }
++            try {
++                Chat service = server.getInternalServices().getService(Chat.class);
++                if (service == null) {
++                    player.sendMessage(new ChatMessage(org.bukkit.ChatColor.RED + "An internal error has occured!"));
++                    MinecraftServer.LOGGER.warn("A chat service has not been registered!");
+                 } else {
+-                    for (Player recipient : event.getRecipients()) {
+-                        recipient.sendMessage(s);
+-                    }
++                    service.process(this.getPlayer(), s);
+                 }
++            } catch (Exception ex) {
++                ex.printStackTrace();
+             }
+         }
+     }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 69485fa69..e650b905f 100644
+index 69485fa69..9f80f4dfe 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -124,6 +124,9 @@ import io.netty.buffer.Unpooled;
  import io.netty.handler.codec.base64.Base64;
  import jline.console.ConsoleReader;
  import net.md_5.bungee.api.chat.BaseComponent;
-+import pw.alphheim.api.services.InternalService;
-+import pw.alphheim.api.services.InternalServicesManager;
-+import pw.alphheim.services.CraftInternalServicesManager;
++import pw.alphheim.api.services.Chat;
++import pw.alphheim.services.CraftInternalServicesManager; // Alphheim
++import pw.alphheim.services.defaults.VanillaChat;
  
  public final class CraftServer implements Server {
      private static final Player[] EMPTY_PLAYER_ARRAY = new Player[0];
-@@ -165,6 +168,7 @@ public final class CraftServer implements Server {
-     private final UUID invalidUserUUID = UUID.nameUUIDFromBytes("InvalidUsername".getBytes(Charsets.UTF_8));
+@@ -166,6 +169,8 @@ public final class CraftServer implements Server {
      private final List<CraftPlayer> playerView;
      public int reloadCount;
-+    private CraftInternalServicesManager<InternalService> internalServices = new CraftInternalServicesManager<>(); // Alphheim
  
++    private final CraftInternalServicesManager internalServices = new CraftInternalServicesManager(); // Alphheim
++
      private final class BooleanWrapper {
          private boolean value = true;
-@@ -764,6 +768,8 @@ public final class CraftServer implements Server {
+     }
+@@ -764,6 +769,8 @@ public final class CraftServer implements Server {
                  "This plugin is not properly shutting down its async tasks when it is being reloaded.  This may cause conflicts with the newly loaded version of the plugin"
              ));
          }
@@ -47,87 +141,188 @@ index 69485fa69..e650b905f 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -1830,4 +1836,15 @@ public final class CraftServer implements Server {
+@@ -1830,4 +1837,15 @@ public final class CraftServer implements Server {
      {
          return spigot;
      }
 +
 +    // Alphheim start
 +    @Override
-+    public CraftInternalServicesManager<InternalService> getInternalServices() {
++    public CraftInternalServicesManager getInternalServices() {
 +        return internalServices;
 +    }
 +
 +    public void initInternalServices() {
-+
++        getInternalServices().registerService(Chat.class, new VanillaChat());
 +    }
 +    // Alphhem end
  }
 diff --git a/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 new file mode 100644
-index 000000000..db23b06b3
+index 000000000..e38c6d0bd
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,72 @@
 +package pw.alphheim.services;
 +
 +import com.google.common.base.Preconditions;
 +import pw.alphheim.api.services.InternalService;
++import pw.alphheim.api.services.InternalServiceHolder;
 +import pw.alphheim.api.services.InternalServicesManager;
 +
 +import java.util.HashMap;
 +import java.util.Map;
 +
-+public class CraftInternalServicesManager<T extends InternalService> implements InternalServicesManager<T> {
++@SuppressWarnings("unchecked")
++public class CraftInternalServicesManager implements InternalServicesManager {
 +
-+    private Map<Class<T>, T> registeredServices = new HashMap<>();
-+    private Map<Class<T>, T> defaultServices = new HashMap<>();
++    private Map<Class<? extends InternalService>, InternalServiceHolder<? extends InternalService>> registeredServices = new HashMap<>();
++    private Map<Class<? extends InternalService>, InternalServiceHolder<? extends InternalService>> defaultServices = new HashMap<>();
 +
 +
-+    @Override
-+    public <T> T getService(Class<T> service) {
-+        InternalService requestedService = registeredServices.get(service);
-+
-+        if (requestedService == null) {
-+            requestedService = defaultServices.get(service);
-+        }
-+
-+        return (T) requestedService;
-+
-+    }
-+
-+    @Override
-+    public void registerDefaultService(Class<T> serviceType, T service ) {
++    public <T extends InternalService> void registerDefaultService(Class<T> serviceType, T service) {
 +        Preconditions.checkArgument(InternalService.class.isAssignableFrom(serviceType), serviceType.getName() + " is not applicable to the type" + InternalService.class.getName());
 +
-+        InternalService internalService = defaultServices.get(serviceType);
++        InternalServiceHolder internalService = defaultServices.get((Class<? extends InternalService>) serviceType);
 +        if (internalService != null) {
 +            throw new IllegalStateException("A default service for " + serviceType.getName() + " is already registered!");
 +        }
 +
-+        defaultServices.put(serviceType, service);
++        defaultServices.put(serviceType, new InternalServiceHolder<>(service));
 +
 +    }
 +
-+    @Override
-+    public void registerService(Class<T> serviceType, T service ) {
-+        registeredServices.put(serviceType, service);
++
++    public <T extends InternalService> boolean registerService(Class<T> serviceType, T service) {
++        return registerService(serviceType, service, false);
 +    }
 +
-+    @Override
-+    public boolean unregisterService(Class<T> serviceType, T service) {
-+        return registeredServices.remove(serviceType, service);
++    public <T extends InternalService> boolean registerService(Class<T> serviceType, T service, boolean force) {
++        Preconditions.checkArgument(InternalService.class.isAssignableFrom(serviceType), serviceType.getName() + " is not applicable to the type" + InternalService.class.getName());
++
++        if (!force) {
++            InternalServiceHolder internalService = defaultServices.get(serviceType);
++            if (internalService != null) {
++                throw new IllegalStateException("A default service for " + serviceType.getName() + " is already registered!");
++            }
++        }
++
++        return registeredServices.put(serviceType, new InternalServiceHolder<>(service)) != null;
 +    }
++
++    public <T extends InternalService> T getService(Class<T> serviceType) {
++        InternalServiceHolder<? extends InternalService> internalServiceHolder = defaultServices.get(serviceType);
++
++        if (internalServiceHolder != null ) {
++            return (T) internalServiceHolder.getInternalService();
++        } else {
++            internalServiceHolder = registeredServices.get(serviceType);
++            return internalServiceHolder != null ? (T) internalServiceHolder.getInternalService() : null;
++        }
++    }
++
++    public <T extends InternalService> T unregisterService(Class<T> serviceType, T service) {
++        T registeredService = getService(serviceType);
++
++        if (registeredService == null) return null;
++
++        if (service.equals(registeredService)) {
++            return (T) registeredServices.remove(serviceType);
++        }
++
++        return null;
++    }
++
++
 +}
 diff --git a/src/main/java/pw/alphheim/services/defaults/VanillaChat.java b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
 new file mode 100644
-index 000000000..f47bb48a3
+index 000000000..031e83266
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
-@@ -0,0 +1,4 @@
+@@ -0,0 +1,83 @@
 +package pw.alphheim.services.defaults;
 +
-+public class VanillaChat {
++import net.minecraft.server.EntityPlayer;
++import net.minecraft.server.PlayerConnection;
++import org.bukkit.Bukkit;
++import org.bukkit.craftbukkit.CraftServer;
++import org.bukkit.craftbukkit.entity.CraftPlayer;
++import org.bukkit.craftbukkit.util.CraftChatMessage;
++import org.bukkit.craftbukkit.util.LazyPlayerSet;
++import org.bukkit.craftbukkit.util.Waitable;
++import org.bukkit.entity.Player;
++import org.bukkit.event.player.AsyncPlayerChatEvent;
++import org.bukkit.event.player.PlayerChatEvent;
++import pw.alphheim.api.services.Chat;
++
++import java.util.concurrent.ExecutionException;
++
++public class VanillaChat implements Chat {
++    @Override
++    public void process(Player sender, String message) {
++        Boolean async = Bukkit.getServer().isPrimaryThread();
++        AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(async,sender, message, new LazyPlayerSet());
++        Bukkit.getPluginManager().callEvent(event);
++
++        if (PlayerChatEvent.getHandlerList().getRegisteredListeners().length != 0) {
++            // Evil plugins still listening to deprecated event
++            final PlayerChatEvent queueEvent = new PlayerChatEvent(sender, event.getMessage(), event.getFormat(), event.getRecipients());
++            queueEvent.setCancelled(event.isCancelled());
++            Waitable waitable = new Waitable() {
++                @Override
++                protected Object evaluate() {
++                    org.bukkit.Bukkit.getPluginManager().callEvent(queueEvent);
++
++                    if (queueEvent.isCancelled()) {
++                        return null;
++                    }
++
++                    String message = String.format(queueEvent.getFormat(), queueEvent.getPlayer().getDisplayName(), queueEvent.getMessage());
++                    ((CraftServer) Bukkit.getServer()).getServer().console.sendMessage(message);
++
++                    if (((LazyPlayerSet) queueEvent.getRecipients()).isLazy()) {
++                        for (Object player : ((CraftServer) Bukkit.getServer()).getServer().getPlayerList().players) {
++                            ((EntityPlayer) player).sendMessage(CraftChatMessage.fromString(message));
++                        }
++                    } else {
++                        for (Player player : queueEvent.getRecipients()) {
++                            player.sendMessage(message);
++                        }
++                    }
++                    return null;
++                }};
++            if (async) {
++                ((CraftServer) Bukkit.getServer()).getServer().processQueue.add(waitable);
++            } else {
++                waitable.run();
++            }
++            try {
++                waitable.get();
++            } catch (InterruptedException e) {
++                Thread.currentThread().interrupt(); // This is proper habit for java. If we aren't handling it, pass it on!
++            } catch (ExecutionException e) {
++                throw new RuntimeException("Exception processing chat event", e.getCause());
++            }
++        } else {
++            if (event.isCancelled()) {
++                return;
++            }
++
++            message = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
++            ((CraftServer) Bukkit.getServer()).getServer().console.sendMessage(message);
++            if (((LazyPlayerSet) event.getRecipients()).isLazy()) {
++                for (Object recipient : ((CraftServer) Bukkit.getServer()).getServer().getPlayerList().players) {
++                    ((EntityPlayer) recipient).sendMessage(CraftChatMessage.fromString(message));
++                }
++            } else {
++                for (Player recipient : event.getRecipients()) {
++                    recipient.sendMessage(message);
++                }
++            }
++        }
++
++    }
 +}
 -- 
 2.15.1

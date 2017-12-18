@@ -1,11 +1,11 @@
-From 26f1f265e2dd989e07e7d383ca9e5346c6eb0fcd Mon Sep 17 00:00:00 2001
+From f63606bdfd87f5b606107733f61763eb93fa1fab Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
 
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 8fbc8283..1ea20cff 100644
+index 8fbc8283..f5671eea 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
 @@ -42,6 +42,8 @@ import org.bukkit.generator.ChunkGenerator;
@@ -27,13 +27,13 @@ index 8fbc8283..1ea20cff 100644
 +    /**
 +     * @return the internal services manager
 +     */
-+    public static InternalServicesManager getInternalServiceManager() {
++    public static InternalServicesManager getInternalServices() {
 +        return server.getInternalServices();
 +    }
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 1b62463a..9aa509e0 100644
+index 1b62463a..a632bf19 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -43,6 +43,7 @@ import org.bukkit.generator.ChunkGenerator;
@@ -44,15 +44,28 @@ index 1b62463a..9aa509e0 100644
  
  /**
   * Represents a server implementation.
-@@ -1007,4 +1008,8 @@ public interface Server extends PluginMessageRecipient {
+@@ -1007,4 +1008,7 @@ public interface Server extends PluginMessageRecipient {
      }
  
      Spigot spigot();
 +
-+
 +    InternalServicesManager getInternalServices(); // Alphheim
 +
  }
+diff --git a/src/main/java/pw/alphheim/api/services/Chat.java b/src/main/java/pw/alphheim/api/services/Chat.java
+new file mode 100644
+index 00000000..9bf27d5c
+--- /dev/null
++++ b/src/main/java/pw/alphheim/api/services/Chat.java
+@@ -0,0 +1,8 @@
++package pw.alphheim.api.services;
++
++import org.bukkit.entity.Player;
++
++public interface Chat extends InternalService {
++
++    void process(Player sender, String message);
++}
 diff --git a/src/main/java/pw/alphheim/api/services/InternalService.java b/src/main/java/pw/alphheim/api/services/InternalService.java
 new file mode 100644
 index 00000000..be519386
@@ -63,39 +76,48 @@ index 00000000..be519386
 +
 +public interface InternalService {
 +}
-diff --git a/src/main/java/pw/alphheim/api/services/InternalServicesManager.java b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
+diff --git a/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
 new file mode 100644
-index 00000000..3d05248a
+index 00000000..6dec37fb
 --- /dev/null
-+++ b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
-@@ -0,0 +1,29 @@
++++ b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
+@@ -0,0 +1,19 @@
 +package pw.alphheim.api.services;
 +
-+public interface InternalServicesManager<T> {
++public class InternalServiceHolder<T extends InternalService> {
 +
-+    /**
-+     * @param serviceType service type
-+     * @return registered service, or default if there is no registered service but a default implementation exists, or null
-+     */
-+    T getService(Class<T> serviceType);
++    private T internalService;
 +
-+    /**
-+     * @param serviceType service type to register
-+     * @param service     service implementation
-+     */
-+    void registerDefaultService(Class<T> serviceType, T service);
++    public InternalServiceHolder(T internalService) {
++        this.internalService = internalService;
++    }
 +
-+    /**
-+     * @param serviceType service type to register
-+     * @param service     service implementation
-+     */
-+    void registerService(Class<T> serviceType, T service);
++    public T getInternalService() {
++        return internalService;
++    }
 +
-+    /**
-+     * @param serviceType service type to un-register
-+     * @param service     service implementation to un-register
-+     */
-+    boolean unregisterService(Class<T> serviceType, T service);
++    @Override
++    public boolean equals(Object obj) {
++        return this == obj || (obj instanceof InternalServiceHolder && ((InternalServiceHolder) obj).internalService == this.internalService);
++    }
++}
+diff --git a/src/main/java/pw/alphheim/api/services/InternalServicesManager.java b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
+new file mode 100644
+index 00000000..dcab13a7
+--- /dev/null
++++ b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
+@@ -0,0 +1,13 @@
++package pw.alphheim.api.services;
++
++public interface InternalServicesManager {
++    public <T extends InternalService> void registerDefaultService(Class<T> serviceType, T service);
++
++
++    public <T extends InternalService> boolean registerService(Class<T> serviceType, T service);
++
++    public <T extends InternalService> T getService(Class<T> serviceType);
++
++    public <T extends InternalService> T unregisterService(Class<T> serviceType, T service);
 +
 +}
 -- 
