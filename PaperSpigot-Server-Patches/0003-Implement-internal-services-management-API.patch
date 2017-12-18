@@ -1,4 +1,4 @@
-From cfad2002158af4cde40ff3cb7c9fd2b345b4b88d Mon Sep 17 00:00:00 2001
+From 25020144d4e6d521c2de30e6286f376a7a486a00 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -110,7 +110,7 @@ index 65093c89c..c637c2bd5 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 69485fa69..9f80f4dfe 100644
+index 69485fa69..7c10aa5bb 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -124,6 +124,9 @@ import io.netty.buffer.Unpooled;
@@ -155,7 +155,7 @@ index 69485fa69..9f80f4dfe 100644
 +    public void initInternalServices() {
 +        getInternalServices().registerService(Chat.class, new VanillaChat());
 +    }
-+    // Alphhem end
++    // Alphheim end
  }
 diff --git a/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 new file mode 100644
