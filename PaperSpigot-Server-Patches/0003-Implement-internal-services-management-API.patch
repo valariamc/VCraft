@@ -1,4 +1,4 @@
-From 0c40c342dde5d9459b62111849410c61516b8379 Mon Sep 17 00:00:00 2001
+From 1977435bfeb5014309b4f9ee7c52e3b18cdafa7a Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -17,27 +17,28 @@ index 088beb22b..78c9c5134 100644
              server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
              // Spigot End
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 69485fa69..80f576272 100644
+index 69485fa69..e650b905f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -124,6 +124,8 @@ import io.netty.buffer.Unpooled;
+@@ -124,6 +124,9 @@ import io.netty.buffer.Unpooled;
  import io.netty.handler.codec.base64.Base64;
  import jline.console.ConsoleReader;
  import net.md_5.bungee.api.chat.BaseComponent;
++import pw.alphheim.api.services.InternalService;
 +import pw.alphheim.api.services.InternalServicesManager;
 +import pw.alphheim.services.CraftInternalServicesManager;
  
  public final class CraftServer implements Server {
      private static final Player[] EMPTY_PLAYER_ARRAY = new Player[0];
-@@ -165,6 +167,7 @@ public final class CraftServer implements Server {
+@@ -165,6 +168,7 @@ public final class CraftServer implements Server {
      private final UUID invalidUserUUID = UUID.nameUUIDFromBytes("InvalidUsername".getBytes(Charsets.UTF_8));
      private final List<CraftPlayer> playerView;
      public int reloadCount;
-+    private CraftInternalServicesManager internalServices; // Alphheim
++    private CraftInternalServicesManager<InternalService> internalServices = new CraftInternalServicesManager<>(); // Alphheim
  
      private final class BooleanWrapper {
          private boolean value = true;
-@@ -764,6 +767,8 @@ public final class CraftServer implements Server {
+@@ -764,6 +768,8 @@ public final class CraftServer implements Server {
                  "This plugin is not properly shutting down its async tasks when it is being reloaded.  This may cause conflicts with the newly loaded version of the plugin"
              ));
          }
@@ -46,14 +47,14 @@ index 69485fa69..80f576272 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -1830,4 +1835,15 @@ public final class CraftServer implements Server {
+@@ -1830,4 +1836,15 @@ public final class CraftServer implements Server {
      {
          return spigot;
      }
 +
 +    // Alphheim start
 +    @Override
-+    public CraftInternalServicesManager getInternalServices() {
++    public CraftInternalServicesManager<InternalService> getInternalServices() {
 +        return internalServices;
 +    }
 +
@@ -64,7 +65,7 @@ index 69485fa69..80f576272 100644
  }
 diff --git a/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 new file mode 100644
-index 000000000..73ef40723
+index 000000000..db23b06b3
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 @@ -0,0 +1,50 @@
@@ -84,7 +85,7 @@ index 000000000..73ef40723
 +
 +
 +    @Override
-+    public T getService(Class<T> service) {
++    public <T> T getService(Class<T> service) {
 +        InternalService requestedService = registeredServices.get(service);
 +
 +        if (requestedService == null) {
@@ -117,6 +118,16 @@ index 000000000..73ef40723
 +    public boolean unregisterService(Class<T> serviceType, T service) {
 +        return registeredServices.remove(serviceType, service);
 +    }
++}
+diff --git a/src/main/java/pw/alphheim/services/defaults/VanillaChat.java b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
+new file mode 100644
+index 000000000..f47bb48a3
+--- /dev/null
++++ b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
+@@ -0,0 +1,4 @@
++package pw.alphheim.services.defaults;
++
++public class VanillaChat {
 +}
 -- 
 2.15.1
