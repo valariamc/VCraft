@@ -1,11 +1,11 @@
-From 2e895b94385eba5710f205a172828929f79d9737 Mon Sep 17 00:00:00 2001
+From c693e299931f9722cc2137bc03bbeeb1e388cdbe Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
 
 
 diff --git a/pom.xml b/pom.xml
-index 6aaba5027..c32776290 100644
+index 6aaba5027..245b1a684 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -62,29 +62,7 @@ index 6aaba5027..c32776290 100644
                  </configuration>
              </plugin>
              <plugin>
-@@ -209,42 +210,11 @@
-                 </executions>
-             </plugin>
-             <!-- Gotta go after shade plugin -->
--            <plugin>
--                <groupId>net.md-5</groupId>
--                <artifactId>specialsource-maven-plugin</artifactId>
--                <version>1.2.1</version>
--                <executions>
--                    <execution>
--                        <phase>package</phase>
--                        <goals>
--                            <goal>remap</goal>
--                        </goals>
--                        <configuration>
--                            <srgIn>${project.basedir}/deprecation-mappings.csrg</srgIn>
--                            <accessIn>${project.basedir}/deprecation-mappings.at</accessIn>
--                        </configuration>
--                    </execution>
--                </executions>
--            </plugin>
-             <plugin>
-                 <groupId>org.apache.maven.plugins</groupId>
+@@ -231,20 +232,6 @@
                  <artifactId>maven-compiler-plugin</artifactId>
                  <!-- versions after this appear to be broken -->
                  <version>3.1</version>
