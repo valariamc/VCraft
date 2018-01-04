@@ -5,6 +5,7 @@ PS1="$"
 basedir="$(cd "$1" && pwd -P)"
 workdir="$basedir/work"
 gpgsign="$(git config commit.gpgsign || echo "false")"
+. $basedir/scripts/forkinfo.sh
 echo "Rebuilding Forked projects.... "
 
 function applyPatch {
@@ -71,9 +72,11 @@ basedir=$(pwd)
 basedir="$1"
 cd "$basedir"
 
-echo "Importing MC Dev"
+echo "Importing Paper MC Dev"
+# paper import mcediv
+cd $workdir/Paper
 
-./scripts/importmcdev.sh "$basedir" >/dev/null 2>&1
+./scripts/importmcdev.sh "$basedir/Paper" >/dev/null 2>&1
 
 # Apply paper
 cd "$workdir/Paper"
@@ -94,7 +97,11 @@ basedir="$1"
 cd "$basedir"
 
 
+echo "Importing Alphheim MC Dev"
+# paper import mcediv
+cd $basedir
 
+./scripts/importmcdev.sh "$basedir" >/dev/null 2>&1
 
 # Apply Alphheim
 
