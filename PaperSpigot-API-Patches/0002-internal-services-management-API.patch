@@ -1,4 +1,4 @@
-From f63606bdfd87f5b606107733f61763eb93fa1fab Mon Sep 17 00:00:00 2001
+From 14905258639b8edd1cdd1ed75c9fae91f7653c02 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
@@ -78,22 +78,36 @@ index 00000000..be519386
 +}
 diff --git a/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
 new file mode 100644
-index 00000000..6dec37fb
+index 00000000..7d087529
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
-@@ -0,0 +1,19 @@
+@@ -0,0 +1,33 @@
 +package pw.alphheim.api.services;
++
++import javax.annotation.Nullable;
++import org.bukkit.plugin.Plugin;
 +
 +public class InternalServiceHolder<T extends InternalService> {
 +
 +    private T internalService;
++    private Plugin plugin;
 +
 +    public InternalServiceHolder(T internalService) {
++        this(internalService, null);
++    }
++
++    public InternalServiceHolder(T internalService, Plugin plugin) {
 +        this.internalService = internalService;
++        this.plugin = plugin;
 +    }
 +
 +    public T getInternalService() {
 +        return internalService;
++    }
++
++    @Nullable
++    public Plugin getPlugin() {
++        return plugin;
 +    }
 +
 +    @Override
@@ -103,21 +117,27 @@ index 00000000..6dec37fb
 +}
 diff --git a/src/main/java/pw/alphheim/api/services/InternalServicesManager.java b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
 new file mode 100644
-index 00000000..dcab13a7
+index 00000000..f904d93c
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
-@@ -0,0 +1,13 @@
+@@ -0,0 +1,19 @@
 +package pw.alphheim.api.services;
 +
++import org.bukkit.plugin.Plugin;
++
 +public interface InternalServicesManager {
-+    public <T extends InternalService> void registerDefaultService(Class<T> serviceType, T service);
++    <T extends InternalService> void registerDefaultService(Class<T> serviceType, T service);
 +
 +
-+    public <T extends InternalService> boolean registerService(Class<T> serviceType, T service);
++    <T extends InternalService> boolean registerService(Class<T> serviceType, T service, Plugin owningPlugin);
 +
-+    public <T extends InternalService> T getService(Class<T> serviceType);
++    <T extends InternalService> boolean registerService(Class<T> serviceType, T service, Plugin owningPlugin, boolean force);
 +
-+    public <T extends InternalService> T unregisterService(Class<T> serviceType, T service);
++    <T extends InternalService> T getService(Class<T> serviceType);
++
++    <T extends InternalService> T unregisterService(Class<T> serviceType, T service);
++
++    <T extends InternalService> boolean unregisterServices(Plugin owningPlugin);
 +
 +}
 -- 

@@ -1,4 +1,4 @@
-From 25020144d4e6d521c2de30e6286f376a7a486a00 Mon Sep 17 00:00:00 2001
+From eeec302cb62cf5eef8cad8013c625b6103814615 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -159,13 +159,14 @@ index 69485fa69..7c10aa5bb 100644
  }
 diff --git a/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 new file mode 100644
-index 000000000..e38c6d0bd
+index 000000000..5e18f0575
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,79 @@
 +package pw.alphheim.services;
 +
 +import com.google.common.base.Preconditions;
++import org.bukkit.plugin.Plugin;
 +import pw.alphheim.api.services.InternalService;
 +import pw.alphheim.api.services.InternalServiceHolder;
 +import pw.alphheim.api.services.InternalServicesManager;
@@ -193,11 +194,11 @@ index 000000000..e38c6d0bd
 +    }
 +
 +
-+    public <T extends InternalService> boolean registerService(Class<T> serviceType, T service) {
-+        return registerService(serviceType, service, false);
++    public <T extends InternalService> boolean registerService(Class<T> serviceType, T service, Plugin owningPlugin) {
++        return registerService(serviceType, service, owningPlugin, false);
 +    }
 +
-+    public <T extends InternalService> boolean registerService(Class<T> serviceType, T service, boolean force) {
++    public <T extends InternalService> boolean registerService(Class<T> serviceType, T service, Plugin owningPlugin, boolean force) {
 +        Preconditions.checkArgument(InternalService.class.isAssignableFrom(serviceType), serviceType.getName() + " is not applicable to the type" + InternalService.class.getName());
 +
 +        if (!force) {
@@ -207,7 +208,7 @@ index 000000000..e38c6d0bd
 +            }
 +        }
 +
-+        return registeredServices.put(serviceType, new InternalServiceHolder<>(service)) != null;
++        return registeredServices.put(serviceType, new InternalServiceHolder<>(service, owningPlugin)) != null;
 +    }
 +
 +    public <T extends InternalService> T getService(Class<T> serviceType) {
@@ -231,6 +232,12 @@ index 000000000..e38c6d0bd
 +        }
 +
 +        return null;
++    }
++
++    public <T extends InternalService> boolean unregisterServices(Plugin owningPlugin) {
++
++        return registeredServices.entrySet().removeIf(entry -> entry.getValue().getPlugin() != null && entry.getValue().getPlugin() == owningPlugin);
++
 +    }
 +
 +

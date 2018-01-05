@@ -1,11 +1,11 @@
-From 55f65fd8a4e105887b6424d09efc41b5a0a7a9b8 Mon Sep 17 00:00:00 2001
+From fcd28d6b73e1909d586a7772619d41c4ca01d72f Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
 
 
 diff --git a/pom.xml b/pom.xml
-index fe9d6d26..4e11f85b 100644
+index fe9d6d26..4e9785cf 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -4,17 +4,17 @@
@@ -31,6 +31,19 @@ index fe9d6d26..4e11f85b 100644
      <url>https://hub.spigotmc.org/stash/projects/PAPER/</url>
      <description>An enhanced plugin API for Minecraft servers.</description>
  
+@@ -54,6 +54,12 @@
+             <!-- Trove Provided by CraftBukkit -->
+             <scope>provided</scope>
+         </dependency>
++        <!-- Bundled with Minecraft -->
++        <dependency>
++            <groupId>com.google.code.findbugs</groupId>
++            <artifactId>jsr305</artifactId>
++            <version>3.0.0</version>
++        </dependency>
+         <dependency>
+             <groupId>commons-lang</groupId>
+             <artifactId>commons-lang</artifactId>
 -- 
 2.15.1
 
