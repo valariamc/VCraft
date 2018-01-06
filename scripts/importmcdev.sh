@@ -35,6 +35,7 @@ function import {
 	fi
 )
 
+import GameRules
 import MobEffect
 
 cd "$workdir/Paper/PaperSpigot-Server/"

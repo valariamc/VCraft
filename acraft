@@ -90,16 +90,16 @@ case "$1" in
         cd "$basedir/AlphheimCraft-Server"
     ;;
     "c" | "clean")
-        rm -rf Paper-API
-        rm -rf Paper-Server
+        rm -rf AlphheimCraft-API
+        rm -rf AlphheimCraft-Server
         rm -rf work
         echo "Cleaned build files"
     ;;
     "e" | "edit")
         case "$2" in
             "s" | "server")
-            export LAST_EDIT="$basedir/Paper-Server"
-            cd "$basedir/Paper-Server"
+            export LAST_EDIT="$basedir/AlphheimCraft-Server"
+            cd "$basedir/AlphheimCraft-Server"
             (
                 set -e
 
@@ -109,8 +109,8 @@ case "$1" in
             )
             ;;
             "a" | "api")
-            export LAST_EDIT="$basedir/Paper-API"
-            cd "$basedir/Paper-API"
+            export LAST_EDIT="$basedir/AlphheimCraft-API"
+            cd "$basedir/AlphheimCraft-API"
             (
                 set -e
 
