@@ -1,4 +1,4 @@
-From 14905258639b8edd1cdd1ed75c9fae91f7653c02 Mon Sep 17 00:00:00 2001
+From a8dd62de9861e1c660ab21b9f9ca96a1c72ceff6 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
@@ -117,7 +117,7 @@ index 00000000..7d087529
 +}
 diff --git a/src/main/java/pw/alphheim/api/services/InternalServicesManager.java b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
 new file mode 100644
-index 00000000..f904d93c
+index 00000000..b042e634
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
 @@ -0,0 +1,19 @@
@@ -137,7 +137,7 @@ index 00000000..f904d93c
 +
 +    <T extends InternalService> T unregisterService(Class<T> serviceType, T service);
 +
-+    <T extends InternalService> boolean unregisterServices(Plugin owningPlugin);
++    boolean unregisterServices(Plugin owningPlugin);
 +
 +}
 -- 

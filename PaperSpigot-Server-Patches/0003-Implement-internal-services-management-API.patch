@@ -1,4 +1,4 @@
-From 982b5e17f32387b595d308da2aca6e1d62b11b7a Mon Sep 17 00:00:00 2001
+From 68e7cb4d4002e807a071e95e2113686a5a96d425 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -159,7 +159,7 @@ index 69485fa69..dd170efcd 100644
  }
 diff --git a/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 new file mode 100644
-index 000000000..5e18f0575
+index 000000000..9993972ec
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 @@ -0,0 +1,79 @@
@@ -234,7 +234,7 @@ index 000000000..5e18f0575
 +        return null;
 +    }
 +
-+    public <T extends InternalService> boolean unregisterServices(Plugin owningPlugin) {
++    public boolean unregisterServices(Plugin owningPlugin) {
 +
 +        return registeredServices.entrySet().removeIf(entry -> entry.getValue().getPlugin() != null && entry.getValue().getPlugin() == owningPlugin);
 +
