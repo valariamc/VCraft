@@ -1,38 +1,36 @@
-Paper [![CI Status](http://ci.destroystokyo.com/buildStatus/icon?job=PaperSpigot)](http://ci.destroystokyo.com/job/PaperSpigot/)
+AlphheimCraft
 ===========
 
-High performance Spigot fork that aims to fix gameplay and mechanics inconsistencies.
+AlphheimCraft is a fork of Paper which is used on the Alphheim server.
 
-[IRC Support and Project Discussion](http://irc.spi.gt/iris/?channels=paper)
+The patches here provide various improvements focusing on our internal usage as well as security fixes
+ where possible.
 
+This software is provided as-is, there is no promise that it will be suitable for your own
+usage or that it won't set your cat on fire (But, you're more than welcome to try).
 
-Documentation
+Support
 ------
-Access the Paper docs here: [paper.readthedocs.io](https://paper.readthedocs.io/)  
-Access the Paper API javadocs here: [paperdocs.emc.gs](https://paperdocs.emc.gs)
+You're on your own. 
 
-How To (Server Admins)
+License
 ------
-Paperclip is a jar file that you can download and run just like a normal jar file.
+In order to conform with upstream licensing, all patches are licensed as MIT, you are more than
+welcome to use the works here, providing that you do **NOT** claim them as your own.
 
-Download a copy of paperclip.jar from [our build server, here](https://ci.destroystokyo.com/job/PaperSpigot/).
-
-Run the Paperclip jar directly from your server. Just like old times
-
-Paper requires [**Java 8**](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) or above.
 
 How To (Compiling Jar From Source)
 ------
-To compile Paper, you need JDK 8, maven, and an internet connection.
+To compile, you need JDK 8, maven, and an internet connection.
 
-Clone this repo, run `./paper jar` from *bash*, get files.
-
-How To (Pull Request)
-------
-See [Contributing](CONTRIBUTING.md)
+Clone this repo, run `./acraft jar` from *bash*, get files.
 
 Special Thanks To:
 -------------
+![PaperMC-Logo](https://avatars2.githubusercontent.com/u/7608950?s=200&v=4)
+
+[PaperMC](https://github.com/PaperMC), for providing this wonderful software base, and for allowing me to
+work alongside them. 
 
 ![YourKit-Logo](https://www.yourkit.com/images/yklogo.png)
 
