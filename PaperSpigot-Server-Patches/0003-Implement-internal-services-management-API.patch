@@ -1,4 +1,4 @@
-From 68e7cb4d4002e807a071e95e2113686a5a96d425 Mon Sep 17 00:00:00 2001
+From f8cfbb4f18601cf819495a596cde577394424a6b Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -159,19 +159,23 @@ index 69485fa69..dd170efcd 100644
  }
 diff --git a/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 new file mode 100644
-index 000000000..9993972ec
+index 000000000..681767b79
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
-@@ -0,0 +1,79 @@
+@@ -0,0 +1,98 @@
 +package pw.alphheim.services;
 +
 +import com.google.common.base.Preconditions;
++import net.minecraft.server.MinecraftServer;
 +import org.bukkit.plugin.Plugin;
 +import pw.alphheim.api.services.InternalService;
 +import pw.alphheim.api.services.InternalServiceHolder;
 +import pw.alphheim.api.services.InternalServicesManager;
 +
++import java.util.ArrayList;
 +import java.util.HashMap;
++import java.util.Iterator;
++import java.util.List;
 +import java.util.Map;
 +
 +@SuppressWarnings("unchecked")
@@ -214,7 +218,7 @@ index 000000000..9993972ec
 +    public <T extends InternalService> T getService(Class<T> serviceType) {
 +        InternalServiceHolder<? extends InternalService> internalServiceHolder = defaultServices.get(serviceType);
 +
-+        if (internalServiceHolder != null ) {
++        if (internalServiceHolder != null) {
 +            return (T) internalServiceHolder.getInternalService();
 +        } else {
 +            internalServiceHolder = registeredServices.get(serviceType);
@@ -236,7 +240,22 @@ index 000000000..9993972ec
 +
 +    public boolean unregisterServices(Plugin owningPlugin) {
 +
-+        return registeredServices.entrySet().removeIf(entry -> entry.getValue().getPlugin() != null && entry.getValue().getPlugin() == owningPlugin);
++        boolean hasRemoved = false;
++        Iterator<Map.Entry<Class<? extends InternalService>, InternalServiceHolder<? extends InternalService>>> iterator = registeredServices.entrySet().iterator();
++
++        while (iterator.hasNext()) {
++            InternalServiceHolder internalServiceHolder = iterator.next().getValue();
++            if (internalServiceHolder.getPlugin() != owningPlugin) continue;
++            hasRemoved = true;
++            try {
++                internalServiceHolder.getInternalService().onDisable();
++            } catch (Throwable ex) {
++                MinecraftServer.LOGGER.warn("An error has occurred while disabling the internal service: " + internalServiceHolder.toString());
++            }
++            iterator.remove();
++        }
++
++        return hasRemoved;
 +
 +    }
 +

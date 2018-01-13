@@ -1,4 +1,4 @@
-From a8dd62de9861e1c660ab21b9f9ca96a1c72ceff6 Mon Sep 17 00:00:00 2001
+From 00acaa13b10bd3ccfb48099e97444a43a1e1dde8 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
@@ -52,6 +52,26 @@ index 1b62463a..a632bf19 100644
 +    InternalServicesManager getInternalServices(); // Alphheim
 +
  }
+diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
+index ce9839ec..8021105d 100644
+--- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
++++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
+@@ -444,6 +444,15 @@ public final class SimplePluginManager implements PluginManager {
+                         + plugin.getDescription().getFullName() + " (Is it up to date?)", ex, plugin); // Paper
+             }
+ 
++            // Alphheim start - internal services
++            try {
++                server.getInternalServices().unregisterServices(plugin);
++            } catch (Throwable ex) {
++                handlePluginException("Error occurred (in the plugin loader) while unregistering internal services for "
++                        + plugin.getDescription().getFullName() + " (Is it up to date?)", ex, plugin); // Paper
++            }
++            // Alphheim stop
++
+             try {
+                 HandlerList.unregisterAll(plugin);
+             } catch (Throwable ex) {
 diff --git a/src/main/java/pw/alphheim/api/services/Chat.java b/src/main/java/pw/alphheim/api/services/Chat.java
 new file mode 100644
 index 00000000..9bf27d5c
@@ -68,20 +88,22 @@ index 00000000..9bf27d5c
 +}
 diff --git a/src/main/java/pw/alphheim/api/services/InternalService.java b/src/main/java/pw/alphheim/api/services/InternalService.java
 new file mode 100644
-index 00000000..be519386
+index 00000000..eb15d53e
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/api/services/InternalService.java
-@@ -0,0 +1,4 @@
+@@ -0,0 +1,6 @@
 +package pw.alphheim.api.services;
 +
 +public interface InternalService {
++
++    default void onDisable(){};
 +}
 diff --git a/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
 new file mode 100644
-index 00000000..7d087529
+index 00000000..85159322
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
-@@ -0,0 +1,33 @@
+@@ -0,0 +1,41 @@
 +package pw.alphheim.api.services;
 +
 +import javax.annotation.Nullable;
@@ -113,6 +135,14 @@ index 00000000..7d087529
 +    @Override
 +    public boolean equals(Object obj) {
 +        return this == obj || (obj instanceof InternalServiceHolder && ((InternalServiceHolder) obj).internalService == this.internalService);
++    }
++
++    @Override
++    public String toString() {
++        return "InternalServiceHolder{" +
++                "internalService=" + internalService.getClass().getName() +
++                ", plugin=" + plugin +
++                '}';
 +    }
 +}
 diff --git a/src/main/java/pw/alphheim/api/services/InternalServicesManager.java b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
