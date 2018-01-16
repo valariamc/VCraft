@@ -1,25 +1,41 @@
-From 093248018233700346f753c1fb9fc823667e761d Mon Sep 17 00:00:00 2001
+From f5c9eacc332b96caf146de6b8dd1f7531ed76d87 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Tue, 16 Jan 2018 04:53:22 +0000
 Subject: [PATCH] Allow overriding enchantment limitations
 
 
 diff --git a/src/main/java/net/minecraft/server/CommandEnchant.java b/src/main/java/net/minecraft/server/CommandEnchant.java
-index 500a6a94a..002adde0b 100644
+index 500a6a94a..81c33ce41 100644
 --- a/src/main/java/net/minecraft/server/CommandEnchant.java
 +++ b/src/main/java/net/minecraft/server/CommandEnchant.java
-@@ -54,11 +54,18 @@ public class CommandEnchant extends CommandAbstract {
-                 } else if (!enchantment1.canEnchant(itemstack)) {
+@@ -23,6 +23,15 @@ public class CommandEnchant extends CommandAbstract {
+         if (astring.length < 2) {
+             throw new ExceptionUsage("commands.enchant.usage", new Object[0]);
+         } else {
++
++            // Alphheim start - bypass enchant limitations
++            boolean bypassLimit = false;
++            if (astring.length == 4) {
++                bypassLimit = Boolean.parseBoolean(astring[3]);
++            }
++
++            // Alphheim end - bypass enchant limitations
++
+             EntityPlayer entityplayer = a(icommandlistener, astring[0]);
+ 
+             icommandlistener.a(CommandObjectiveExecutor.EnumCommandResult.AFFECTED_ITEMS, 0);
+@@ -51,14 +60,17 @@ public class CommandEnchant extends CommandAbstract {
+ 
+                 if (enchantment1 == null) {
+                     throw new ExceptionInvalidNumber("commands.enchant.notFound", new Object[] { Integer.valueOf(i)});
+-                } else if (!enchantment1.canEnchant(itemstack)) {
++                } else if (!bypassLimit && !enchantment1.canEnchant(itemstack)) { // Alphheim - bypass enchant limitations
                      throw new CommandException("commands.enchant.cantEnchant", new Object[0]);
                  } else {
-+                    boolean bypassLimit = false;
 +
 +                    // Alphheim start - allow bypassing enchantment limits
                      if (astring.length >= 3) {
 -                        j = a(astring[2], enchantment1.getStartLevel(), enchantment1.getMaxLevel());
-+                        if (astring.length == 4) {
-+                            bypassLimit = Boolean.parseBoolean(astring[3]);
-+                        }
 +                        j = bypassLimit ? a(astring[2]) : a(astring[2], enchantment1.getStartLevel(), enchantment1.getMaxLevel());
                      }
  
@@ -29,7 +45,7 @@ index 500a6a94a..002adde0b 100644
                          NBTTagList nbttaglist = itemstack.getEnchantments();
  
                          if (nbttaglist != null) {
-@@ -95,4 +102,11 @@ public class CommandEnchant extends CommandAbstract {
+@@ -95,4 +107,11 @@ public class CommandEnchant extends CommandAbstract {
      public boolean isListStart(String[] astring, int i) {
          return i == 0;
      }
