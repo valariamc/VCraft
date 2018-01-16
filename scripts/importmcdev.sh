@@ -35,6 +35,7 @@ function import {
 	fi
 )
 
+import CommandEnchant
 import GameRules
 import MobEffect
 

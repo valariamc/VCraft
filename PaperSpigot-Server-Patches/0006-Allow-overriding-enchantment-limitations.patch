@@ -1,0 +1,46 @@
+From 093248018233700346f753c1fb9fc823667e761d Mon Sep 17 00:00:00 2001
+From: Shane Freeder <theboyetronic@gmail.com>
+Date: Tue, 16 Jan 2018 04:53:22 +0000
+Subject: [PATCH] Allow overriding enchantment limitations
+
+
+diff --git a/src/main/java/net/minecraft/server/CommandEnchant.java b/src/main/java/net/minecraft/server/CommandEnchant.java
+index 500a6a94a..002adde0b 100644
+--- a/src/main/java/net/minecraft/server/CommandEnchant.java
++++ b/src/main/java/net/minecraft/server/CommandEnchant.java
+@@ -54,11 +54,18 @@ public class CommandEnchant extends CommandAbstract {
+                 } else if (!enchantment1.canEnchant(itemstack)) {
+                     throw new CommandException("commands.enchant.cantEnchant", new Object[0]);
+                 } else {
++                    boolean bypassLimit = false;
++
++                    // Alphheim start - allow bypassing enchantment limits
+                     if (astring.length >= 3) {
+-                        j = a(astring[2], enchantment1.getStartLevel(), enchantment1.getMaxLevel());
++                        if (astring.length == 4) {
++                            bypassLimit = Boolean.parseBoolean(astring[3]);
++                        }
++                        j = bypassLimit ? a(astring[2]) : a(astring[2], enchantment1.getStartLevel(), enchantment1.getMaxLevel());
+                     }
+ 
+-                    if (itemstack.hasTag()) {
++                    if (itemstack.hasTag() && !bypassLimit) {
++                    // Alphheim end - allow bypassing enchantment limits
+                         NBTTagList nbttaglist = itemstack.getEnchantments();
+ 
+                         if (nbttaglist != null) {
+@@ -95,4 +102,11 @@ public class CommandEnchant extends CommandAbstract {
+     public boolean isListStart(String[] astring, int i) {
+         return i == 0;
+     }
++
++    // Alphheim start - fix decompile error
++    @Override
++    public int compareTo(ICommand o) {
++        return a(o);
++    }
++    // Alphheim end
+ }
+-- 
+2.15.1
+
