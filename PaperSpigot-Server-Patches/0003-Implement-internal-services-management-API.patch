@@ -1,4 +1,4 @@
-From f8cfbb4f18601cf819495a596cde577394424a6b Mon Sep 17 00:00:00 2001
+From 0fac8606bea459ceacb74c1562c7caf89c006ead Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -110,7 +110,7 @@ index 65093c89c..c637c2bd5 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 69485fa69..dd170efcd 100644
+index 69485fa69..da17cc10e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -124,6 +124,9 @@ import io.netty.buffer.Unpooled;
@@ -132,7 +132,15 @@ index 69485fa69..dd170efcd 100644
      private final class BooleanWrapper {
          private boolean value = true;
      }
-@@ -764,6 +769,8 @@ public final class CraftServer implements Server {
+@@ -733,6 +738,7 @@ public final class CraftServer implements Server {
+         }
+ 
+         pluginManager.clearPlugins();
++        internalServices.reset();
+         commandMap.clearCommands();
+         resetRecipes();
+         org.spigotmc.SpigotConfig.registerCommands(); // Spigot
+@@ -764,6 +770,8 @@ public final class CraftServer implements Server {
                  "This plugin is not properly shutting down its async tasks when it is being reloaded.  This may cause conflicts with the newly loaded version of the plugin"
              ));
          }
@@ -141,7 +149,7 @@ index 69485fa69..dd170efcd 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -1830,4 +1837,15 @@ public final class CraftServer implements Server {
+@@ -1830,4 +1838,15 @@ public final class CraftServer implements Server {
      {
          return spigot;
      }
@@ -159,10 +167,10 @@ index 69485fa69..dd170efcd 100644
  }
 diff --git a/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 new file mode 100644
-index 000000000..681767b79
+index 000000000..d6db9070e
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
-@@ -0,0 +1,98 @@
+@@ -0,0 +1,118 @@
 +package pw.alphheim.services;
 +
 +import com.google.common.base.Preconditions;
@@ -195,6 +203,26 @@ index 000000000..681767b79
 +
 +        defaultServices.put(serviceType, new InternalServiceHolder<>(service));
 +
++    }
++
++    public void reset() {
++        registeredServices.forEach((aClass, internalServiceHolder) -> {
++            try {
++                internalServiceHolder.getInternalService().onDisable();
++            } catch (Exception ex) {
++                ex.printStackTrace();
++            }
++        });
++        registeredServices.clear();
++
++        defaultServices.forEach((aClass, internalServiceHolder) -> {
++            try {
++                internalServiceHolder.getInternalService().onDisable();
++            } catch (Exception ex) {
++                ex.printStackTrace();
++            }
++        });
++        defaultServices.clear();
 +    }
 +
 +
@@ -351,5 +379,5 @@ index 000000000..031e83266
 +    }
 +}
 -- 
-2.15.1
+2.16.1
 
