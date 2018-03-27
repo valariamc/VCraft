@@ -37,6 +37,7 @@ function import {
 
 import CommandEnchant
 import GameRules
+import EntityMinecartHopper
 import MobEffect
 
 cd "$workdir/Paper/PaperSpigot-Server/"
