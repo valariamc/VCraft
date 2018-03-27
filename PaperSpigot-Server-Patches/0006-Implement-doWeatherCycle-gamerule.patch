@@ -1,4 +1,4 @@
-From 58f8fee6190512178a6ace613909aa7b593c5250 Mon Sep 17 00:00:00 2001
+From f4a593882af517029e9ac3cf0388eccdf0d7d17d Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sat, 6 Jan 2018 18:35:54 +0000
 Subject: [PATCH] Implement doWeatherCycle gamerule
@@ -41,5 +41,5 @@ index 8f3511f80..fef0fee6a 100644
                  this.o = this.p;
                  if (this.worldData.hasStorm()) {
 -- 
-2.15.1
+2.16.2
 

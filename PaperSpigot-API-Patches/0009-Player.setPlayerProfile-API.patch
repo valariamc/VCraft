@@ -1,0 +1,73 @@
+From 277704ec01265cfbc0ddc58fb1a37c8cb7622276 Mon Sep 17 00:00:00 2001
+From: Aikar <aikar@aikar.co>
+Date: Sun, 18 Mar 2018 12:28:55 -0400
+Subject: [PATCH] Player.setPlayerProfile API
+
+This can be useful for changing name or skins after a player has logged in.
+
+diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
+index d02fe560..5ad4822b 100644
+--- a/src/main/java/org/bukkit/entity/Player.java
++++ b/src/main/java/org/bukkit/entity/Player.java
+@@ -2,6 +2,7 @@ package org.bukkit.entity;
+ 
+ import java.net.InetSocketAddress;
+ 
++import com.destroystokyo.paper.profile.PlayerProfile;
+ import org.bukkit.Achievement;
+ import org.bukkit.ChatColor;
+ import org.bukkit.Effect;
+@@ -453,6 +454,21 @@ public interface Player extends HumanEntity, Conversable, CommandSender, Offline
+      * Hide any title that is currently visible to the player
+      */
+     public void hideTitle();
++
++    // Alphheim start
++    /**
++     * Gets a copy of this players profile
++     * @return The players profile object
++     */
++    PlayerProfile getPlayerProfile();
++
++    /**
++     * Changes the PlayerProfile for this player. This will cause this player
++     * to be reregistered to all clients that can currently see this player
++     * @param profile The new profile to use
++     */
++    void setPlayerProfile(PlayerProfile profile);
++    // Alphheim end
+     // Paper end
+ 
+     /**
+diff --git a/src/main/java/org/bukkit/inventory/meta/SkullMeta.java b/src/main/java/org/bukkit/inventory/meta/SkullMeta.java
+index 6c36e2f0..6151d9c8 100644
+--- a/src/main/java/org/bukkit/inventory/meta/SkullMeta.java
++++ b/src/main/java/org/bukkit/inventory/meta/SkullMeta.java
+@@ -50,24 +50,5 @@ public interface SkullMeta extends ItemMeta {
+     @Nullable PlayerProfile getPlayerProfile();
+     // Paper end
+ 
+-    /**
+-     * Gets the owner of the skull.
+-     *
+-     * @return the owner if the skull
+-     */
+-    OfflinePlayer getOwningPlayer();
+-
+-    /**
+-     * Sets the owner of the skull.
+-     * <p>
+-     * Plugins should check that hasOwner() returns true before calling this
+-     * plugin.
+-     *
+-     * @param owner the new owner of the skull
+-     * @return true if the owner was successfully set
+-     */
+-    boolean setOwningPlayer(OfflinePlayer owner);
+-
+-
+     SkullMeta clone();
+ }
+-- 
+2.16.2
+

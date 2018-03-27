@@ -1,4 +1,4 @@
-From e6dfe028a7026ed5e73674237bc1ea6369f99ff8 Mon Sep 17 00:00:00 2001
+From 36de03e5bc4ef54718e106116582b92b363f7bc7 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sat, 6 Jan 2018 14:44:38 +0000
 Subject: [PATCH] Don't tick 'unlimited' potion effects
@@ -18,5 +18,5 @@ index c9f433f83..64c85dd55 100644
  
      public void b(EntityLiving entityliving) {
 -- 
-2.15.1
+2.16.2
 

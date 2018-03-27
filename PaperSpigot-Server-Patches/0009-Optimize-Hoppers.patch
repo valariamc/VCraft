@@ -1,4 +1,4 @@
-From 7dc3feed8916d0440b1c9537e8d59fb6e60cce9e Mon Sep 17 00:00:00 2001
+From 173d69732c7bb698da01873d60cb67caf20313f7 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Wed, 27 Apr 2016 22:09:52 -0400
 Subject: [PATCH] Optimize Hoppers
