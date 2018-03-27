@@ -1,4 +1,4 @@
-From 31e0f7fd18c03b247fed725dae8ad4a42cad352b Mon Sep 17 00:00:00 2001
+From 7dc3feed8916d0440b1c9537e8d59fb6e60cce9e Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Wed, 27 Apr 2016 22:09:52 -0400
 Subject: [PATCH] Optimize Hoppers
@@ -79,7 +79,7 @@ index f68b132fb..0f89a410f 100644
  
              this.h = iblockdata.getBlock().toLegacyData(iblockdata);
 diff --git a/src/main/java/net/minecraft/server/TileEntityHopper.java b/src/main/java/net/minecraft/server/TileEntityHopper.java
-index 760a0767e..6072360d7 100644
+index 760a0767e..e7caab2a5 100644
 --- a/src/main/java/net/minecraft/server/TileEntityHopper.java
 +++ b/src/main/java/net/minecraft/server/TileEntityHopper.java
 @@ -16,7 +16,7 @@ public class TileEntityHopper extends TileEntityContainer implements IHopper, IU
@@ -248,6 +248,25 @@ index 760a0767e..6072360d7 100644
      private boolean r() {
          IInventory iinventory = this.H();
  
+@@ -356,6 +506,8 @@ public class TileEntityHopper extends TileEntityContainer implements IHopper, IU
+                 return false;
+             }
+ 
++            skipPullModeEventFire = skipHopperEvents; // Alphheim - Paper
++
+             if (iinventory instanceof IWorldInventory) {
+                 IWorldInventory iworldinventory = (IWorldInventory) iinventory;
+                 int[] aint = iworldinventory.getSlotsForFace(enumdirection);
+@@ -504,7 +656,9 @@ public class TileEntityHopper extends TileEntityContainer implements IHopper, IU
+             boolean flag = false;
+ 
+             if (itemstack1 == null) {
++                IGNORE_TILE_UPDATES = true; // Alphheim - Paper
+                 iinventory.setItem(i, itemstack);
++                IGNORE_TILE_UPDATES = false; // Alphheim - Paper
+                 itemstack = null;
+                 flag = true;
+             } else if (a(itemstack1, itemstack)) {
 diff --git a/src/main/java/org/github/paperspigot/PaperSpigotWorldConfig.java b/src/main/java/org/github/paperspigot/PaperSpigotWorldConfig.java
 index 67e56df01..2d82aec7e 100644
 --- a/src/main/java/org/github/paperspigot/PaperSpigotWorldConfig.java
