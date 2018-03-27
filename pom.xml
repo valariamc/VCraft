@@ -44,12 +44,12 @@
 
     <distributionManagement>
         <repository>
-            <id>destroystokyo-releases</id>
-            <url>https://repo.destroystokyo.com/repository/maven-releases/</url>
+            <id>valaria-deployment</id>
+            <url>https://repo.valaria.pw/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>destroystokyo-snapshots</id>
-            <url>https://repo.destroystokyo.com/repository/maven-snapshots/</url>
+            <id>valaria-deployment</id>
+            <url>https://repo.valaria.pw/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 </project>

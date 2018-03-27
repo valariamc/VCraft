@@ -1,11 +1,11 @@
-From 070c7c2e29b1f96844a0040f715a1f551e6794ef Mon Sep 17 00:00:00 2001
+From f4d3da95bc036d01a3aefb5b5c8faa0d060be35b Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
 
 
 diff --git a/pom.xml b/pom.xml
-index fe9d6d26..463ab829 100644
+index fe9d6d26..6c7947ab 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -4,17 +4,17 @@
@@ -30,6 +30,23 @@ index fe9d6d26..463ab829 100644
 +    <name>Alphheim-API</name>
      <url>https://hub.spigotmc.org/stash/projects/PAPER/</url>
      <description>An enhanced plugin API for Minecraft servers.</description>
+ 
+@@ -29,12 +29,12 @@
+     <!-- just until we get deployment to central approved -->
+     <distributionManagement>
+         <repository>
+-            <id>destroystokyo-releases</id>
+-            <url>https://repo.destroystokyo.com/content/repositories/releases/</url>
++            <id>valaria-deployment</id>
++            <url>https://repo.valaria.pw/repository/maven-releases/</url>
+         </repository>
+         <snapshotRepository>
+-            <id>destroystokyo-snapshots</id>
+-            <url>https://repo.destroystokyo.com/content/repositories/snapshots/</url>
++            <id>valaria-deployment</id>
++            <url>https://repo.valaria.pw/repository/maven-snapshots/</url>
+         </snapshotRepository>
+     </distributionManagement>
  
 @@ -54,6 +54,19 @@
              <!-- Trove Provided by CraftBukkit -->
