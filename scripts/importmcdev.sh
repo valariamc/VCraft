@@ -39,6 +39,7 @@ import CommandEnchant
 import GameRules
 import EntityMinecartHopper
 import MobEffect
+import RemoteControlListener
 
 cd "$workdir/Paper/PaperSpigot-Server/"
 rm -rf nms-patches applyPatches.sh makePatches.sh >/dev/null 2>&1
