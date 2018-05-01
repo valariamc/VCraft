@@ -1,11 +1,11 @@
-From c693e299931f9722cc2137bc03bbeeb1e388cdbe Mon Sep 17 00:00:00 2001
+From 336f48b5ff73a67fd826cd85c820f4ebda625020 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
 
 
 diff --git a/pom.xml b/pom.xml
-index 6aaba5027..245b1a684 100644
+index 6aaba502..07744660 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -14,7 +14,7 @@ index 6aaba5027..245b1a684 100644
      <modelVersion>4.0.0</modelVersion>
 -    <groupId>org.github.paperspigot</groupId>
 -    <artifactId>paperspigot</artifactId>
-+    <groupId>pw.alphheim</groupId>
++    <groupId>im.alphhe</groupId>
 +    <artifactId>alphheimcraft</artifactId>
      <packaging>jar</packaging>
      <version>1.8.8-R0.1-SNAPSHOT</version>
@@ -29,7 +29,7 @@ index 6aaba5027..245b1a684 100644
      <parent>
 -        <groupId>org.github.paperspigot</groupId>
 -        <artifactId>paperspigot-parent</artifactId>
-+        <groupId>pw.alphheim</groupId>
++        <groupId>im.alphhe</groupId>
 +       <artifactId>alphheimcraft-parent</artifactId>
          <version>dev-SNAPSHOT</version>
          <relativePath>../pom.xml</relativePath>
@@ -40,7 +40,7 @@ index 6aaba5027..245b1a684 100644
          <dependency>
 -            <groupId>org.github.paperspigot</groupId>
 -            <artifactId>paperspigot-api</artifactId>
-+            <groupId>pw.alphheim</groupId>
++            <groupId>im.alphhe</groupId>
 +            <artifactId>alphheimcraft-api</artifactId>
              <version>${project.version}</version>
              <type>jar</type>
@@ -84,7 +84,7 @@ index 6aaba5027..245b1a684 100644
              <plugin>
                  <groupId>org.apache.maven.plugins</groupId>
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index b400ce04d..180ba00d2 100644
+index b400ce04..180ba00d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1084,7 +1084,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
@@ -96,6 +96,19 @@ index b400ce04d..180ba00d2 100644
      }
  
      public CrashReport b(CrashReport crashreport) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+index 3a4b1424..1dc6d26e 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+@@ -11,7 +11,7 @@ public final class Versioning {
+     public static String getBukkitVersion() {
+         String result = "Unknown-Version";
+ 
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.github.paperspigot/paperspigot-api/pom.properties");
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/im.alphhe/alphheimcraft-api/pom.properties");
+         Properties properties = new Properties();
+ 
+         if (stream != null) {
 -- 
-2.15.1
+2.17.0
 

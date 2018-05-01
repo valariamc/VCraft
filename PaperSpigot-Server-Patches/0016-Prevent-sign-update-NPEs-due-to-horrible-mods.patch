@@ -1,4 +1,4 @@
-From f99539ba8e745d51b51a07eec4b45acad3ce498e Mon Sep 17 00:00:00 2001
+From 94645dc9fab587a1257e81cab328eb59025a63b1 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Thu, 26 Apr 2018 11:51:10 +0100
 Subject: [PATCH] Prevent sign update NPEs due to horrible mods

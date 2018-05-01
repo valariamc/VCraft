@@ -9,7 +9,7 @@
         <version>7</version>
     </parent>
 
-    <groupId>pw.alphheim</groupId>
+    <groupId>im.alphhe</groupId>
     <artifactId>alphheimcraft-parent</artifactId>
     <version>dev-SNAPSHOT</version>
     <packaging>pom</packaging>

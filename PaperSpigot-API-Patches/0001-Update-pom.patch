@@ -1,11 +1,11 @@
-From f4d3da95bc036d01a3aefb5b5c8faa0d060be35b Mon Sep 17 00:00:00 2001
+From 74173955aa6ba14db7c8badcb416b00deaf16152 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
 
 
 diff --git a/pom.xml b/pom.xml
-index fe9d6d26..6c7947ab 100644
+index fe9d6d26..675e562b 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -4,17 +4,17 @@
@@ -14,14 +14,14 @@ index fe9d6d26..6c7947ab 100644
      <parent>
 -        <groupId>org.github.paperspigot</groupId>
 -        <artifactId>paperspigot-parent</artifactId>
-+        <groupId>pw.alphheim</groupId>
++        <groupId>im.alphhe</groupId>
 +        <artifactId>alphheimcraft-parent</artifactId>
          <version>dev-SNAPSHOT</version>
      </parent>
  
 -    <groupId>org.github.paperspigot</groupId>
 -    <artifactId>paperspigot-api</artifactId>
-+    <groupId>pw.alphheim</groupId>
++    <groupId>im.alphhe</groupId>
 +    <artifactId>alphheimcraft-api</artifactId>
      <version>1.8.8-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>
@@ -68,6 +68,136 @@ index fe9d6d26..6c7947ab 100644
          <dependency>
              <groupId>commons-lang</groupId>
              <artifactId>commons-lang</artifactId>
+diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
+index e91e1d8c..19596bc2 100644
+--- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
++++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
+@@ -1,6 +1,9 @@
+ package org.bukkit.command.defaults;
+ 
+ import com.google.common.base.Charsets;
++
++import java.io.InputStreamReader;
++import java.net.HttpURLConnection;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.List;
+@@ -185,8 +188,25 @@ public class VersionCommand extends BukkitCommand {
+     private void obtainVersion() {
+         String version = Bukkit.getVersion();
+         if (version == null) version = "Custom";
++        // Alphheim start
++        if (version.startsWith("git-AlphheimCraft-")) {
++            // Alphheim end
++            String[] parts = version.substring("git-AlphheimCraft-".length()).split("[-\\s]");
++            int paperSpigotVersions = getDistance("paperspigot", parts[0]);
++            if (paperSpigotVersions == -1) {
++                setVersionMessage("Error obtaining version information");
++            } else {
++                if (paperSpigotVersions == 0) {
++                    setVersionMessage("You are running the latest version");
++                } else {
++                    setVersionMessage("You are " + paperSpigotVersions + " version(s) behind");
++                }
++            }
++        }
++
+         // PaperSpigot start
+         if (version.startsWith("git-PaperSpigot-")) {
++            // Alphheim end
+             String[] parts = version.substring("git-PaperSpigot-".length()).split("[-\\s]");
+             int paperSpigotVersions = getDistance("paperspigot", parts[0]);
+             if (paperSpigotVersions == -1) {
+@@ -246,21 +266,45 @@ public class VersionCommand extends BukkitCommand {
+         }
+     }
+ 
+-    private static int getDistance(String repo, String currentVerInt) { // PaperSpigot
++    // Alphheim start - "borrowed" version code from Paper
++    // Paper start
++    private static int getDistance(String repo, String verInfo) {
+         try {
++            int currentVer = Integer.decode(verInfo);
++            return getFromJenkins(currentVer);
++        } catch (NumberFormatException ex) {
++            verInfo = verInfo.replace("\"", "");
++            return getFromRepo("Alphheim/AlphheimCraft", verInfo);
++        }
++            /*
+             BufferedReader reader = Resources.asCharSource(
+-                    new URL("https://ci.destroystokyo.com/job/PaperSpigot/lastSuccessfulBuild/buildNumber"), // PaperSpigot
++                    new URL("https://hub.spigotmc.org/stash/rest/api/1.0/projects/SPIGOT/repos/" + repo + "/commits?since=" + URLEncoder.encode(hash, "UTF-8") + "&withCounts=true"),
++                    Charsets.UTF_8
++            ).openBufferedStream();
++            try {
++                JSONObject obj = (JSONObject) new JSONParser().parse(reader);
++                return ((Number) obj.get("totalCount")).intValue();
++            } catch (ParseException ex) {
++                ex.printStackTrace();
++                return -1;
++            } finally {
++                reader.close();
++            }
++            */
++    }
++
++    private static int getFromJenkins(int currentVer) {
++        try {
++            BufferedReader reader = Resources.asCharSource(
++                    new URL("https://atlas.valaria.pw/jenkins/job/Alphheim/lastSuccessfulBuild/buildNumber"), // Alphheim
+                     Charsets.UTF_8
+             ).openBufferedStream();
+             try {
+-                // PaperSpigot start
+                 int newVer = Integer.decode(reader.readLine());
+-                int currentVer = Integer.decode(currentVerInt);
+                 return newVer - currentVer;
+             } catch (NumberFormatException ex) {
+-                //ex.printStackTrace();
+-                // PaperSpigot end
+-                return -1;
++                ex.printStackTrace();
++                return -2;
+             } finally {
+                 reader.close();
+             }
+@@ -269,4 +313,36 @@ public class VersionCommand extends BukkitCommand {
+             return -1;
+         }
+     }
++
++    // Contributed by Techcable <Techcable@outlook.com> in GH PR #65
++    private static final String BRANCH = "master";
++    private static int getFromRepo(String repo, String hash) {
++        try {
++            HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + BRANCH + "..." + hash).openConnection();
++            connection.connect();
++            if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) return -2; // Unknown commit
++            try (
++                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), Charsets.UTF_8))
++            ) {
++                JSONObject obj = (JSONObject) new JSONParser().parse(reader);
++                String status = (String) obj.get("status");
++                switch (status) {
++                    case "identical":
++                        return 0;
++                    case "behind":
++                        return ((Number) obj.get("behind_by")).intValue();
++                    default:
++                        return -1;
++                }
++            } catch (ParseException | NumberFormatException e) {
++                e.printStackTrace();
++                return -1;
++            }
++        } catch (IOException e) {
++            e.printStackTrace();
++            return -1;
++        }
++    }
++    // Paper end // Alphheim End
++
+ }
 -- 
-2.16.2
+2.17.0
 

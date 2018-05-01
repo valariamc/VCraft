@@ -1,4 +1,4 @@
-From 1117ebee61c15165e1d94952c1219696f1830cc5 Mon Sep 17 00:00:00 2001
+From f698f1a800c9d1c7918fc9cdd98924063c6fdb41 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Fri, 27 Apr 2018 11:38:55 +0100
 Subject: [PATCH] Support setting the rcon host
