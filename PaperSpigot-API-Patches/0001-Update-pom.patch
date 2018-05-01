@@ -1,4 +1,4 @@
-From 74173955aa6ba14db7c8badcb416b00deaf16152 Mon Sep 17 00:00:00 2001
+From 3393fb2a38b4f4b288629cee451415672d5a5f09 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
@@ -69,7 +69,7 @@ index fe9d6d26..675e562b 100644
              <groupId>commons-lang</groupId>
              <artifactId>commons-lang</artifactId>
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-index e91e1d8c..19596bc2 100644
+index e91e1d8c..54a93f37 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 @@ -1,6 +1,9 @@
@@ -167,7 +167,7 @@ index e91e1d8c..19596bc2 100644
      }
 +
 +    // Contributed by Techcable <Techcable@outlook.com> in GH PR #65
-+    private static final String BRANCH = "master";
++    private static final String BRANCH = "ver/1.8.8-ah";
 +    private static int getFromRepo(String repo, String hash) {
 +        try {
 +            HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + BRANCH + "..." + hash).openConnection();
