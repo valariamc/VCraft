@@ -1,4 +1,4 @@
-From 3393fb2a38b4f4b288629cee451415672d5a5f09 Mon Sep 17 00:00:00 2001
+From 7c309f4493e31da417a1ba54ee04de48eae61e6b Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
@@ -69,7 +69,7 @@ index fe9d6d26..675e562b 100644
              <groupId>commons-lang</groupId>
              <artifactId>commons-lang</artifactId>
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-index e91e1d8c..54a93f37 100644
+index e91e1d8c..3eb0f673 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 @@ -1,6 +1,9 @@
@@ -100,7 +100,7 @@ index e91e1d8c..54a93f37 100644
 +                    setVersionMessage("You are " + paperSpigotVersions + " version(s) behind");
 +                }
 +            }
-+        }
++        } else
 +
          // PaperSpigot start
          if (version.startsWith("git-PaperSpigot-")) {
@@ -116,7 +116,7 @@ index e91e1d8c..54a93f37 100644
 +    // Alphheim start - "borrowed" version code from Paper
 +    // Paper start
 +    private static int getDistance(String repo, String verInfo) {
-         try {
++        try {
 +            int currentVer = Integer.decode(verInfo);
 +            return getFromJenkins(currentVer);
 +        } catch (NumberFormatException ex) {
@@ -124,8 +124,7 @@ index e91e1d8c..54a93f37 100644
 +            return getFromRepo("Alphheim/AlphheimCraft", verInfo);
 +        }
 +            /*
-             BufferedReader reader = Resources.asCharSource(
--                    new URL("https://ci.destroystokyo.com/job/PaperSpigot/lastSuccessfulBuild/buildNumber"), // PaperSpigot
++            BufferedReader reader = Resources.asCharSource(
 +                    new URL("https://hub.spigotmc.org/stash/rest/api/1.0/projects/SPIGOT/repos/" + repo + "/commits?since=" + URLEncoder.encode(hash, "UTF-8") + "&withCounts=true"),
 +                    Charsets.UTF_8
 +            ).openBufferedStream();
@@ -142,8 +141,9 @@ index e91e1d8c..54a93f37 100644
 +    }
 +
 +    private static int getFromJenkins(int currentVer) {
-+        try {
-+            BufferedReader reader = Resources.asCharSource(
+         try {
+             BufferedReader reader = Resources.asCharSource(
+-                    new URL("https://ci.destroystokyo.com/job/PaperSpigot/lastSuccessfulBuild/buildNumber"), // PaperSpigot
 +                    new URL("https://atlas.valaria.pw/jenkins/job/Alphheim/lastSuccessfulBuild/buildNumber"), // Alphheim
                      Charsets.UTF_8
              ).openBufferedStream();
