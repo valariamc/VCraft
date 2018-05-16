@@ -1,0 +1,28 @@
+From 5cf7a4d3a64bd43f08a38cb1236ca6768de1f93e Mon Sep 17 00:00:00 2001
+From: Shane Freeder <theboyetronic@gmail.com>
+Date: Wed, 16 May 2018 21:48:55 +0100
+Subject: [PATCH] backport PlayerInventory#getItemInMainHand
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
+index dba8d5ba..75bd977b 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryPlayer.java
+@@ -26,6 +26,14 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
+         return super.getSize() - 4;
+     }
+ 
++    // Alphheim start - backport getItemInMainHand
++    @Override
++    public ItemStack getItemInMainHand() {
++        return getItemInHand();
++    }
++
++    // Alphheim end - backport getItemInMainHand
++
+     public ItemStack getItemInHand() {
+         return CraftItemStack.asCraftMirror(getInventory().getItemInHand());
+     }
+-- 
+2.17.0
+
