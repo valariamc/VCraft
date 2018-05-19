@@ -1,0 +1,59 @@
+From 0405e86258be15f6968ad889d7a33cf99e3ab8eb Mon Sep 17 00:00:00 2001
+From: Shane Freeder <theboyetronic@gmail.com>
+Date: Sat, 19 May 2018 01:38:49 +0100
+Subject: [PATCH] Add EffectRemovalNotification
+
+
+diff --git a/src/main/java/pw/alphheim/api/events/EffectRemovalNotification.java b/src/main/java/pw/alphheim/api/events/EffectRemovalNotification.java
+new file mode 100644
+index 00000000..c892fa3c
+--- /dev/null
++++ b/src/main/java/pw/alphheim/api/events/EffectRemovalNotification.java
+@@ -0,0 +1,44 @@
++package pw.alphheim.api.events;
++
++import org.bukkit.entity.Entity;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.bukkit.potion.PotionEffect;
++
++/**
++ * Used to notify that a potion effect is being removed from a player.
++ * it is *not* safe to modify potion effects on the player at this point.
++ */
++public class EffectRemovalNotification extends Event {
++    private static final HandlerList handlers = new HandlerList();
++    private Entity bukkitEntity;
++    private PotionEffect potionEffect;
++
++    public EffectRemovalNotification(Entity bukkitEntity, PotionEffect potionEffect) {
++        this.bukkitEntity = bukkitEntity;
++        this.potionEffect = potionEffect;
++    }
++
++    /**
++     * @return the potion effect being removed
++     */
++    public PotionEffect getPotionEffect() {
++        return potionEffect;
++    }
++
++    /**
++     * @return the affected entity
++     */
++    public Entity getEntity() {
++        return bukkitEntity;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+-- 
+2.17.0
+
