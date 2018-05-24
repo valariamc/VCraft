@@ -1,4 +1,4 @@
-From a500a88ea48e33e67d2bea22fc5b1f8aebb0a944 Mon Sep 17 00:00:00 2001
+From 1a35cacf1605f10cd5a6751d147a06d8c5a66195 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Fri, 11 May 2018 01:46:36 +0100
 Subject: [PATCH] remove several stupid deprecation warnings
@@ -17,10 +17,16 @@ index b71a7244..5b60fb8a 100644
          return server.getOfflinePlayer(name);
      }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 14a82e73..a472d752 100644
+index 14a82e73..009e9847 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -626,7 +626,6 @@ public interface Server extends PluginMessageRecipient {
+@@ -620,13 +620,10 @@ public interface Server extends PluginMessageRecipient {
+      * This will return an object even if the player does not exist. To this
+      * method, all players will exist.
+      *
+-     * @deprecated Persistent storage of users should be by UUID as names are no longer
+-     *             unique past a single session.
+      * @param name the name the player to retrieve
       * @return an offline player
       * @see #getOfflinePlayer(java.util.UUID)
       */
