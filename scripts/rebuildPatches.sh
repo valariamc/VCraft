@@ -1,62 +1,44 @@
-#!/usr/bin/env bash
+#!/bin/bash
+# get base dir regardless of execution location
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+	DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+	SOURCE="$(readlink "$SOURCE")"
+	[[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+. $(dirname $SOURCE)/init.sh
 
-(
 PS1="$"
-basedir="$(cd "$1" && pwd -P)"
-workdir="$basedir/work"
 echo "Rebuilding patch files from current fork state..."
-git config core.safecrlf false
-
-function cleanupPatches {
-    cd "$1"
-    for patch in *.patch; do
-        echo "$patch"
-        gitver=$(tail -n 2 "$patch" | grep -ve "^$" | tail -n 1)
-        diffs=$(git diff --staged "$patch" | grep -E "^(\+|\-)" | grep -Ev "(From [a-z0-9]{32,}|\-\-\- a|\+\+\+ b|.index)")
-
-        testver=$(echo "$diffs" | tail -n 2 | grep -ve "^$" | tail -n 1 | grep "$gitver")
-        if [ "x$testver" != "x" ]; then
-            diffs=$(echo "$diffs" | sed 'N;$!P;$!D;$d')
-        fi
-
-        if [ "x$diffs" == "x" ] ; then
-            git reset HEAD "$patch" >/dev/null
-            git checkout -- "$patch" >/dev/null
-        fi
-    done
-}
-
 function savePatches {
-    what=$1
-    what_name=$(basename "$what")
-    target=$2
-    echo "Formatting patches for $what..."
+	what=$1
+	cd $basedir/$what/
 
-    cd "$basedir/${what_name}-Patches/"
-    if [ -d "$basedir/$target/.git/rebase-apply" ]; then
-        # in middle of a rebase, be smarter
-        echo "REBASE DETECTED - PARTIAL SAVE"
-        last=$(cat "$basedir/$target/.git/rebase-apply/last")
-        next=$(cat "$basedir/$target/.git/rebase-apply/next")
-        for i in $(seq -f "%04g" 1 1 $last)
-        do
-            if [ $i -lt $next ]; then
-                rm ${i}-*.patch
-            fi
-        done
-    else
-        rm -rf *.patch
-    fi
+	mkdir -p $basedir/patches/$2
+	if [ -d ".git/rebase-apply" ]; then
+		# in middle of a rebase, be smarter
+		echo "REBASE DETECTED - PARTIAL SAVE"
+		last=$(cat ".git/rebase-apply/last")
+		next=$(cat ".git/rebase-apply/next")
+		declare -a files=("$basedir/patches/$2/"*.patch)
+		for i in $(seq -f "%04g" 1 1 $last)
+		do
+			if [ $i -lt $next ]; then
+				rm "${files[`expr $i - 1`]}"
+			fi
+		done
+	else
+		rm $basedir/patches/$2/*.patch
+	fi
 
-    cd "$basedir/$target"
-
-    git format-patch --no-stat -N -o "$basedir/${what_name}-Patches/" upstream/upstream >/dev/null
-    cd "$basedir"
-    git add -A "$basedir/${what_name}-Patches"
-    cleanupPatches "$basedir/${what_name}-Patches"
-    echo "  Patches saved for $what to $what_name-Patches/"
+	git format-patch --quiet -N -o $basedir/patches/$2 upstream/upstream
+	cd $basedir
+	git add -A $basedir/patches/$2
+	cleanupPatches $basedir/patches/$2/
+	echo "  Patches saved for $what to patches/$2"
 }
 
-savePatches "$workdir/Paper/PaperSpigot-API" "AlphheimCraft-API"
-savePatches "$workdir/Paper/PaperSpigot-Server" "AlphheimCraft-Server"
-)
+savePatches ${FORK_NAME}-API api
+savePatches ${FORK_NAME}-Server server
+
+$basedir/scripts/push.sh

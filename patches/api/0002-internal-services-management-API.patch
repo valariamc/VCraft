@@ -1,0 +1,188 @@
+From 7f5679ffbb63babf897efd737dea0b49269242b4 Mon Sep 17 00:00:00 2001
+From: Shane Freeder <theboyetronic@gmail.com>
+Date: Sun, 17 Dec 2017 08:13:55 +0000
+Subject: [PATCH] internal services management API
+
+---
+ src/main/java/org/bukkit/Bukkit.java          | 12 ++++++
+ src/main/java/org/bukkit/Server.java          |  4 ++
+ .../bukkit/plugin/SimplePluginManager.java    |  9 ++++
+ .../java/pw/alphheim/api/services/Chat.java   |  8 ++++
+ .../api/services/InternalService.java         |  6 +++
+ .../api/services/InternalServiceHolder.java   | 41 +++++++++++++++++++
+ .../api/services/InternalServicesManager.java | 19 +++++++++
+ 7 files changed, 99 insertions(+)
+ create mode 100644 src/main/java/pw/alphheim/api/services/Chat.java
+ create mode 100644 src/main/java/pw/alphheim/api/services/InternalService.java
+ create mode 100644 src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
+ create mode 100644 src/main/java/pw/alphheim/api/services/InternalServicesManager.java
+
+diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
+index 8fbc8283..f5671eea 100644
+--- a/src/main/java/org/bukkit/Bukkit.java
++++ b/src/main/java/org/bukkit/Bukkit.java
+@@ -42,6 +42,8 @@ import org.bukkit.generator.ChunkGenerator;
+ 
+ import org.bukkit.inventory.ItemFactory;
+ import org.bukkit.inventory.meta.ItemMeta;
++import pw.alphheim.api.services.InternalService;
++import pw.alphheim.api.services.InternalServicesManager;
+ 
+ /**
+  * Represents the Bukkit core, for version and Server singleton handling
+@@ -1166,4 +1168,14 @@ public final class Bukkit {
+     {
+         return server.spigot();
+     }
++
++    // Alphheim start
++
++    /**
++     * @return the internal services manager
++     */
++    public static InternalServicesManager getInternalServices() {
++        return server.getInternalServices();
++    }
++    // Alphheim end
+ }
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index 1b62463a..a632bf19 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -43,6 +43,7 @@ import org.bukkit.generator.ChunkGenerator;
+ 
+ import org.bukkit.inventory.ItemFactory;
+ import org.bukkit.inventory.meta.ItemMeta;
++import pw.alphheim.api.services.InternalServicesManager;
+ 
+ /**
+  * Represents a server implementation.
+@@ -1007,4 +1008,7 @@ public interface Server extends PluginMessageRecipient {
+     }
+ 
+     Spigot spigot();
++
++    InternalServicesManager getInternalServices(); // Alphheim
++
+ }
+diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
+index ce9839ec..8021105d 100644
+--- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
++++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
+@@ -444,6 +444,15 @@ public final class SimplePluginManager implements PluginManager {
+                         + plugin.getDescription().getFullName() + " (Is it up to date?)", ex, plugin); // Paper
+             }
+ 
++            // Alphheim start - internal services
++            try {
++                server.getInternalServices().unregisterServices(plugin);
++            } catch (Throwable ex) {
++                handlePluginException("Error occurred (in the plugin loader) while unregistering internal services for "
++                        + plugin.getDescription().getFullName() + " (Is it up to date?)", ex, plugin); // Paper
++            }
++            // Alphheim stop
++
+             try {
+                 HandlerList.unregisterAll(plugin);
+             } catch (Throwable ex) {
+diff --git a/src/main/java/pw/alphheim/api/services/Chat.java b/src/main/java/pw/alphheim/api/services/Chat.java
+new file mode 100644
+index 00000000..9bf27d5c
+--- /dev/null
++++ b/src/main/java/pw/alphheim/api/services/Chat.java
+@@ -0,0 +1,8 @@
++package pw.alphheim.api.services;
++
++import org.bukkit.entity.Player;
++
++public interface Chat extends InternalService {
++
++    void process(Player sender, String message);
++}
+diff --git a/src/main/java/pw/alphheim/api/services/InternalService.java b/src/main/java/pw/alphheim/api/services/InternalService.java
+new file mode 100644
+index 00000000..eb15d53e
+--- /dev/null
++++ b/src/main/java/pw/alphheim/api/services/InternalService.java
+@@ -0,0 +1,6 @@
++package pw.alphheim.api.services;
++
++public interface InternalService {
++
++    default void onDisable(){};
++}
+diff --git a/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
+new file mode 100644
+index 00000000..85159322
+--- /dev/null
++++ b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
+@@ -0,0 +1,41 @@
++package pw.alphheim.api.services;
++
++import javax.annotation.Nullable;
++import org.bukkit.plugin.Plugin;
++
++public class InternalServiceHolder<T extends InternalService> {
++
++    private T internalService;
++    private Plugin plugin;
++
++    public InternalServiceHolder(T internalService) {
++        this(internalService, null);
++    }
++
++    public InternalServiceHolder(T internalService, Plugin plugin) {
++        this.internalService = internalService;
++        this.plugin = plugin;
++    }
++
++    public T getInternalService() {
++        return internalService;
++    }
++
++    @Nullable
++    public Plugin getPlugin() {
++        return plugin;
++    }
++
++    @Override
++    public boolean equals(Object obj) {
++        return this == obj || (obj instanceof InternalServiceHolder && ((InternalServiceHolder) obj).internalService == this.internalService);
++    }
++
++    @Override
++    public String toString() {
++        return "InternalServiceHolder{" +
++                "internalService=" + internalService.getClass().getName() +
++                ", plugin=" + plugin +
++                '}';
++    }
++}
+diff --git a/src/main/java/pw/alphheim/api/services/InternalServicesManager.java b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
+new file mode 100644
+index 00000000..b042e634
+--- /dev/null
++++ b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
+@@ -0,0 +1,19 @@
++package pw.alphheim.api.services;
++
++import org.bukkit.plugin.Plugin;
++
++public interface InternalServicesManager {
++    <T extends InternalService> void registerDefaultService(Class<T> serviceType, T service);
++
++
++    <T extends InternalService> boolean registerService(Class<T> serviceType, T service, Plugin owningPlugin);
++
++    <T extends InternalService> boolean registerService(Class<T> serviceType, T service, Plugin owningPlugin, boolean force);
++
++    <T extends InternalService> T getService(Class<T> serviceType);
++
++    <T extends InternalService> T unregisterService(Class<T> serviceType, T service);
++
++    boolean unregisterServices(Plugin owningPlugin);
++
++}
+-- 
+2.17.1
+

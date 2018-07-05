@@ -1,52 +1,62 @@
-#!/usr/bin/env bash
+#!/bin/bash
+sourceBase=$(dirname $SOURCE)/../
+cd ${basedir:-$sourceBase}
 
-(
-set -e
-PS1="$"
-basedir="$(cd "$1" && pwd -P)"
-workdir="$basedir/work"
-minecraftversion=$(cat "$workdir/BuildData/info.json"  | grep minecraftVersion | cut -d '"' -f 4)
-decompiledir="$workdir/Minecraft/$minecraftversion"
-nms="$decompiledir/net/minecraft/server"
-cb="src/main/java/net/minecraft/server"
-gpgsign="$(git config commit.gpgsign || echo "false")"
+basedir=$(pwd -P)
+cd -
 
+FORK_NAME="AlphheimCraft"
+API_REPO="https://electronicboy@atlas.valaria.pw/stash/scm/al/alphheimcraft-api.git"
+SERVER_REPO="https://electronicboy@atlas.valaria.pw/stash/scm/al/alphheimcraft-server.git"
+PAPER_API_REPO="https://electronicboy@atlas.valaria.pw/stash/scm/al/paper-api.git"
+PAPER_SERVER_REPO="https://electronicboy@atlas.valaria.pw/stash/scm/al/paper-server.git"
+MCDEV_REPO="https://electronicboy@atlas.valaria.pw/stash/scm/al/mc-dev.git"
 
-patch=$(which patch 2>/dev/null)
-if [ "x$patch" == "x" ]; then
-    patch="$basedir/hctap.exe"
+function bashColor {
+if [ $2 ]; then
+	echo -e "\e[$1;$2m"
+else
+	echo -e "\e[$1m"
 fi
-
-function enableCommitSigningIfNeeded {
-    if [[ "$gpgsign" == "true" ]]; then
-        git config commit.gpgsign true
-    fi
+}
+function bashColorReset {
+	echo -e "\e[m"
 }
 
-echo "Applying CraftBukkit patches to NMS..."
-cd "$workdir/CraftBukkit"
-git checkout -B patched HEAD >/dev/null 2>&1
-rm -rf "$cb"
-mkdir -p "$cb"
-for file in $(ls nms-patches)
-do
-    patchFile="nms-patches/$file"
-    file="$(echo "$file" | cut -d. -f1).java"
+function cleanupPatches {
+	cd "$1"
+	for patch in *.patch; do
+		gitver=$(tail -n 2 $patch | grep -ve "^$" | tail -n 1)
+		diffs=$(git diff --staged $patch | grep -E "^(\+|\-)" | grep -Ev "(From [a-z0-9]{32,}|\-\-\- a|\+\+\+ b|.index|Date\: )")
 
-    echo "Patching $file < $patchFile"
-    set +e
-    sed -i 's/\r//' "$nms/$file" > /dev/null
-    set -e
+		testver=$(echo "$diffs" | tail -n 2 | grep -ve "^$" | tail -n 1 | grep "$gitver")
+		if [ "x$testver" != "x" ]; then
+			diffs=$(echo "$diffs" | tail -n +3)
+		fi
 
-    cp "$nms/$file" "$cb/$file"
-    "$patch" -d src/main/java/ "net/minecraft/server/$file" < "$patchFile"
-done
-
-git add src
-# We don't need to sign an automated commit
-# All it does is make you input your key passphrase mid-patch
-git config commit.gpgsign false
-git commit -m "CraftBukkit $ $(date)" --author="Auto <auto@mated.null>"
-enableCommitSigningIfNeeded
-git checkout -f HEAD^
-)
+		if [ "x$diffs" == "x" ] ; then
+			git reset HEAD $patch >/dev/null
+			git checkout -- $patch >/dev/null
+		fi
+	done
+}
+function pushRepo {
+	if [ "$(git config minecraft.push-${FORK_NAME})" == "1" ]; then
+	echo "Pushing - $1 ($3) to $2"
+	(
+		cd "$1"
+		git remote rm emc-push > /dev/null 2>&1
+		git remote add emc-push $2 >/dev/null 2>&1
+		git push emc-push $3 -f
+	)
+	fi
+}
+function basedir {
+	cd "$basedir"
+}
+function gethead {
+	(
+		cd "$1"
+		git log -1 --oneline
+	)
+}

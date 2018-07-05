@@ -1,0 +1,49 @@
+From 5c346cc4367e159f3426a072bd23f58367ce996f Mon Sep 17 00:00:00 2001
+From: Shane Freeder <theboyetronic@gmail.com>
+Date: Sat, 6 Jan 2018 18:35:54 +0000
+Subject: [PATCH] Implement doWeatherCycle gamerule
+
+---
+ src/main/java/net/minecraft/server/GameRules.java | 1 +
+ src/main/java/net/minecraft/server/World.java     | 6 ++++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/src/main/java/net/minecraft/server/GameRules.java b/src/main/java/net/minecraft/server/GameRules.java
+index 1c89c905..33f91d86 100644
+--- a/src/main/java/net/minecraft/server/GameRules.java
++++ b/src/main/java/net/minecraft/server/GameRules.java
+@@ -24,6 +24,7 @@ public class GameRules {
+         this.a("randomTickSpeed", "3", GameRules.EnumGameRuleType.NUMERICAL_VALUE);
+         this.a("sendCommandFeedback", "true", GameRules.EnumGameRuleType.BOOLEAN_VALUE);
+         this.a("reducedDebugInfo", "false", GameRules.EnumGameRuleType.BOOLEAN_VALUE);
++        this.a("doWeatherCycle", "true", EnumGameRuleType.BOOLEAN_VALUE); // Alphheim
+     }
+ 
+     public void a(String s, String s1, GameRules.EnumGameRuleType gamerules_enumgameruletype) {
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 8f3511f8..fef0fee6 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -2122,6 +2122,11 @@ public abstract class World implements IBlockAccess {
+     protected void p() {
+         if (!this.worldProvider.o()) {
+             if (!this.isClientSide) {
++
++                // Alphheim start
++                boolean hasWeather = getGameRules().getBoolean("doWeatherCycles");
++                if (hasWeather) {
++                // Alphheim end
+                 int i = this.worldData.A();
+ 
+                 if (i > 0) {
+@@ -2170,6 +2175,7 @@ public abstract class World implements IBlockAccess {
+                         this.worldData.setStorm(!this.worldData.hasStorm());
+                     }
+                 }
++                } // Alphheim
+ 
+                 this.o = this.p;
+                 if (this.worldData.hasStorm()) {
+-- 
+2.17.1
+

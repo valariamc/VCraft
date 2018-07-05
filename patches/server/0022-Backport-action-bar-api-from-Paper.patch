@@ -1,0 +1,35 @@
+From 5b82edab4d359289d90ea0d0eb42ac946fcf6545 Mon Sep 17 00:00:00 2001
+From: Shane Freeder <theboyetronic@gmail.com>
+Date: Sat, 16 Jun 2018 20:46:48 +0100
+Subject: [PATCH] Backport action bar api from Paper
+
+---
+ .../org/bukkit/craftbukkit/entity/CraftPlayer.java | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 9e742cdc..578bf12f 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -1627,4 +1627,18 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+         return spigot;
+     }
+     // Spigot end
++
++    // Alphheim start - backport action bar
++    @Override
++    public void sendActionBar(String message) {
++        if (getHandle().playerConnection == null || message == null || message.isEmpty()) return;
++        getHandle().playerConnection.sendPacket(new PacketPlayOutChat(new ChatComponentText(message), (byte) 2)); // GAME_INFO
++    }
++
++    @Override
++    public void sendActionBar(char alternateChar, String message) {
++        if (message == null || message.isEmpty()) return;
++        sendActionBar(org.bukkit.ChatColor.translateAlternateColorCodes(alternateChar, message));
++    }
++    // Alphheim end - backport action bar
+ }
+-- 
+2.17.1
+

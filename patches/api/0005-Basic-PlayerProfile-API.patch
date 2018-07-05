@@ -1,0 +1,579 @@
+From 527ab64c0248923e61b4f0fe853f227049e064c3 Mon Sep 17 00:00:00 2001
+From: Aikar <aikar@aikar.co>
+Date: Mon, 15 Jan 2018 21:46:46 -0500
+Subject: [PATCH] Basic PlayerProfile API
+
+Provides basic elements of a PlayerProfile to be used by future API/events
+---
+ .../event/profile/LookupProfileEvent.java     |  56 +++++++
+ .../event/profile/PreLookupProfileEvent.java  | 155 ++++++++++++++++++
+ .../paper/profile/PlayerProfile.java          | 149 +++++++++++++++++
+ .../paper/profile/ProfileProperty.java        |  72 ++++++++
+ src/main/java/org/bukkit/Bukkit.java          |  36 ++++
+ src/main/java/org/bukkit/Server.java          |  29 ++++
+ 6 files changed, 497 insertions(+)
+ create mode 100644 src/main/java/com/destroystokyo/paper/event/profile/LookupProfileEvent.java
+ create mode 100644 src/main/java/com/destroystokyo/paper/event/profile/PreLookupProfileEvent.java
+ create mode 100644 src/main/java/com/destroystokyo/paper/profile/PlayerProfile.java
+ create mode 100644 src/main/java/com/destroystokyo/paper/profile/ProfileProperty.java
+
+diff --git a/src/main/java/com/destroystokyo/paper/event/profile/LookupProfileEvent.java b/src/main/java/com/destroystokyo/paper/event/profile/LookupProfileEvent.java
+new file mode 100644
+index 00000000..f7a68add
+--- /dev/null
++++ b/src/main/java/com/destroystokyo/paper/event/profile/LookupProfileEvent.java
+@@ -0,0 +1,56 @@
++package com.destroystokyo.paper.event.profile;
++
++import com.destroystokyo.paper.profile.PlayerProfile;
++import com.mojang.authlib.GameProfile;
++
++import org.bukkit.Bukkit;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++
++import javax.annotation.Nonnull;
++
++/**
++ * Allows a plugin to be notified anytime AFTER a Profile has been looked up from the Mojang API
++ * This is an opportunity to view the response and potentially cache things.
++ * <p>
++ * No guarantees are made about thread execution context for this event. If you need to know, check
++ * event.isAsync()
++ */
++public class LookupProfileEvent extends Event {
++
++    private static final HandlerList handlers = new HandlerList();
++
++    private final PlayerProfile profile;
++
++    public LookupProfileEvent(@Nonnull PlayerProfile profile) {
++        super(!Bukkit.isPrimaryThread());
++        this.profile = profile;
++    }
++
++    /**
++     * @return The profile that was recently looked up. This profile can be mutated
++     * @deprecated will be removed with 1.13, use {@link #getPlayerProfile()}
++     */
++    @Deprecated
++    @Nonnull
++    public GameProfile getProfile() {
++        return profile.getGameProfile();
++    }
++
++    /**
++     * @return The profile that was recently looked up. This profile can be mutated
++     */
++    @Nonnull
++    public PlayerProfile getPlayerProfile() {
++        return profile;
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/destroystokyo/paper/event/profile/PreLookupProfileEvent.java b/src/main/java/com/destroystokyo/paper/event/profile/PreLookupProfileEvent.java
+new file mode 100644
+index 00000000..e9b822b7
+--- /dev/null
++++ b/src/main/java/com/destroystokyo/paper/event/profile/PreLookupProfileEvent.java
+@@ -0,0 +1,155 @@
++package com.destroystokyo.paper.event.profile;
++
++import com.destroystokyo.paper.profile.PlayerProfile;
++import com.destroystokyo.paper.profile.ProfileProperty;
++import com.google.common.collect.ArrayListMultimap;
++import com.google.common.collect.Multimap;
++import com.mojang.authlib.properties.Property;
++
++import org.bukkit.Bukkit;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++
++import java.util.HashSet;
++import java.util.Set;
++import java.util.UUID;
++
++import javax.annotation.Nonnull;
++import javax.annotation.Nullable;
++
++/**
++ * Allows a plugin to intercept a Profile Lookup for a Profile by name
++ * <p>
++ * At the point of event fire, the UUID and properties are unset.
++ * <p>
++ * If a plugin sets the UUID, and optionally the properties, the API call to look up the profile may be skipped.
++ * <p>
++ * No guarantees are made about thread execution context for this event. If you need to know, check
++ * event.isAsync()
++ */
++public class PreLookupProfileEvent extends Event {
++
++    private static final HandlerList handlers = new HandlerList();
++    private final String name;
++    private UUID uuid;
++    private Set<ProfileProperty> properties = new HashSet<>();
++
++    public PreLookupProfileEvent(@Nonnull String name) {
++        super(!Bukkit.isPrimaryThread());
++        this.name = name;
++    }
++
++    /**
++     * @return Name of the profile
++     */
++    @Nonnull
++    public String getName() {
++        return name;
++    }
++
++    /**
++     * If this value is left null by the completion of the event call, then the server will
++     * trigger a call to the Mojang API to look up the UUID (Network Request), and subsequently, fire a
++     * {@link LookupProfileEvent}
++     *
++     * @return The UUID of the profile if it has already been provided by a plugin
++     */
++    @Nullable
++    public UUID getUUID() {
++        return uuid;
++    }
++
++    /**
++     * Sets the UUID for this player name. This will skip the initial API call to find the players UUID.
++     * <p>
++     * However, if Profile Properties are needed by the server, you must also set them or else an API call might still be made.
++     *
++     * @param uuid the UUID to set for the profile or null to reset
++     */
++    public void setUUID(@Nullable UUID uuid) {
++        this.uuid = uuid;
++    }
++
++    /**
++     * Get the properties for this profile
++     *
++     * @return the property map to attach to the new {@link PlayerProfile}
++     * @deprecated will be removed with 1.13  Use {@link #getProfileProperties()}
++     */
++    @Deprecated
++    @Nonnull
++    public Multimap<String, Property> getProperties() {
++        Multimap<String, Property> props = ArrayListMultimap.create();
++
++        for (ProfileProperty property : properties) {
++            props.put(property.getName(), new Property(property.getName(), property.getValue(), property.getSignature()));
++        }
++        return props;
++    }
++
++    /**
++     * Completely replaces all Properties with the new provided properties
++     *
++     * @param properties the properties to set on the new profile
++     * @deprecated will be removed with 1.13 Use {@link #setProfileProperties(Set)}
++     */
++    @Deprecated
++    public void setProperties(Multimap<String, Property> properties) {
++        this.properties = new HashSet<>();
++        properties.values().forEach(property -> {
++            this.properties.add(new ProfileProperty(property.getName(), property.getValue(), property.getSignature()));
++        });
++    }
++
++    /**
++     * Adds additional properties, without removing the original properties
++     *
++     * @param properties the properties to add to the existing properties
++     * @deprecated will be removed with 1.13 use {@link #addProfileProperties(Set)}
++     */
++    @Deprecated
++    public void addProperties(Multimap<String, Property> properties) {
++        properties.values().forEach(property -> {
++            this.properties.add(new ProfileProperty(property.getName(), property.getValue(), property.getSignature()));
++        });
++    }
++
++    /**
++     * @return The currently pending prepopulated properties.
++     * Any property in this Set will be automatically prefilled on this Profile
++     */
++    public Set<ProfileProperty> getProfileProperties() {
++        return this.properties;
++    }
++
++    /**
++     * Clears any existing prepopulated properties and uses the supplied properties
++     * Any property in this Set will be automatically prefilled on this Profile
++     *
++     * @param properties The properties to add
++     */
++    public void setProfileProperties(Set<ProfileProperty> properties) {
++        this.properties = new HashSet<>();
++        this.properties.addAll(properties);
++    }
++
++    /**
++     * Adds any properties currently missing to the prepopulated properties set, replacing any that already were set.
++     * Any property in this Set will be automatically prefilled on this Profile
++     *
++     * @param properties The properties to add
++     */
++    public void addProfileProperties(Set<ProfileProperty> properties) {
++        this.properties.addAll(properties);
++    }
++
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++
++}
+\ No newline at end of file
+diff --git a/src/main/java/com/destroystokyo/paper/profile/PlayerProfile.java b/src/main/java/com/destroystokyo/paper/profile/PlayerProfile.java
+new file mode 100644
+index 00000000..e060c38a
+--- /dev/null
++++ b/src/main/java/com/destroystokyo/paper/profile/PlayerProfile.java
+@@ -0,0 +1,149 @@
++package com.destroystokyo.paper.profile;
++
++import com.mojang.authlib.GameProfile;
++
++import javax.annotation.Nonnull;
++import javax.annotation.Nullable;
++import java.util.Collection;
++import java.util.Set;
++import java.util.UUID;
++
++/**
++ * Represents a players profile for the game, such as UUID, Name, and textures.
++ */
++public interface PlayerProfile {
++
++    /**
++     * @return The players name, if set
++     */
++    @Nullable String getName();
++
++    /**
++     * Sets this profiles Name
++     *
++     * @param name The new Name
++     * @return The previous Name
++     */
++    String setName(@Nullable String name);
++
++    /**
++     * @return The players unique identifier, if set
++     */
++    @Nullable UUID getId();
++
++    /**
++     * Sets this profiles UUID
++     *
++     * @param uuid The new UUID
++     * @return The previous UUID
++     */
++    UUID setId(@Nullable UUID uuid);
++
++    /**
++     * @return A Mutable set of this players properties, such as textures.
++     * Values specified here are subject to implementation details.
++     */
++    @Nonnull Set<ProfileProperty> getProperties();
++
++    /**
++     * Check if the Profile has the specified property
++     * @param property Property name to check
++     * @return If the property is set
++     */
++    boolean hasProperty(String property);
++
++    /**
++     * Sets a property. If the property already exists, the previous one will be replaced
++     * @param property Property to set.
++     */
++    void setProperty(ProfileProperty property);
++
++    /**
++     * Sets multiple properties. If any of the set properties already exist, it will be replaced
++     * @param properties The properties to set
++     */
++    void setProperties(Collection<ProfileProperty> properties);
++
++    /**
++     * Removes a specific property from this profile
++     * @param property The property to remove
++     * @return If a property was removed
++     */
++    boolean removeProperty(String property);
++
++    /**
++     * Removes a specific property from this profile
++     * @param property The property to remove
++     * @return If a property was removed
++     */
++    default boolean removeProperty(@Nonnull ProfileProperty property) {
++        return removeProperty(property.getName());
++    }
++
++    /**
++     * Removes all properties in the collection
++     * @param properties The properties to remove
++     * @return If any property was removed
++     */
++    default boolean removeProperties(Collection<ProfileProperty> properties) {
++        boolean removed = false;
++        for (ProfileProperty property : properties) {
++            if (removeProperty(property)) {
++                removed = true;
++            }
++        }
++        return removed;
++    }
++
++    /**
++     * Clears all properties on this profile
++     */
++    void clearProperties();
++
++    /**
++     * @return If the profile is now complete (has UUID and Name)
++     */
++    boolean isComplete();
++
++    /**
++     * Like {@link #complete(boolean)} but will try only from cache, and not make network calls
++     * Does not account for textures.
++     *
++     * @return If the profile is now complete (has UUID and Name)
++     */
++    boolean completeFromCache();
++
++    /**
++     * If this profile is not complete, then make the API call to complete it.
++     * This is a blocking operation and should be done asynchronously.
++     *
++     * This will also complete textures. If you do not want to load textures, use {{@link #complete(boolean)}}
++     * @return If the profile is now complete (has UUID and Name) (if you get rate limited, this operation may fail)
++     */
++    default boolean complete() {
++        return complete(true);
++    }
++
++    /**
++     * If this profile is not complete, then make the API call to complete it.
++     * This is a blocking operation and should be done asynchronously.
++     *
++     * Optionally will also fill textures.
++     * @return If the profile is now complete (has UUID and Name) (if you get rate limited, this operation may fail)
++     */
++    boolean complete(boolean textures);
++
++    /**
++     * Whether or not this Profile has textures associated to it
++     * @return If has a textures property
++     */
++    default boolean hasTextures() {
++        return hasProperty("textures");
++    }
++
++    /**
++     * @deprecated Will be removed in 1.13
++     */
++    @Deprecated
++    GameProfile getGameProfile();
++}
+diff --git a/src/main/java/com/destroystokyo/paper/profile/ProfileProperty.java b/src/main/java/com/destroystokyo/paper/profile/ProfileProperty.java
+new file mode 100644
+index 00000000..d17061e6
+--- /dev/null
++++ b/src/main/java/com/destroystokyo/paper/profile/ProfileProperty.java
+@@ -0,0 +1,72 @@
++package com.destroystokyo.paper.profile;
++
++import com.google.common.base.Preconditions;
++
++import javax.annotation.Nonnull;
++import javax.annotation.Nullable;
++import java.util.Objects;
++
++/**
++ * Represents a property on a {@link PlayerProfile}
++ */
++public class ProfileProperty {
++    private final String name;
++    private final String value;
++    private final String signature;
++
++    public ProfileProperty(@Nonnull String name, @Nonnull String value) {
++        this(name, value, null);
++    }
++
++    public ProfileProperty(@Nonnull String name, @Nonnull String value, @Nullable String signature) {
++        this.name = Preconditions.checkNotNull(name, "ProfileProperty name can not be null");
++        this.value = Preconditions.checkNotNull(value, "ProfileProperty value can not be null");
++        this.signature = signature;
++    }
++
++    /**
++     * @return The property name, ie "textures"
++     */
++    @Nonnull
++    public String getName() {
++        return name;
++    }
++
++    /**
++     * @return The property value, likely to be base64 encoded
++     */
++    @Nonnull
++    public String getValue() {
++        return value;
++    }
++
++    /**
++     * @return A signature from Mojang for signed properties
++     */
++    @Nullable
++    public String getSignature() {
++        return signature;
++    }
++
++    /**
++     * @return If this property has a signature or not
++     */
++    public boolean isSigned() {
++        return this.signature != null;
++    }
++
++    @Override
++    public boolean equals(Object o) {
++        if (this == o) return true;
++        if (o == null || getClass() != o.getClass()) return false;
++        ProfileProperty that = (ProfileProperty) o;
++        return Objects.equals(name, that.name) &&
++                Objects.equals(value, that.value) &&
++                Objects.equals(signature, that.signature);
++    }
++
++    @Override
++    public int hashCode() {
++        return Objects.hash(name);
++    }
++}
+diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
+index f5671eea..b71a7244 100644
+--- a/src/main/java/org/bukkit/Bukkit.java
++++ b/src/main/java/org/bukkit/Bukkit.java
+@@ -45,6 +45,9 @@ import org.bukkit.inventory.meta.ItemMeta;
+ import pw.alphheim.api.services.InternalService;
+ import pw.alphheim.api.services.InternalServicesManager;
+ 
++import javax.annotation.Nullable; // Alphheim - Paper
++import javax.annotation.Nonnull; // Alphheim - Paper
++
+ /**
+  * Represents the Bukkit core, for version and Server singleton handling
+  */
+@@ -1162,6 +1165,39 @@ public final class Bukkit {
+     public static CommandMap getCommandMap() {
+         return server.getCommandMap();
+     }
++    // Alphheim start - Paper
++
++    /**
++     * Creates a PlayerProfile for the specified uuid, with name as null
++     * @param uuid UUID to create profile for
++     * @return A PlayerProfile object
++     */
++    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull UUID uuid) {
++        return server.createProfile(uuid);
++    }
++
++    /**
++     * Creates a PlayerProfile for the specified name, with UUID as null
++     * @param name Name to create profile for
++     * @return A PlayerProfile object
++     */
++    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull String name) {
++        return server.createProfile(name);
++    }
++
++    /**
++     * Creates a PlayerProfile for the specified name/uuid
++     *
++     * Both UUID and Name can not be null at same time. One must be supplied.
++     *
++     * @param uuid UUID to create profile for
++     * @param name Name to create profile for
++     * @return A PlayerProfile object
++     */
++    public static com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name) {
++        return server.createProfile(uuid, name);
++    }
++    // Alphheim end
+     // Paper end
+ 
+     public static Server.Spigot spigot()
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index a632bf19..14a82e73 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -45,6 +45,9 @@ import org.bukkit.inventory.ItemFactory;
+ import org.bukkit.inventory.meta.ItemMeta;
+ import pw.alphheim.api.services.InternalServicesManager;
+ 
++import javax.annotation.Nullable; // Alphheim - Paper
++import javax.annotation.Nonnull; // Alphheim - Paper
++
+ /**
+  * Represents a server implementation.
+  */
+@@ -1011,4 +1014,30 @@ public interface Server extends PluginMessageRecipient {
+ 
+     InternalServicesManager getInternalServices(); // Alphheim
+ 
++    // Alphheim start - paper
++    /**
++     * Creates a PlayerProfile for the specified uuid, with name as null
++     * @param uuid UUID to create profile for
++     * @return A PlayerProfile object
++     */
++    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull UUID uuid);
++
++    /**
++     * Creates a PlayerProfile for the specified name, with UUID as null
++     * @param name Name to create profile for
++     * @return A PlayerProfile object
++     */
++    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nonnull String name);
++
++    /**
++     * Creates a PlayerProfile for the specified name/uuid
++     *
++     * Both UUID and Name can not be null at same time. One must be supplied.
++     *
++     * @param uuid UUID to create profile for
++     * @param name Name to create profile for
++     * @return A PlayerProfile object
++     */
++    com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
++    // Alphheim end - Paper end
+ }
+-- 
+2.17.1
+
