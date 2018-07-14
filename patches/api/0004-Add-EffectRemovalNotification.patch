@@ -1,4 +1,4 @@
-From 409e48839bbb7c6c88456ab761449fbfff23c476 Mon Sep 17 00:00:00 2001
+From 8cea26c4de8142b7fb945f11d1896795ef443ea5 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sat, 19 May 2018 01:38:49 +0100
 Subject: [PATCH] Add EffectRemovalNotification

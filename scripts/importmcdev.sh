@@ -8,14 +8,9 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 . $(dirname $SOURCE)/init.sh
 
-# revert for 1.12
-# workdir=$basedir/Paper/work
-# minecraftversion=$(cat $basedir/Paper/work/BuildData/info.json | grep minecraftVersion | cut -d '"' -f 4)
-# decompiledir=$workdir/Minecraft/$minecraftversion
-
 workdir=$basedir/Paper/work
-minecraftversion=$(cat $basedir/Paper/BuildData/info.json | grep minecraftVersion | cut -d '"' -f 4)
-decompiledir=$workdir/$minecraftversion
+minecraftversion=$(cat $basedir/Paper/work/BuildData/info.json | grep minecraftVersion | cut -d '"' -f 4)
+decompiledir=$workdir/Minecraft/$minecraftversion
 
 nms="net/minecraft/server"
 export MODLOG=""
@@ -31,17 +26,13 @@ function containsElement {
 
 export importedmcdev=""
 function import {
-	# revert for 1.12
-	# if [ -f "$basedir/Paper/Paper-Server/src/main/java/net/minecraft/server/$1.java" ]; then
-	if [ -f "$basedir/Paper/PaperSpigot-Server/src/main/java/net/minecraft/server/$1.java" ]; then
+	if [ -f "$basedir/Paper/Paper-Server/src/main/java/net/minecraft/server/$1.java" ]; then
 		echo "ALREADY IMPORTED $1"
 		return 0
 	fi
 	export importedmcdev="$importedmcdev $1"
 	file="${1}.java"
-	# revert for 1.12
-	# target="$basedir/Paper/Paper-Server/src/main/java/$nms/$file"
-	target="$basedir/Paper/PaperSpigot-Server/src/main/java/$nms/$file"
+	target="$basedir/Paper/Paper-Server/src/main/java/$nms/$file"
 	base="$decompiledir/$nms/$file"
 
 	if [[ ! -f "$target" ]]; then
@@ -54,9 +45,7 @@ function import {
 }
 
 (
-	# revert for 1.12
-	# cd Paper/Paper-Server/
-	cd Paper/PaperSpigot-Server/
+	cd Paper/Paper-Server/
 	lastlog=$(git log -1 --oneline)
 	if [[ "$lastlog" = *"EMC-Extra mc-dev Imports"* ]]; then
 		git reset --hard HEAD^
@@ -68,9 +57,7 @@ nonnms=$(cat patches/server/* | grep "create mode " | grep -Po "src/main/java/ne
 for f in $files; do
 	containsElement "$f" ${nonnms[@]}
 	if [ "$?" == "1" ]; then
-		# revert for 1.12
-		# if [ ! -f "$basedir/Paper/Paper-Server/src/main/java/net/minecraft/server/$f.java" ]; then
-		if [ ! -f "$basedir/Paper/PaperSpigot-Server/src/main/java/net/minecraft/server/$f.java" ]; then
+		if [ ! -f "$basedir/Paper/Paper-Server/src/main/java/net/minecraft/server/$f.java" ]; then
 			if [ ! -f "$decompiledir/$nms/$f.java" ]; then
 				echo "$(bashColor 1 31) ERROR!!! Missing NMS$(bashColor 1 34) $f $(bashColorReset)";
 			else
@@ -90,8 +77,7 @@ done
 
 ################
 (
-	# revert for 1.12
-	cd Paper/PaperSpigot-Server/
+	cd Paper/Paper-Server/
 	rm -rf nms-patches
 	git add src -A
 	echo -e "EMC-Extra mc-dev Imports\n\n$MODLOG" | git commit src -F -

@@ -1,4 +1,4 @@
-From 5e0cc826ccf9d170af7ae412146d8aa3ea321b83 Mon Sep 17 00:00:00 2001
+From f413aca1dc00ea83a21d0bbeb608b08a0543cce8 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Fri, 11 May 2018 01:46:27 +0100
 Subject: [PATCH] remove several stupid deprecation warnings
@@ -9,10 +9,10 @@ Subject: [PATCH] remove several stupid deprecation warnings
  2 files changed, 5 deletions(-)
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 06f8f82d..12e6917c 100644
+index b01ab149..efec7107 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -409,7 +409,6 @@ public final class CraftServer implements Server {
+@@ -424,7 +424,6 @@ public final class CraftServer implements Server {
      }
  
      @Override
@@ -20,7 +20,7 @@ index 06f8f82d..12e6917c 100644
      public Player getPlayer(final String name) {
          Validate.notNull(name, "Name cannot be null");
  
-@@ -435,7 +434,6 @@ public final class CraftServer implements Server {
+@@ -450,7 +449,6 @@ public final class CraftServer implements Server {
      }
  
      @Override
@@ -28,7 +28,7 @@ index 06f8f82d..12e6917c 100644
      public Player getPlayerExact(String name) {
          Validate.notNull(name, "Name cannot be null");
  
-@@ -464,7 +462,6 @@ public final class CraftServer implements Server {
+@@ -479,7 +477,6 @@ public final class CraftServer implements Server {
      }
  
      @Override
@@ -36,7 +36,7 @@ index 06f8f82d..12e6917c 100644
      public List<Player> matchPlayer(String partialName) {
          Validate.notNull(partialName, "PartialName cannot be null");
  
-@@ -1356,7 +1353,6 @@ public final class CraftServer implements Server {
+@@ -1374,7 +1371,6 @@ public final class CraftServer implements Server {
      // Paper end
  
      @Override
@@ -45,10 +45,10 @@ index 06f8f82d..12e6917c 100644
          Validate.notNull(name, "Name cannot be null");
          com.google.common.base.Preconditions.checkArgument( !org.apache.commons.lang.StringUtils.isBlank( name ), "Name cannot be blank" ); // Spigot
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 6b2967e4..9e742cdc 100644
+index 6cbf429f..fb932279 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -602,7 +602,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -698,7 +698,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          server.getHandle().playerFileData.save(getHandle());
      }
  

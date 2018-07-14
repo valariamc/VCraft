@@ -1,36 +1,36 @@
-From 7f5679ffbb63babf897efd737dea0b49269242b4 Mon Sep 17 00:00:00 2001
+From 49f1cc49f3d88cbaf4961bae3ccda3ee4972b331 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
 
 ---
  src/main/java/org/bukkit/Bukkit.java          | 12 ++++++
- src/main/java/org/bukkit/Server.java          |  4 ++
+ src/main/java/org/bukkit/Server.java          | 12 ++++++
  .../bukkit/plugin/SimplePluginManager.java    |  9 ++++
  .../java/pw/alphheim/api/services/Chat.java   |  8 ++++
  .../api/services/InternalService.java         |  6 +++
  .../api/services/InternalServiceHolder.java   | 41 +++++++++++++++++++
  .../api/services/InternalServicesManager.java | 19 +++++++++
- 7 files changed, 99 insertions(+)
+ 7 files changed, 107 insertions(+)
  create mode 100644 src/main/java/pw/alphheim/api/services/Chat.java
  create mode 100644 src/main/java/pw/alphheim/api/services/InternalService.java
  create mode 100644 src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
  create mode 100644 src/main/java/pw/alphheim/api/services/InternalServicesManager.java
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 8fbc8283..f5671eea 100644
+index 682d2bbf..924815b2 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -42,6 +42,8 @@ import org.bukkit.generator.ChunkGenerator;
+@@ -43,6 +43,8 @@ import org.bukkit.generator.ChunkGenerator;
  
  import org.bukkit.inventory.ItemFactory;
  import org.bukkit.inventory.meta.ItemMeta;
 +import pw.alphheim.api.services.InternalService;
 +import pw.alphheim.api.services.InternalServicesManager;
  
- /**
-  * Represents the Bukkit core, for version and Server singleton handling
-@@ -1166,4 +1168,14 @@ public final class Bukkit {
+ import javax.annotation.Nullable; // Paper
+ import javax.annotation.Nonnull; // Paper
+@@ -1270,4 +1272,14 @@ public final class Bukkit {
      {
          return server.spigot();
      }
@@ -46,30 +46,38 @@ index 8fbc8283..f5671eea 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 1b62463a..a632bf19 100644
+index 2912bdae..f835e282 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -43,6 +43,7 @@ import org.bukkit.generator.ChunkGenerator;
+@@ -44,6 +44,7 @@ import org.bukkit.generator.ChunkGenerator;
  
  import org.bukkit.inventory.ItemFactory;
  import org.bukkit.inventory.meta.ItemMeta;
 +import pw.alphheim.api.services.InternalServicesManager;
  
- /**
-  * Represents a server implementation.
-@@ -1007,4 +1008,7 @@ public interface Server extends PluginMessageRecipient {
-     }
- 
-     Spigot spigot();
+ import javax.annotation.Nullable; // Paper
+ import javax.annotation.Nonnull; // Paper
+@@ -1082,4 +1083,15 @@ public interface Server extends PluginMessageRecipient {
+      */
+     com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
+     // Paper end
 +
-+    InternalServicesManager getInternalServices(); // Alphheim
-+
++    // Alphheim start
++    /**
++     * This system is primarily designed to deal with cases where we may wish
++     * to completely replace how something in the server is handled, while
++     * providing a default implementation in the server as a fallback to one being registered.
++     *
++     * @return the {@link InternalServicesManager} used in the server
++     */
++    InternalServicesManager getInternalServices();
++    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index ce9839ec..8021105d 100644
+index cb2b0b9c..cb2b4213 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -444,6 +444,15 @@ public final class SimplePluginManager implements PluginManager {
+@@ -454,6 +454,15 @@ public final class SimplePluginManager implements PluginManager {
                          + plugin.getDescription().getFullName() + " (Is it up to date?)", ex, plugin); // Paper
              }
  
