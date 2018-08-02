@@ -1,4 +1,4 @@
-From 49f1cc49f3d88cbaf4961bae3ccda3ee4972b331 Mon Sep 17 00:00:00 2001
+From 17ef7179780dc201efb081c399eea87597e40160 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
@@ -18,10 +18,10 @@ Subject: [PATCH] internal services management API
  create mode 100644 src/main/java/pw/alphheim/api/services/InternalServicesManager.java
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 682d2bbf..924815b2 100644
+index 5c23b322..e985eba5 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -43,6 +43,8 @@ import org.bukkit.generator.ChunkGenerator;
+@@ -45,6 +45,8 @@ import org.bukkit.generator.ChunkGenerator;
  
  import org.bukkit.inventory.ItemFactory;
  import org.bukkit.inventory.meta.ItemMeta;
@@ -30,7 +30,7 @@ index 682d2bbf..924815b2 100644
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
-@@ -1270,4 +1272,14 @@ public final class Bukkit {
+@@ -1369,4 +1371,14 @@ public final class Bukkit {
      {
          return server.spigot();
      }
@@ -46,10 +46,10 @@ index 682d2bbf..924815b2 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 2912bdae..f835e282 100644
+index 7d710480..eeaa889b 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -44,6 +44,7 @@ import org.bukkit.generator.ChunkGenerator;
+@@ -46,6 +46,7 @@ import org.bukkit.generator.ChunkGenerator;
  
  import org.bukkit.inventory.ItemFactory;
  import org.bukkit.inventory.meta.ItemMeta;
@@ -57,7 +57,7 @@ index 2912bdae..f835e282 100644
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
-@@ -1082,4 +1083,15 @@ public interface Server extends PluginMessageRecipient {
+@@ -1174,4 +1175,15 @@ public interface Server extends PluginMessageRecipient {
       */
      com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
      // Paper end
@@ -192,5 +192,5 @@ index 00000000..b042e634
 +
 +}
 -- 
-2.17.1
+2.18.0
 

@@ -1,23 +1,23 @@
-From a18f20dfd21ef92a1e746fec98600172079c9e73 Mon Sep 17 00:00:00 2001
+From 884aea6175215b3b07d9f0c06f59ecfb9469b374 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
 
 ---
  .../net/minecraft/server/DedicatedServer.java |   1 +
- .../minecraft/server/PlayerConnection.java    |  70 ++---------
+ .../minecraft/server/PlayerConnection.java    |  75 ++---------
  .../org/bukkit/craftbukkit/CraftServer.java   |  18 +++
  .../CraftInternalServicesManager.java         | 118 ++++++++++++++++++
- .../services/defaults/VanillaChat.java        |  97 ++++++++++++++
- 5 files changed, 242 insertions(+), 62 deletions(-)
+ .../services/defaults/VanillaChat.java        |  95 ++++++++++++++
+ 5 files changed, 243 insertions(+), 64 deletions(-)
  create mode 100644 src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
  create mode 100644 src/main/java/pw/alphheim/services/defaults/VanillaChat.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 39a3d46f..b0a69072 100644
+index 8e15710ca..13af605a4 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -223,6 +223,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -227,6 +227,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
  
              // CraftBukkit start
              // this.a((PlayerList) (new DedicatedPlayerList(this))); // Spigot - moved up
@@ -26,10 +26,10 @@ index 39a3d46f..b0a69072 100644
              server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
              // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index cc115273..1ad550ee 100644
+index 6ebc0a95e..938527418 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -60,6 +60,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
+@@ -61,6 +61,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
  import com.destroystokyo.paper.event.player.PlayerJumpEvent; // Paper
  import co.aikar.timings.MinecraftTimings; // Paper
  // CraftBukkit end
@@ -37,7 +37,7 @@ index cc115273..1ad550ee 100644
  
  public class PlayerConnection implements PacketListenerPlayIn, ITickable {
  
-@@ -1383,71 +1384,16 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1661,72 +1662,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
          } else if (this.player.getChatFlags() == EntityHuman.EnumChatVisibility.SYSTEM) {
              // Do nothing, this is coming from a plugin
          } else {
@@ -91,7 +91,8 @@ index cc115273..1ad550ee 100644
 -                // Paper Start - (Meh) Support for vanilla world scoreboard name coloring
 -                String displayName = event.getPlayer().getDisplayName();
 -                if (this.player.getWorld().paperConfig.useVanillaScoreboardColoring) {
--                    displayName = ScoreboardTeam.getPlayerDisplayName(this.player.getTeam(), player.getDisplayName());
+-                    // Explicitly add a RESET here, vanilla uses components for this now...
+-                    displayName = CraftChatMessage.fromComponent(ScoreboardTeam.a(this.player.getTeam(),((CraftPlayer) player).getHandle().getDisplayName())) + org.bukkit.ChatColor.RESET;
 -                }
 -
 -                s = String.format(event.getFormat(), displayName, event.getMessage());
@@ -101,26 +102,29 @@ index cc115273..1ad550ee 100644
 -                    for (Object recipient : minecraftServer.getPlayerList().players) {
 -                        ((EntityPlayer) recipient).sendMessage(CraftChatMessage.fromString(s));
 -                    }
-+                Chat service = server.getInternalServices().getService(Chat.class);
-+                if (service == null) {
-+                    player.sendMessage(new ChatMessage(org.bukkit.ChatColor.RED + "An internal error has occured!"));
-+                    MinecraftServer.LOGGER.warn("A chat service has not been registered!");
-                 } else {
+-                } else {
 -                    for (Player recipient : event.getRecipients()) {
 -                        recipient.sendMessage(s);
--                    }
-+                    service.process(this.getPlayer(), s);
-                 }
++                    // alphheim start
++                    Chat service = server.getInternalServices().getService(Chat.class);
++                    if (service == null) {
++                        player.sendMessage(new ChatMessage(org.bukkit.ChatColor.RED + "An internal error has occured!"));
++                        MinecraftServer.LOGGER.warn("A chat service has not been registered!");
++                    } else {
++                        service.process(this.getPlayer(), s);
+                     }
+-                }
 +            } catch (Exception ex) {
 +                ex.printStackTrace();
++                // Alphheim end
              }
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 80702f6f..b01ab149 100644
+index 8a58479f4..afc8364ec 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -134,6 +134,9 @@ import org.bukkit.NamespacedKey;
+@@ -152,6 +152,9 @@ import org.bukkit.craftbukkit.tag.CraftItemTag;
  import org.bukkit.craftbukkit.util.CraftNamespacedKey;
  import org.bukkit.event.server.TabCompleteEvent;
  import net.md_5.bungee.api.chat.BaseComponent;
@@ -130,7 +134,7 @@ index 80702f6f..b01ab149 100644
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
-@@ -180,6 +183,8 @@ public final class CraftServer implements Server {
+@@ -197,6 +200,8 @@ public final class CraftServer implements Server {
      public int reloadCount;
      public static Exception excessiveVelEx; // Paper - Velocity warnings
  
@@ -139,7 +143,7 @@ index 80702f6f..b01ab149 100644
      private final class BooleanWrapper {
          private boolean value = true;
      }
-@@ -763,6 +768,7 @@ public final class CraftServer implements Server {
+@@ -801,6 +806,7 @@ public final class CraftServer implements Server {
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
          pluginManager.clearPlugins();
@@ -147,7 +151,7 @@ index 80702f6f..b01ab149 100644
          commandMap.clearCommands();
  
          // Paper start
-@@ -803,6 +809,7 @@ public final class CraftServer implements Server {
+@@ -842,6 +848,7 @@ public final class CraftServer implements Server {
                  "This plugin is not properly shutting down its async tasks when it is being reloaded.  This may cause conflicts with the newly loaded version of the plugin"
              ));
          }
@@ -155,7 +159,7 @@ index 80702f6f..b01ab149 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -1972,4 +1979,15 @@ public final class CraftServer implements Server {
+@@ -2048,4 +2055,15 @@ public final class CraftServer implements Server {
          return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
      }
      // Paper end
@@ -173,7 +177,7 @@ index 80702f6f..b01ab149 100644
  }
 diff --git a/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 new file mode 100644
-index 00000000..d6db9070
+index 000000000..d6db9070e
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 @@ -0,0 +1,118 @@
@@ -297,10 +301,10 @@ index 00000000..d6db9070
 +}
 diff --git a/src/main/java/pw/alphheim/services/defaults/VanillaChat.java b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
 new file mode 100644
-index 00000000..f005a70e
+index 000000000..27ed0eb5f
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
-@@ -0,0 +1,97 @@
+@@ -0,0 +1,95 @@
 +package pw.alphheim.services.defaults;
 +
 +import net.minecraft.server.EntityPlayer;
@@ -321,6 +325,7 @@ index 00000000..f005a70e
 +import org.bukkit.event.player.PlayerChatEvent;
 +import pw.alphheim.api.services.Chat;
 +
++import java.util.Set;
 +import java.util.concurrent.ExecutionException;
 +
 +public class VanillaChat implements Chat {
@@ -348,15 +353,7 @@ index 00000000..f005a70e
 +
 +                    String message = String.format(queueEvent.getFormat(), queueEvent.getPlayer().getDisplayName(), queueEvent.getMessage());
 +                    server.getServer().console.sendMessage(message);
-+                    if (((LazyPlayerSet) queueEvent.getRecipients()).isLazy()) {
-+                        for (Object player : server.getServer().getPlayerList().players) {
-+                            ((EntityPlayer) player).sendMessage(CraftChatMessage.fromString(message));
-+                        }
-+                    } else {
-+                        for (Player player : queueEvent.getRecipients()) {
-+                            player.sendMessage(message);
-+                        }
-+                    }
++                    sendMessage(message, queueEvent.getRecipients(), event);
 +                    return null;
 +                }};
 +            if (async) {
@@ -378,26 +375,31 @@ index 00000000..f005a70e
 +
 +            // Paper Start - (Meh) Support for vanilla world scoreboard name coloring
 +            String displayName = event.getPlayer().getDisplayName();
-+            if (((CraftWorld) sender.getWorld()).getHandle().paperConfig.useVanillaScoreboardColoring) {
-+                displayName = ScoreboardTeam.getPlayerDisplayName(((CraftPlayer) sender).getHandle().getTeam(), sender.getDisplayName());
++            if (((CraftPlayer) sender).getHandle().getWorld().paperConfig.useVanillaScoreboardColoring) {
++                // Explicitly add a RESET here, vanilla uses components for this now...
++                displayName = CraftChatMessage.fromComponent(ScoreboardTeam.a(((CraftPlayer) sender).getHandle().getTeam(),((CraftPlayer) sender).getHandle().getDisplayName())) + org.bukkit.ChatColor.RESET;
 +            }
 +
 +            message = String.format(event.getFormat(), displayName, event.getMessage());
 +            // Paper end
 +            server.getServer().console.sendMessage(message);
-+            if (((LazyPlayerSet) event.getRecipients()).isLazy()) {
-+                for (Object recipient : server.getServer().getPlayerList().players) {
-+                    ((EntityPlayer) recipient).sendMessage(CraftChatMessage.fromString(message));
-+                }
-+            } else {
-+                for (Player recipient : event.getRecipients()) {
-+                    recipient.sendMessage(message);
-+                }
-+            }
++            sendMessage(message, event.getRecipients(), event);
 +        }
 +
 +    }
++
++    private void sendMessage(String message, Set<Player> recipients, AsyncPlayerChatEvent event) {
++        if (((LazyPlayerSet) recipients).isLazy()) {
++            for (Object recipient : server.getServer().getPlayerList().players) {
++                ((EntityPlayer) recipient).sendMessage(CraftChatMessage.fromString(message));
++            }
++        } else {
++            for (Player recipient : recipients) {
++                recipient.sendMessage(message);
++            }
++        }
++    }
 +}
 -- 
-2.17.1
+2.18.0
 

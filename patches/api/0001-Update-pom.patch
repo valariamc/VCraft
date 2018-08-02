@@ -1,18 +1,18 @@
-From 42bc6befba5e18290d5931fd8b2621249e289168 Mon Sep 17 00:00:00 2001
+From f66a0c03a5a4f453cd7477cc87c4bb6939e51afd Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
 
 ---
- pom.xml                                       | 20 +++++++++----------
- .../command/defaults/VersionCommand.java      | 10 +++++-----
- 2 files changed, 15 insertions(+), 15 deletions(-)
+ pom.xml                                       | 19 ++++++++++---------
+ .../command/defaults/VersionCommand.java      |  9 +++++----
+ 2 files changed, 15 insertions(+), 13 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index ae5cfd10..10de2d68 100644
+index a771e156..e07f7e34 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -4,18 +4,18 @@
+@@ -4,17 +4,18 @@
      <modelVersion>4.0.0</modelVersion>
  
      <parent>
@@ -23,11 +23,10 @@ index ae5cfd10..10de2d68 100644
          <version>dev-SNAPSHOT</version>
      </parent>
  
--    <groupId>com.destroystokyo.paper</groupId>
 -    <artifactId>paper-api</artifactId>
 +    <groupId>im.alphhe</groupId>
 +    <artifactId>alphheimcraft-api</artifactId>
-     <version>1.12.2-R0.1-SNAPSHOT</version>
+     <version>1.13-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>
  
 -    <name>Paper-API</name>
@@ -37,7 +36,7 @@ index ae5cfd10..10de2d68 100644
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
-@@ -27,12 +27,12 @@
+@@ -26,12 +27,12 @@
  
      <distributionManagement>
          <repository>
@@ -55,7 +54,7 @@ index ae5cfd10..10de2d68 100644
      </distributionManagement>
  
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-index c45faf4c..16fdb7f7 100644
+index 7041085c..f559f741 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 @@ -209,8 +209,8 @@ public class VersionCommand extends BukkitCommand {
@@ -73,8 +72,8 @@ index c45faf4c..16fdb7f7 100644
              return getFromJenkins(currentVer);
          } catch (NumberFormatException ex) {
              verInfo = verInfo.replace("\"", "");
--            return getFromRepo("PaperMC/Paper", verInfo);
-+            return getFromRepo("Alphheim/AlphheimCraft", verInfo);
+-            return getFromRepo("PaperMC/Paper", "pre/1.13", verInfo);
++            return getFromRepo("Alphheim/AlphheimCraft", BRANCH, verInfo);
          }
              /*
              BufferedReader reader = Resources.asCharSource(
@@ -82,20 +81,19 @@ index c45faf4c..16fdb7f7 100644
      private static int getFromJenkins(int currentVer) {
          try {
              BufferedReader reader = Resources.asCharSource(
--                    new URL("https://ci.destroystokyo.com/job/Paper/lastSuccessfulBuild/buildNumber"), // Paper
-+                    new URL("https://atlas.valaria.pw/jenkins/job/Alphheim/lastSuccessfulBuild/buildNumber"), // Alphheim
+-                    new URL("https://ci.destroystokyo.com/job/Paper-1.13/lastSuccessfulBuild/buildNumber"), // Paper
++                    new URL("https://atlas.valaria.pw/jenkins/job/Alphheim-Future/lastSuccessfulBuild/buildNumber"), // Alphheim
                      Charsets.UTF_8
              ).openBufferedStream();
              try {
-@@ -307,7 +307,7 @@ public class VersionCommand extends BukkitCommand {
+@@ -307,6 +307,7 @@ public class VersionCommand extends BukkitCommand {
      }
  
      // Contributed by Techcable <Techcable@outlook.com> in GH PR #65
--    private static final String BRANCH = "master";
-+    private static final String BRANCH = "ver/1.12.2-ah"; // Alphheim
-     private static int getFromRepo(String repo, String hash) {
++    private static final String BRANCH = "ver/1.13-ah"; // Alphheim
+     private static int getFromRepo(String repo, String branch, String hash) {
          try {
-             HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + BRANCH + "..." + hash).openConnection();
+             HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + branch + "..." + hash).openConnection();
 -- 
-2.17.1
+2.18.0
 

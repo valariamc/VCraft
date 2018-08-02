@@ -1,25 +1,34 @@
-From 32bff36cb47afe97f810089e66cb71fa8056aa0f Mon Sep 17 00:00:00 2001
+From 3fe753bb167b22b71867bcef40bd7a94434f3c03 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sat, 6 Jan 2018 14:44:38 +0000
 Subject: [PATCH] Don't tick 'unlimited' potion effects
 
 ---
- src/main/java/net/minecraft/server/MobEffect.java | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ src/main/java/net/minecraft/server/MobEffect.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/MobEffect.java b/src/main/java/net/minecraft/server/MobEffect.java
-index 56baf5c4..bb292223 100644
+index 49c99afcc..e6de2efa8 100644
 --- a/src/main/java/net/minecraft/server/MobEffect.java
 +++ b/src/main/java/net/minecraft/server/MobEffect.java
-@@ -92,7 +92,7 @@ public class MobEffect implements Comparable<MobEffect> {
+@@ -120,7 +120,7 @@ public class MobEffect implements Comparable<MobEffect> {
      }
  
-     private int h() {
+     private int i() {
 -        return --this.duration;
 +        return duration == Integer.MAX_VALUE ? Integer.MAX_VALUE : --this.duration; // Alphheim - don't reduce the duration of 'unlimited' effects
      }
  
      public void b(EntityLiving entityliving) {
+@@ -222,7 +222,7 @@ public class MobEffect implements Comparable<MobEffect> {
+         return (this.getDuration() <= 32147 || mobeffect.getDuration() <= 32147) && (!this.isAmbient() || !mobeffect.isAmbient()) ? ComparisonChain.start().compare(Boolean.valueOf(this.isAmbient()), Boolean.valueOf(mobeffect.isAmbient())).compare(this.getDuration(), mobeffect.getDuration()).compare(this.getMobEffect().getColor(), mobeffect.getMobEffect().getColor()).result() : ComparisonChain.start().compare(Boolean.valueOf(this.isAmbient()), Boolean.valueOf(mobeffect.isAmbient())).compare(this.getMobEffect().getColor(), mobeffect.getMobEffect().getColor()).result();
+     }
+ 
+-    public int compareTo(Object object) {
++    public int compareTo(MobEffect object) { // Alphheim - decompile fix
+         return this.b((MobEffect) object);
+     }
+ }
 -- 
-2.17.1
+2.18.0
 
