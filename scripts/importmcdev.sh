@@ -37,10 +37,10 @@ function import {
 
 	if [[ ! -f "$target" ]]; then
 		export MODLOG="$MODLOG  Imported $file from mc-dev\n";
-		echo "$(bashColor 1 32) Copying $(bashColor 1 34)$base $(bashColor 1 32)to$(bashColor 1 34) $target $(bashColorReset)"
+		echo -e "$(bashColor 1 32) Copying $(bashColor 1 34)$base $(bashColor 1 32)to$(bashColor 1 34) $target $(bashColorReset)"
 		cp "$base" "$target"
 	else
-		echo "$(bashColor 1 33) UN-NEEDED IMPORT STATEMENT:$(bashColor 1 34) $file $(bashColorReset)"
+		echo -e "$(bashColor 1 33) UN-NEEDED IMPORT STATEMENT:$(bashColor 1 34) $file $(bashColorReset)"
 	fi
 }
 
