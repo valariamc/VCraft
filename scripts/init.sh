@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 sourceBase=$(dirname $SOURCE)/../
 cd ${basedir:-$sourceBase}
 

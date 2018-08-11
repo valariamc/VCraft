@@ -1,4 +1,4 @@
-From 884aea6175215b3b07d9f0c06f59ecfb9469b374 Mon Sep 17 00:00:00 2001
+From d15742367672c8d1beb353b532016c4028785e6b Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -121,7 +121,7 @@ index 6ebc0a95e..938527418 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 8a58479f4..afc8364ec 100644
+index 9ddb9b66a..28b43df44 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -152,6 +152,9 @@ import org.bukkit.craftbukkit.tag.CraftItemTag;
@@ -159,7 +159,7 @@ index 8a58479f4..afc8364ec 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -2048,4 +2055,15 @@ public final class CraftServer implements Server {
+@@ -2051,4 +2058,15 @@ public final class CraftServer implements Server {
          return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
      }
      // Paper end

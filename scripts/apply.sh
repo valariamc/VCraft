@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # get base dir regardless of execution location
 # resolve shell-specifics
 case "$(echo "$SHELL" | sed -E 's|/usr(/local)?||g')" in
