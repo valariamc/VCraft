@@ -1,4 +1,4 @@
-From 46c39f36d517dcb5cc44476be56685d2d03c72b0 Mon Sep 17 00:00:00 2001
+From b61732bdc0de5e19d33e15d36fb38a0412163827 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Fri, 11 May 2018 01:46:36 +0100
 Subject: [PATCH] remove several stupid deprecation warnings
@@ -9,10 +9,10 @@ Subject: [PATCH] remove several stupid deprecation warnings
  2 files changed, 4 deletions(-)
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index e985eba5..3a01dccc 100644
+index df8593f6..006c1ce0 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -746,7 +746,6 @@ public final class Bukkit {
+@@ -747,7 +747,6 @@ public final class Bukkit {
       * @return an offline player
       * @see #getOfflinePlayer(java.util.UUID)
       */
@@ -21,10 +21,10 @@ index e985eba5..3a01dccc 100644
          return server.getOfflinePlayer(name);
      }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index eeaa889b..d7688719 100644
+index de828888..bae38484 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -607,13 +607,10 @@ public interface Server extends PluginMessageRecipient {
+@@ -608,13 +608,10 @@ public interface Server extends PluginMessageRecipient {
       * This will return an object even if the player does not exist. To this
       * method, all players will exist.
       *
