@@ -1,4 +1,4 @@
-From f66a0c03a5a4f453cd7477cc87c4bb6939e51afd Mon Sep 17 00:00:00 2001
+From 3e497a19924d982b216cf1551c8b7fbfe81d0c3c Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
@@ -9,7 +9,7 @@ Subject: [PATCH] Update pom
  2 files changed, 15 insertions(+), 13 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index a771e156..e07f7e34 100644
+index a5044519..cd2a844d 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -4,17 +4,18 @@
@@ -26,7 +26,7 @@ index a771e156..e07f7e34 100644
 -    <artifactId>paper-api</artifactId>
 +    <groupId>im.alphhe</groupId>
 +    <artifactId>alphheimcraft-api</artifactId>
-     <version>1.13-R0.1-SNAPSHOT</version>
+     <version>1.13.1-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>
  
 -    <name>Paper-API</name>

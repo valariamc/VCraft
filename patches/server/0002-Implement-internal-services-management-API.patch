@@ -1,4 +1,4 @@
-From d7823dd6287336aeb38602fedba42133eb75850b Mon Sep 17 00:00:00 2001
+From 489ddaf104844dfd3e44e016ee2e2f8467eaefab Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -14,7 +14,7 @@ Subject: [PATCH] Implement internal services management API
  create mode 100644 src/main/java/pw/alphheim/services/defaults/VanillaChat.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index eae83ab9f..7207ef043 100644
+index 98d3bad37..610256bdb 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
 @@ -227,6 +227,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
@@ -26,10 +26,10 @@ index eae83ab9f..7207ef043 100644
              server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
              // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 6ebc0a95e..938527418 100644
+index 906abc654..1fbdfc729 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -61,6 +61,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
+@@ -64,6 +64,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
  import com.destroystokyo.paper.event.player.PlayerJumpEvent; // Paper
  import co.aikar.timings.MinecraftTimings; // Paper
  // CraftBukkit end
@@ -37,7 +37,7 @@ index 6ebc0a95e..938527418 100644
  
  public class PlayerConnection implements PacketListenerPlayIn, ITickable {
  
-@@ -1661,72 +1662,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1677,72 +1678,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
          } else if (this.player.getChatFlags() == EntityHuman.EnumChatVisibility.SYSTEM) {
              // Do nothing, this is coming from a plugin
          } else {
@@ -121,10 +121,10 @@ index 6ebc0a95e..938527418 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 055265935..829f2fc49 100644
+index a6d1fde49..cb83139c3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -153,6 +153,9 @@ import org.bukkit.craftbukkit.tag.CraftItemTag;
+@@ -154,6 +154,9 @@ import org.bukkit.craftbukkit.tag.CraftItemTag;
  import org.bukkit.craftbukkit.util.CraftNamespacedKey;
  import org.bukkit.event.server.TabCompleteEvent;
  import net.md_5.bungee.api.chat.BaseComponent;
@@ -134,7 +134,7 @@ index 055265935..829f2fc49 100644
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
-@@ -198,6 +201,8 @@ public final class CraftServer implements Server {
+@@ -199,6 +202,8 @@ public final class CraftServer implements Server {
      public int reloadCount;
      public static Exception excessiveVelEx; // Paper - Velocity warnings
  
@@ -143,7 +143,7 @@ index 055265935..829f2fc49 100644
      private final class BooleanWrapper {
          private boolean value = true;
      }
-@@ -802,6 +807,7 @@ public final class CraftServer implements Server {
+@@ -803,6 +808,7 @@ public final class CraftServer implements Server {
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
          pluginManager.clearPlugins();
@@ -151,7 +151,7 @@ index 055265935..829f2fc49 100644
          commandMap.clearCommands();
  
          // Paper start
-@@ -843,6 +849,7 @@ public final class CraftServer implements Server {
+@@ -844,6 +850,7 @@ public final class CraftServer implements Server {
                  "This plugin is not properly shutting down its async tasks when it is being reloaded.  This may cause conflicts with the newly loaded version of the plugin"
              ));
          }
@@ -159,7 +159,7 @@ index 055265935..829f2fc49 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -2059,4 +2066,15 @@ public final class CraftServer implements Server {
+@@ -2079,4 +2086,15 @@ public final class CraftServer implements Server {
          return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
      }
      // Paper end
