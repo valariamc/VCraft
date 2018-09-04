@@ -1,4 +1,4 @@
-From d3a69cd02ef2d4b572207dfbfb92c29c42f384e6 Mon Sep 17 00:00:00 2001
+From e83fd10ad3dd95a399a8b92873d70e35ec839c54 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Fri, 11 May 2018 01:46:27 +0100
 Subject: [PATCH] remove several stupid deprecation warnings
@@ -45,10 +45,10 @@ index cb83139c3..d67def45b 100644
          Validate.notNull(name, "Name cannot be null");
          com.google.common.base.Preconditions.checkArgument( !org.apache.commons.lang.StringUtils.isBlank( name ), "Name cannot be blank" ); // Spigot
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index b7144c5d2..2fccb803f 100644
+index b6cf96e18..a38420f14 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -781,7 +781,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -794,7 +794,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          server.getHandle().playerFileData.save(getHandle());
      }
  
