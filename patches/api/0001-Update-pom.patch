@@ -1,4 +1,4 @@
-From 3e497a19924d982b216cf1551c8b7fbfe81d0c3c Mon Sep 17 00:00:00 2001
+From 1639d622a8385d579055cc4fd6c138fcc6acb44e Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
@@ -9,7 +9,7 @@ Subject: [PATCH] Update pom
  2 files changed, 15 insertions(+), 13 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index a5044519..cd2a844d 100644
+index a5044519f..cd2a844d2 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -4,17 +4,18 @@
@@ -54,7 +54,7 @@ index a5044519..cd2a844d 100644
      </distributionManagement>
  
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-index 7041085c..f559f741 100644
+index 2ea1e0cf4..f559f7414 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 @@ -209,8 +209,8 @@ public class VersionCommand extends BukkitCommand {
@@ -72,7 +72,7 @@ index 7041085c..f559f741 100644
              return getFromJenkins(currentVer);
          } catch (NumberFormatException ex) {
              verInfo = verInfo.replace("\"", "");
--            return getFromRepo("PaperMC/Paper", "pre/1.13", verInfo);
+-            return getFromRepo("PaperMC/Paper", "master", verInfo);
 +            return getFromRepo("Alphheim/AlphheimCraft", BRANCH, verInfo);
          }
              /*
@@ -95,5 +95,5 @@ index 7041085c..f559f741 100644
          try {
              HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + branch + "..." + hash).openConnection();
 -- 
-2.18.0
+2.19.0
 
