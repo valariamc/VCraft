@@ -1,15 +1,15 @@
-From 1639d622a8385d579055cc4fd6c138fcc6acb44e Mon Sep 17 00:00:00 2001
+From 8ecf4b3f3af3d7bbe0f955981b82c2f8c5df9443 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
 
 ---
- pom.xml                                       | 19 ++++++++++---------
- .../command/defaults/VersionCommand.java      |  9 +++++----
- 2 files changed, 15 insertions(+), 13 deletions(-)
+ pom.xml                                       | 22 ++++++++++++++-----
+ .../command/defaults/VersionCommand.java      |  9 ++++----
+ 2 files changed, 22 insertions(+), 9 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index a5044519f..cd2a844d2 100644
+index 67d40f03e..cd2a844d2 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -4,17 +4,18 @@
@@ -36,23 +36,24 @@ index a5044519f..cd2a844d2 100644
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
-@@ -26,12 +27,12 @@
+@@ -24,6 +25,17 @@
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+     </properties>
  
-     <distributionManagement>
-         <repository>
--            <id>destroystokyo-releases</id>
--            <url>https://destroystokyo.com/repo/repository/maven-releases/</url>
++    <distributionManagement>
++        <repository>
 +            <id>valaria-deployment</id>
 +            <url>https://repo.valaria.pw/repository/maven-releases/</url>
-         </repository>
-         <snapshotRepository>
--            <id>destroystokyo-snapshots</id>
--            <url>https://destroystokyo.com/repo/repository/maven-snapshots/</url>
++        </repository>
++        <snapshotRepository>
 +            <id>valaria-deployment</id>
 +            <url>https://repo.valaria.pw/repository/maven-snapshots/</url>
-         </snapshotRepository>
-     </distributionManagement>
- 
++        </snapshotRepository>
++    </distributionManagement>
++
+     <repositories>
+         <repository>
+             <id>spigotmc-public</id>
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 index 2ea1e0cf4..f559f7414 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
