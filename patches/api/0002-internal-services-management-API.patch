@@ -1,4 +1,4 @@
-From 84c032ea22f2210f787218b17da73e9f07e9535f Mon Sep 17 00:00:00 2001
+From 0b5fc5b9dba756530f53705ae1169ea9298c61f1 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
@@ -18,7 +18,7 @@ Subject: [PATCH] internal services management API
  create mode 100644 src/main/java/pw/alphheim/api/services/InternalServicesManager.java
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 491c7383..df8593f6 100644
+index d56d306e5..e9f7587af 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
 @@ -46,6 +46,8 @@ import org.bukkit.generator.ChunkGenerator;
@@ -30,7 +30,7 @@ index 491c7383..df8593f6 100644
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
-@@ -1380,4 +1382,14 @@ public final class Bukkit {
+@@ -1421,4 +1423,14 @@ public final class Bukkit {
      {
          return server.spigot();
      }
@@ -46,7 +46,7 @@ index 491c7383..df8593f6 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index f75fe8b1..de828888 100644
+index 4a47cb87d..c253c68a7 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -47,6 +47,7 @@ import org.bukkit.generator.ChunkGenerator;
@@ -57,7 +57,7 @@ index f75fe8b1..de828888 100644
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
-@@ -1183,4 +1184,15 @@ public interface Server extends PluginMessageRecipient {
+@@ -1220,4 +1221,15 @@ public interface Server extends PluginMessageRecipient {
       */
      com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
      // Paper end
@@ -74,7 +74,7 @@ index f75fe8b1..de828888 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index cb2b0b9c..cb2b4213 100644
+index a7dd902fb..5f2e43791 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 @@ -454,6 +454,15 @@ public final class SimplePluginManager implements PluginManager {
@@ -95,7 +95,7 @@ index cb2b0b9c..cb2b4213 100644
              } catch (Throwable ex) {
 diff --git a/src/main/java/pw/alphheim/api/services/Chat.java b/src/main/java/pw/alphheim/api/services/Chat.java
 new file mode 100644
-index 00000000..9bf27d5c
+index 000000000..9bf27d5ce
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/api/services/Chat.java
 @@ -0,0 +1,8 @@
@@ -109,7 +109,7 @@ index 00000000..9bf27d5c
 +}
 diff --git a/src/main/java/pw/alphheim/api/services/InternalService.java b/src/main/java/pw/alphheim/api/services/InternalService.java
 new file mode 100644
-index 00000000..eb15d53e
+index 000000000..eb15d53e3
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/api/services/InternalService.java
 @@ -0,0 +1,6 @@
@@ -121,7 +121,7 @@ index 00000000..eb15d53e
 +}
 diff --git a/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
 new file mode 100644
-index 00000000..85159322
+index 000000000..851593222
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
 @@ -0,0 +1,41 @@
@@ -168,7 +168,7 @@ index 00000000..85159322
 +}
 diff --git a/src/main/java/pw/alphheim/api/services/InternalServicesManager.java b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
 new file mode 100644
-index 00000000..b042e634
+index 000000000..b042e6342
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
 @@ -0,0 +1,19 @@
@@ -192,5 +192,5 @@ index 00000000..b042e634
 +
 +}
 -- 
-2.18.0
+2.19.0
 
