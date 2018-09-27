@@ -1,0 +1,59 @@
+From 999315853a063965dfb37ef5f8b6dd4605eeab15 Mon Sep 17 00:00:00 2001
+From: Shane Freeder <theboyetronic@gmail.com>
+Date: Thu, 27 Sep 2018 03:11:41 +0100
+Subject: [PATCH] Make Location use UUIDs for serialization as opposed to
+ relying on world names
+
+---
+ src/main/java/org/bukkit/Location.java | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/Location.java
+index 9457832bc..9110ed244 100644
+--- a/src/main/java/org/bukkit/Location.java
++++ b/src/main/java/org/bukkit/Location.java
+@@ -11,6 +11,7 @@ import org.bukkit.util.Vector;
+ // Paper start
+ import com.google.common.base.Preconditions;
+ import java.util.Collection;
++import java.util.UUID;
+ import java.util.function.Predicate;
+ import org.bukkit.entity.Entity;
+ import org.bukkit.entity.LivingEntity;
+@@ -32,6 +33,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
+     private double z;
+     private float pitch;
+     private float yaw;
++    private UUID worldUUID; // Alphheim
+ 
+     /**
+      * Constructs a new Location with the given coordinates
+@@ -989,6 +991,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
+     public Map<String, Object> serialize() {
+         Map<String, Object> data = new HashMap<String, Object>();
+         data.put("world", this.world.getName());
++        data.put("world-uuid", this.world.getUID().toString()); // Alphheim
+ 
+         data.put("x", this.x);
+         data.put("y", this.y);
+@@ -1009,7 +1012,16 @@ public class Location implements Cloneable, ConfigurationSerializable {
+      * @see ConfigurationSerializable
+      */
+     public static Location deserialize(Map<String, Object> args) {
+-        World world = Bukkit.getWorld((String) args.get("world"));
++        // alphheim start - use UUIDs
++        World world = null;
++        String worldUUID = (String) args.get("world-uuid");
++        if (worldUUID != null) {
++            world = Bukkit.getWorld(UUID.fromString(worldUUID));
++        }
++
++        if (world == null)
++            world = Bukkit.getWorld((String) args.get("world"));
++        // Alphheim end - location world UUID
+         if (world == null) {
+             throw new IllegalArgumentException("unknown world");
+         }
+-- 
+2.19.0
+
