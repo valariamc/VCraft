@@ -40,6 +40,7 @@ function applyPatch {
 	git branch -f upstream "$branch" >/dev/null
 
 	cd "$basedir"
+	# TODO: Recreate $target if there is no .git folder?
 	if [ ! -d  "$basedir/$target" ]; then
 		mkdir "$basedir/$target"
 		cd "$basedir/$target"

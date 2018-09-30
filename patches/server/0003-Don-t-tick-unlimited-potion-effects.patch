@@ -1,4 +1,4 @@
-From 3fe753bb167b22b71867bcef40bd7a94434f3c03 Mon Sep 17 00:00:00 2001
+From b8dc6728c673d27e4cc89f68483289bd5c9bf0ff Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sat, 6 Jan 2018 14:44:38 +0000
 Subject: [PATCH] Don't tick 'unlimited' potion effects
@@ -8,10 +8,10 @@ Subject: [PATCH] Don't tick 'unlimited' potion effects
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/net/minecraft/server/MobEffect.java b/src/main/java/net/minecraft/server/MobEffect.java
-index 49c99afcc..e6de2efa8 100644
+index f9472e90..68c8d23c 100644
 --- a/src/main/java/net/minecraft/server/MobEffect.java
 +++ b/src/main/java/net/minecraft/server/MobEffect.java
-@@ -120,7 +120,7 @@ public class MobEffect implements Comparable<MobEffect> {
+@@ -118,7 +118,7 @@ public class MobEffect implements Comparable<MobEffect> {
      }
  
      private int i() {
@@ -20,15 +20,15 @@ index 49c99afcc..e6de2efa8 100644
      }
  
      public void b(EntityLiving entityliving) {
-@@ -222,7 +222,7 @@ public class MobEffect implements Comparable<MobEffect> {
-         return (this.getDuration() <= 32147 || mobeffect.getDuration() <= 32147) && (!this.isAmbient() || !mobeffect.isAmbient()) ? ComparisonChain.start().compare(Boolean.valueOf(this.isAmbient()), Boolean.valueOf(mobeffect.isAmbient())).compare(this.getDuration(), mobeffect.getDuration()).compare(this.getMobEffect().getColor(), mobeffect.getMobEffect().getColor()).result() : ComparisonChain.start().compare(Boolean.valueOf(this.isAmbient()), Boolean.valueOf(mobeffect.isAmbient())).compare(this.getMobEffect().getColor(), mobeffect.getMobEffect().getColor()).result();
+@@ -214,7 +214,7 @@ public class MobEffect implements Comparable<MobEffect> {
      }
  
+     // $FF: synthetic method
 -    public int compareTo(Object object) {
 +    public int compareTo(MobEffect object) { // Alphheim - decompile fix
-         return this.b((MobEffect) object);
+         return this.b((MobEffect)object);
      }
  }
 -- 
-2.18.0
+2.19.0
 
