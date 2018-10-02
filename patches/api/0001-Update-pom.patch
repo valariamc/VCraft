@@ -91,7 +91,7 @@ index 2ea1e0cf4..f559f7414 100644
      }
  
      // Contributed by Techcable <Techcable@outlook.com> in GH PR #65
-+    private static final String BRANCH = "ver/1.13-ah"; // Alphheim
++    private static final String BRANCH = "master"; // Alphheim
      private static int getFromRepo(String repo, String branch, String hash) {
          try {
              HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + branch + "..." + hash).openConnection();
