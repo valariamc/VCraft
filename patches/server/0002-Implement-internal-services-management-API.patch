@@ -1,4 +1,4 @@
-From b640ce3fb0911e9aeb5d7c103e8705b3aac7ffc5 Mon Sep 17 00:00:00 2001
+From b5bd48120fd7464ced264ce354f489bc43d0b31e Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -14,7 +14,7 @@ Subject: [PATCH] Implement internal services management API
  create mode 100644 src/main/java/pw/alphheim/services/defaults/VanillaChat.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 9ad5d9dc60..63183ed0fc 100644
+index 9ad5d9dc..63183ed0 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
 @@ -227,6 +227,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
@@ -26,10 +26,10 @@ index 9ad5d9dc60..63183ed0fc 100644
              server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
              // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 7768b5898a..11650a31e4 100644
+index 1e5ac718..4d5526a9 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -64,6 +64,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
+@@ -63,6 +63,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
  import com.destroystokyo.paper.event.player.PlayerJumpEvent; // Paper
  import co.aikar.timings.MinecraftTimings; // Paper
  // CraftBukkit end
@@ -37,7 +37,7 @@ index 7768b5898a..11650a31e4 100644
  
  public class PlayerConnection implements PacketListenerPlayIn, ITickable {
  
-@@ -1678,72 +1679,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1652,72 +1653,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
          } else if (this.player.getChatFlags() == EntityHuman.EnumChatVisibility.SYSTEM) {
              // Do nothing, this is coming from a plugin
          } else {
@@ -121,7 +121,7 @@ index 7768b5898a..11650a31e4 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 19f2f2bbd8..0baaedc996 100644
+index 19f2f2bb..0baaedc9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -158,6 +158,9 @@ import org.bukkit.craftbukkit.util.CraftNamespacedKey;
@@ -177,7 +177,7 @@ index 19f2f2bbd8..0baaedc996 100644
  }
 diff --git a/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 new file mode 100644
-index 0000000000..d6db9070e8
+index 00000000..d6db9070
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
 @@ -0,0 +1,118 @@
@@ -301,7 +301,7 @@ index 0000000000..d6db9070e8
 +}
 diff --git a/src/main/java/pw/alphheim/services/defaults/VanillaChat.java b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
 new file mode 100644
-index 0000000000..27ed0eb5fa
+index 00000000..27ed0eb5
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
 @@ -0,0 +1,95 @@
@@ -401,5 +401,5 @@ index 0000000000..27ed0eb5fa
 +    }
 +}
 -- 
-2.19.0
+2.19.1
 
