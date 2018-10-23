@@ -1,4 +1,4 @@
-From 8ecf4b3f3af3d7bbe0f955981b82c2f8c5df9443 Mon Sep 17 00:00:00 2001
+From 7a6a555b0c9bdaf954ab340a7784e4ab473a3388 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
@@ -9,7 +9,7 @@ Subject: [PATCH] Update pom
  2 files changed, 22 insertions(+), 9 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 67d40f03e..cd2a844d2 100644
+index 3347be41..3dd2004b 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -4,17 +4,18 @@
@@ -26,7 +26,7 @@ index 67d40f03e..cd2a844d2 100644
 -    <artifactId>paper-api</artifactId>
 +    <groupId>im.alphhe</groupId>
 +    <artifactId>alphheimcraft-api</artifactId>
-     <version>1.13.1-R0.1-SNAPSHOT</version>
+     <version>1.13.2-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>
  
 -    <name>Paper-API</name>
@@ -55,7 +55,7 @@ index 67d40f03e..cd2a844d2 100644
          <repository>
              <id>spigotmc-public</id>
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-index 2ea1e0cf4..f559f7414 100644
+index 2ea1e0cf..449bd92c 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 @@ -209,8 +209,8 @@ public class VersionCommand extends BukkitCommand {
@@ -96,5 +96,5 @@ index 2ea1e0cf4..f559f7414 100644
          try {
              HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + branch + "..." + hash).openConnection();
 -- 
-2.19.0
+2.19.1
 
