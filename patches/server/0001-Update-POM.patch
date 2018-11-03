@@ -1,4 +1,4 @@
-From 2fc533ec30ac82f7cfd643854c7e1a124b25bb43 Mon Sep 17 00:00:00 2001
+From 4f4cf56852c3483835832fa142be99f9fd120e32 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
@@ -10,7 +10,7 @@ Subject: [PATCH] Update POM
  3 files changed, 10 insertions(+), 11 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 4107df328..e65ea4a5b 100644
+index c3844581a..28691e148 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,10 +1,10 @@
@@ -66,10 +66,10 @@ index 4107df328..e65ea4a5b 100644
                  </configuration>
                  <executions>
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 67722440f..efdc385f4 100644
+index e47918b3d..e3ff388ad 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1336,7 +1336,7 @@ public abstract class MinecraftServer implements IAsyncTaskHandler, IMojangStati
+@@ -1347,7 +1347,7 @@ public abstract class MinecraftServer implements IAsyncTaskHandler, IMojangStati
      }
  
      public String getServerModName() {

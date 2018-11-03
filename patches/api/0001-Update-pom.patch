@@ -1,4 +1,4 @@
-From 7a6a555b0c9bdaf954ab340a7784e4ab473a3388 Mon Sep 17 00:00:00 2001
+From 8429e9f17bb6296db35a51e610b31c98a8b3e7a5 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
@@ -55,10 +55,10 @@ index 3347be41..3dd2004b 100644
          <repository>
              <id>spigotmc-public</id>
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-index 2ea1e0cf..449bd92c 100644
+index 5cebb245..7f475dc3 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-@@ -209,8 +209,8 @@ public class VersionCommand extends BukkitCommand {
+@@ -207,8 +207,8 @@ public class VersionCommand extends BukkitCommand {
      private void obtainVersion() {
          String version = Bukkit.getVersion();
          if (version == null) version = "Custom";
@@ -69,7 +69,7 @@ index 2ea1e0cf..449bd92c 100644
              int distance = getDistance(null, parts[0]);
              switch (distance) {
                  case -1:
-@@ -266,7 +266,7 @@ public class VersionCommand extends BukkitCommand {
+@@ -264,7 +264,7 @@ public class VersionCommand extends BukkitCommand {
              return getFromJenkins(currentVer);
          } catch (NumberFormatException ex) {
              verInfo = verInfo.replace("\"", "");
@@ -78,7 +78,7 @@ index 2ea1e0cf..449bd92c 100644
          }
              /*
              BufferedReader reader = Resources.asCharSource(
-@@ -288,7 +288,7 @@ public class VersionCommand extends BukkitCommand {
+@@ -286,7 +286,7 @@ public class VersionCommand extends BukkitCommand {
      private static int getFromJenkins(int currentVer) {
          try {
              BufferedReader reader = Resources.asCharSource(
@@ -87,7 +87,7 @@ index 2ea1e0cf..449bd92c 100644
                      Charsets.UTF_8
              ).openBufferedStream();
              try {
-@@ -307,6 +307,7 @@ public class VersionCommand extends BukkitCommand {
+@@ -305,6 +305,7 @@ public class VersionCommand extends BukkitCommand {
      }
  
      // Contributed by Techcable <Techcable@outlook.com> in GH PR #65
