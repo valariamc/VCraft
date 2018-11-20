@@ -1,4 +1,4 @@
-From 7688a7754219ccc53a98e67df1dd5117920c4a31 Mon Sep 17 00:00:00 2001
+From e28a2f03e336a35f54f80a30b958d8072b18b15a Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -26,7 +26,7 @@ index bec7748ea..7dda5c40d 100644
              server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
              // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 3427e95e6..21dd53c43 100644
+index 8d35b478b..0bab7b224 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -63,6 +63,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
@@ -37,7 +37,7 @@ index 3427e95e6..21dd53c43 100644
  
  public class PlayerConnection implements PacketListenerPlayIn, ITickable {
  
-@@ -1675,72 +1676,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1707,72 +1708,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
          } else if (this.player.getChatFlags() == EntityHuman.EnumChatVisibility.SYSTEM) {
              // Do nothing, this is coming from a plugin
          } else {
@@ -121,7 +121,7 @@ index 3427e95e6..21dd53c43 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 648ac4d18..7bdc81758 100644
+index 645953a31..fe0365e69 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -161,6 +161,9 @@ import org.bukkit.craftbukkit.util.CraftNamespacedKey;
@@ -159,7 +159,7 @@ index 648ac4d18..7bdc81758 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -2162,4 +2169,15 @@ public final class CraftServer implements Server {
+@@ -2166,4 +2173,15 @@ public final class CraftServer implements Server {
          return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
      }
      // Paper end
