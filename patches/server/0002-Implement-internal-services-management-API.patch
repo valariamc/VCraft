@@ -1,4 +1,4 @@
-From e28a2f03e336a35f54f80a30b958d8072b18b15a Mon Sep 17 00:00:00 2001
+From 849bdf646e1ec0f1756c5e7a3c4f02bf05c742c5 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -8,8 +8,8 @@ Subject: [PATCH] Implement internal services management API
  .../minecraft/server/PlayerConnection.java    |  75 ++---------
  .../org/bukkit/craftbukkit/CraftServer.java   |  18 +++
  .../CraftInternalServicesManager.java         | 118 ++++++++++++++++++
- .../services/defaults/VanillaChat.java        |  95 ++++++++++++++
- 5 files changed, 243 insertions(+), 64 deletions(-)
+ .../services/defaults/VanillaChat.java        | 104 +++++++++++++++
+ 5 files changed, 252 insertions(+), 64 deletions(-)
  create mode 100644 src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
  create mode 100644 src/main/java/pw/alphheim/services/defaults/VanillaChat.java
 
@@ -26,7 +26,7 @@ index bec7748ea..7dda5c40d 100644
              server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
              // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 8d35b478b..0bab7b224 100644
+index 204d622f0..9540e57e4 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -63,6 +63,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
@@ -37,7 +37,7 @@ index 8d35b478b..0bab7b224 100644
  
  public class PlayerConnection implements PacketListenerPlayIn, ITickable {
  
-@@ -1707,72 +1708,18 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1707,73 +1708,19 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
          } else if (this.player.getChatFlags() == EntityHuman.EnumChatVisibility.SYSTEM) {
              // Do nothing, this is coming from a plugin
          } else {
@@ -87,12 +87,13 @@ index 8d35b478b..0bab7b224 100644
 -                if (event.isCancelled()) {
 -                    return;
 -                }
--
+ 
 -                // Paper Start - (Meh) Support for vanilla world scoreboard name coloring
 -                String displayName = event.getPlayer().getDisplayName();
 -                if (this.player.getWorld().paperConfig.useVanillaScoreboardColoring) {
+-                    IChatBaseComponent nameFromTeam = ScoreboardTeam.a(this.player.getTeam(),((CraftPlayer) player).getHandle().getDisplayName());
 -                    // Explicitly add a RESET here, vanilla uses components for this now...
--                    displayName = CraftChatMessage.fromComponent(ScoreboardTeam.a(this.player.getTeam(),((CraftPlayer) player).getHandle().getDisplayName())) + org.bukkit.ChatColor.RESET;
+-                    displayName = CraftChatMessage.fromComponent(nameFromTeam, EnumChatFormat.WHITE) + org.bukkit.ChatColor.RESET;
 -                }
 -
 -                s = String.format(event.getFormat(), displayName, event.getMessage());
@@ -301,13 +302,15 @@ index 000000000..d6db9070e
 +}
 diff --git a/src/main/java/pw/alphheim/services/defaults/VanillaChat.java b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
 new file mode 100644
-index 000000000..27ed0eb5f
+index 000000000..61f2f8178
 --- /dev/null
 +++ b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
-@@ -0,0 +1,95 @@
+@@ -0,0 +1,104 @@
 +package pw.alphheim.services.defaults;
 +
 +import net.minecraft.server.EntityPlayer;
++import net.minecraft.server.EnumChatFormat;
++import net.minecraft.server.IChatBaseComponent;
 +import net.minecraft.server.MinecraftServer;
 +import net.minecraft.server.PlayerConnection;
 +import net.minecraft.server.ScoreboardTeam;
@@ -333,8 +336,14 @@ index 000000000..27ed0eb5f
 +
 +    @Override
 +    public void process(Player sender, String message) {
++        if (!(sender instanceof CraftPlayer)) {
++            server.getLogger().warning( sender.getName() + " is not a CraftPlayer but tried to chat?!");
++            return;
++        }
 +
-+        Boolean async = Bukkit.getServer().isPrimaryThread();
++        CraftPlayer player = (CraftPlayer) sender;
++
++        boolean async = Bukkit.getServer().isPrimaryThread();
 +        AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(async, sender, message, new LazyPlayerSet(server.getServer()));
 +        server.getPluginManager().callEvent(event);
 +
@@ -375,9 +384,10 @@ index 000000000..27ed0eb5f
 +
 +            // Paper Start - (Meh) Support for vanilla world scoreboard name coloring
 +            String displayName = event.getPlayer().getDisplayName();
-+            if (((CraftPlayer) sender).getHandle().getWorld().paperConfig.useVanillaScoreboardColoring) {
++            if (player.getHandle().getWorld().paperConfig.useVanillaScoreboardColoring) {
++                IChatBaseComponent nameFromTeam = ScoreboardTeam.a(((CraftPlayer) sender).getHandle().getTeam(),((CraftPlayer) player).getHandle().getDisplayName());
 +                // Explicitly add a RESET here, vanilla uses components for this now...
-+                displayName = CraftChatMessage.fromComponent(ScoreboardTeam.a(((CraftPlayer) sender).getHandle().getTeam(),((CraftPlayer) sender).getHandle().getDisplayName())) + org.bukkit.ChatColor.RESET;
++                displayName = CraftChatMessage.fromComponent(nameFromTeam, EnumChatFormat.WHITE) + org.bukkit.ChatColor.RESET;
 +            }
 +
 +            message = String.format(event.getFormat(), displayName, event.getMessage());
@@ -401,5 +411,5 @@ index 000000000..27ed0eb5f
 +    }
 +}
 -- 
-2.19.1
+2.19.2
 
