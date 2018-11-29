@@ -32,7 +32,7 @@ index c3844581a..28691e148 100644
      <parent>
 -        <groupId>com.destroystokyo.paper</groupId>
 -        <artifactId>paper-parent</artifactId>
-+        <groupId>im.alphhe</groupId>
++        <groupId>pw.valaria</groupId>
 +       <artifactId>alphheimcraft-parent</artifactId>
          <version>dev-SNAPSHOT</version>
          <relativePath>../pom.xml</relativePath>
@@ -42,7 +42,7 @@ index c3844581a..28691e148 100644
          <dependency>
 -            <groupId>com.destroystokyo.paper</groupId>
 -            <artifactId>paper-api</artifactId>
-+            <groupId>im.alphhe</groupId>
++            <groupId>pw.valaria</groupId>
 +            <artifactId>alphheimcraft-api</artifactId>
              <version>${project.version}</version>
              <scope>compile</scope>
@@ -88,7 +88,7 @@ index 674096cab..b85c64715 100644
          String result = "Unknown-Version";
 -
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.destroystokyo.paper/paper-api/pom.properties");
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/im.alphhe/alphheimcraft-api/pom.properties");
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/pw.valaria/alphheimcraft-api/pom.properties");
          Properties properties = new Properties();
  
          if (stream != null) {

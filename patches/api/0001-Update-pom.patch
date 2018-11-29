@@ -18,13 +18,13 @@ index 3347be41..3dd2004b 100644
      <parent>
 -        <groupId>com.destroystokyo.paper</groupId>
 -        <artifactId>paper-parent</artifactId>
-+        <groupId>im.alphhe</groupId>
++        <groupId>pw.valaria</groupId>
 +        <artifactId>alphheimcraft-parent</artifactId>
          <version>dev-SNAPSHOT</version>
      </parent>
  
 -    <artifactId>paper-api</artifactId>
-+    <groupId>im.alphhe</groupId>
++    <groupId>pw.valaria</groupId>
 +    <artifactId>alphheimcraft-api</artifactId>
      <version>1.13.2-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>

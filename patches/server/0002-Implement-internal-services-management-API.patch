@@ -10,8 +10,8 @@ Subject: [PATCH] Implement internal services management API
  .../CraftInternalServicesManager.java         | 118 ++++++++++++++++++
  .../services/defaults/VanillaChat.java        | 104 +++++++++++++++
  5 files changed, 252 insertions(+), 64 deletions(-)
- create mode 100644 src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
- create mode 100644 src/main/java/pw/alphheim/services/defaults/VanillaChat.java
+ create mode 100644 src/main/java/pw/valaria/services/CraftInternalServicesManager.java
+ create mode 100644 src/main/java/pw/valaria/services/defaults/VanillaChat.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
 index bec7748ea..7dda5c40d 100644
@@ -33,7 +33,7 @@ index 204d622f0..9540e57e4 100644
  import com.destroystokyo.paper.event.player.PlayerJumpEvent; // Paper
  import co.aikar.timings.MinecraftTimings; // Paper
  // CraftBukkit end
-+import pw.alphheim.api.services.Chat; // Alphheim
++import pw.valaria.api.services.Chat; // Alphheim
  
  public class PlayerConnection implements PacketListenerPlayIn, ITickable {
  
@@ -129,9 +129,9 @@ index 645953a31..fe0365e69 100644
  import org.bukkit.event.server.ServerLoadEvent;
  import org.bukkit.event.server.TabCompleteEvent;
  import net.md_5.bungee.api.chat.BaseComponent;
-+import pw.alphheim.api.services.Chat;
-+import pw.alphheim.services.CraftInternalServicesManager; // Alphheim
-+import pw.alphheim.services.defaults.VanillaChat;
++import pw.valaria.api.services.Chat;
++import pw.valaria.services.CraftInternalServicesManager; // Alphheim
++import pw.valaria.services.defaults.VanillaChat;
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
@@ -176,20 +176,20 @@ index 645953a31..fe0365e69 100644
 +    }
 +    // Alphheim end
  }
-diff --git a/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
+diff --git a/src/main/java/pw/valaria/services/CraftInternalServicesManager.java b/src/main/java/pw/valaria/services/CraftInternalServicesManager.java
 new file mode 100644
 index 000000000..d6db9070e
 --- /dev/null
-+++ b/src/main/java/pw/alphheim/services/CraftInternalServicesManager.java
++++ b/src/main/java/pw/valaria/services/CraftInternalServicesManager.java
 @@ -0,0 +1,118 @@
-+package pw.alphheim.services;
++package pw.valaria.services;
 +
 +import com.google.common.base.Preconditions;
 +import net.minecraft.server.MinecraftServer;
 +import org.bukkit.plugin.Plugin;
-+import pw.alphheim.api.services.InternalService;
-+import pw.alphheim.api.services.InternalServiceHolder;
-+import pw.alphheim.api.services.InternalServicesManager;
++import pw.valaria.api.services.InternalService;
++import pw.valaria.api.services.InternalServiceHolder;
++import pw.valaria.api.services.InternalServicesManager;
 +
 +import java.util.ArrayList;
 +import java.util.HashMap;
@@ -300,13 +300,13 @@ index 000000000..d6db9070e
 +
 +
 +}
-diff --git a/src/main/java/pw/alphheim/services/defaults/VanillaChat.java b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
+diff --git a/src/main/java/pw/valaria/services/defaults/VanillaChat.java b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
 new file mode 100644
 index 000000000..61f2f8178
 --- /dev/null
-+++ b/src/main/java/pw/alphheim/services/defaults/VanillaChat.java
++++ b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
 @@ -0,0 +1,104 @@
-+package pw.alphheim.services.defaults;
++package pw.valaria.services.defaults;
 +
 +import net.minecraft.server.EntityPlayer;
 +import net.minecraft.server.EnumChatFormat;
@@ -326,7 +326,7 @@ index 000000000..61f2f8178
 +import org.bukkit.entity.Player;
 +import org.bukkit.event.player.AsyncPlayerChatEvent;
 +import org.bukkit.event.player.PlayerChatEvent;
-+import pw.alphheim.api.services.Chat;
++import pw.valaria.api.services.Chat;
 +
 +import java.util.Set;
 +import java.util.concurrent.ExecutionException;

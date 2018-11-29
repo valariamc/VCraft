@@ -7,15 +7,15 @@ Subject: [PATCH] internal services management API
  src/main/java/org/bukkit/Bukkit.java          | 12 ++++++
  src/main/java/org/bukkit/Server.java          | 12 ++++++
  .../bukkit/plugin/SimplePluginManager.java    |  9 ++++
- .../java/pw/alphheim/api/services/Chat.java   |  8 ++++
+ .../java/pw/valaria/api/services/Chat.java   |  8 ++++
  .../api/services/InternalService.java         |  6 +++
  .../api/services/InternalServiceHolder.java   | 41 +++++++++++++++++++
  .../api/services/InternalServicesManager.java | 19 +++++++++
  7 files changed, 107 insertions(+)
- create mode 100644 src/main/java/pw/alphheim/api/services/Chat.java
- create mode 100644 src/main/java/pw/alphheim/api/services/InternalService.java
- create mode 100644 src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
- create mode 100644 src/main/java/pw/alphheim/api/services/InternalServicesManager.java
+ create mode 100644 src/main/java/pw/valaria/api/services/Chat.java
+ create mode 100644 src/main/java/pw/valaria/api/services/InternalService.java
+ create mode 100644 src/main/java/pw/valaria/api/services/InternalServiceHolder.java
+ create mode 100644 src/main/java/pw/valaria/api/services/InternalServicesManager.java
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
 index 22ca2900c..866d3941b 100644
@@ -25,8 +25,8 @@ index 22ca2900c..866d3941b 100644
  
  import org.bukkit.inventory.ItemFactory;
  import org.bukkit.inventory.meta.ItemMeta;
-+import pw.alphheim.api.services.InternalService;
-+import pw.alphheim.api.services.InternalServicesManager;
++import pw.valaria.api.services.InternalService;
++import pw.valaria.api.services.InternalServicesManager;
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
@@ -53,7 +53,7 @@ index 9c78f18f6..33e8b74b3 100644
  
  import org.bukkit.inventory.ItemFactory;
  import org.bukkit.inventory.meta.ItemMeta;
-+import pw.alphheim.api.services.InternalServicesManager;
++import pw.valaria.api.services.InternalServicesManager;
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
@@ -93,13 +93,13 @@ index a7dd902fb..5f2e43791 100644
              try {
                  HandlerList.unregisterAll(plugin);
              } catch (Throwable ex) {
-diff --git a/src/main/java/pw/alphheim/api/services/Chat.java b/src/main/java/pw/alphheim/api/services/Chat.java
+diff --git a/src/main/java/pw/valaria/api/services/Chat.java b/src/main/java/pw/valaria/api/services/Chat.java
 new file mode 100644
 index 000000000..9bf27d5ce
 --- /dev/null
-+++ b/src/main/java/pw/alphheim/api/services/Chat.java
++++ b/src/main/java/pw/valaria/api/services/Chat.java
 @@ -0,0 +1,8 @@
-+package pw.alphheim.api.services;
++package pw.valaria.api.services;
 +
 +import org.bukkit.entity.Player;
 +
@@ -107,25 +107,25 @@ index 000000000..9bf27d5ce
 +
 +    void process(Player sender, String message);
 +}
-diff --git a/src/main/java/pw/alphheim/api/services/InternalService.java b/src/main/java/pw/alphheim/api/services/InternalService.java
+diff --git a/src/main/java/pw/valaria/api/services/InternalService.java b/src/main/java/pw/valaria/api/services/InternalService.java
 new file mode 100644
 index 000000000..eb15d53e3
 --- /dev/null
-+++ b/src/main/java/pw/alphheim/api/services/InternalService.java
++++ b/src/main/java/pw/valaria/api/services/InternalService.java
 @@ -0,0 +1,6 @@
-+package pw.alphheim.api.services;
++package pw.valaria.api.services;
 +
 +public interface InternalService {
 +
 +    default void onDisable(){};
 +}
-diff --git a/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
+diff --git a/src/main/java/pw/valaria/api/services/InternalServiceHolder.java b/src/main/java/pw/valaria/api/services/InternalServiceHolder.java
 new file mode 100644
 index 000000000..851593222
 --- /dev/null
-+++ b/src/main/java/pw/alphheim/api/services/InternalServiceHolder.java
++++ b/src/main/java/pw/valaria/api/services/InternalServiceHolder.java
 @@ -0,0 +1,41 @@
-+package pw.alphheim.api.services;
++package pw.valaria.api.services;
 +
 +import javax.annotation.Nullable;
 +import org.bukkit.plugin.Plugin;
@@ -166,13 +166,13 @@ index 000000000..851593222
 +                '}';
 +    }
 +}
-diff --git a/src/main/java/pw/alphheim/api/services/InternalServicesManager.java b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
+diff --git a/src/main/java/pw/valaria/api/services/InternalServicesManager.java b/src/main/java/pw/valaria/api/services/InternalServicesManager.java
 new file mode 100644
 index 000000000..b042e6342
 --- /dev/null
-+++ b/src/main/java/pw/alphheim/api/services/InternalServicesManager.java
++++ b/src/main/java/pw/valaria/api/services/InternalServicesManager.java
 @@ -0,0 +1,19 @@
-+package pw.alphheim.api.services;
++package pw.valaria.api.services;
 +
 +import org.bukkit.plugin.Plugin;
 +
