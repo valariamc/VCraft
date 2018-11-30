@@ -1,4 +1,4 @@
-From 5dfb4050f2e291c57174ed72cdb15b7e3bc62805 Mon Sep 17 00:00:00 2001
+From 48aadd4c7ee908efa3e9dd18c097af153a997372 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
@@ -7,8 +7,8 @@ Subject: [PATCH] internal services management API
  src/main/java/org/bukkit/Bukkit.java          | 12 ++++++
  src/main/java/org/bukkit/Server.java          | 12 ++++++
  .../bukkit/plugin/SimplePluginManager.java    |  9 ++++
- .../java/pw/valaria/api/services/Chat.java   |  8 ++++
- .../api/services/InternalService.java         |  6 +++
+ .../java/pw/valaria/api/services/Chat.java    |  8 ++++
+ .../valaria/api/services/InternalService.java |  6 +++
  .../api/services/InternalServiceHolder.java   | 41 +++++++++++++++++++
  .../api/services/InternalServicesManager.java | 19 +++++++++
  7 files changed, 107 insertions(+)
@@ -18,7 +18,7 @@ Subject: [PATCH] internal services management API
  create mode 100644 src/main/java/pw/valaria/api/services/InternalServicesManager.java
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 22ca2900c..866d3941b 100644
+index 22ca2900c..f5c9e7f56 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
 @@ -50,6 +50,8 @@ import org.bukkit.generator.ChunkGenerator;
@@ -46,7 +46,7 @@ index 22ca2900c..866d3941b 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 9c78f18f6..33e8b74b3 100644
+index 9c78f18f6..d17e5a191 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -51,6 +51,7 @@ import org.bukkit.generator.ChunkGenerator;
@@ -95,7 +95,7 @@ index a7dd902fb..5f2e43791 100644
              } catch (Throwable ex) {
 diff --git a/src/main/java/pw/valaria/api/services/Chat.java b/src/main/java/pw/valaria/api/services/Chat.java
 new file mode 100644
-index 000000000..9bf27d5ce
+index 000000000..cb1468637
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/Chat.java
 @@ -0,0 +1,8 @@
@@ -109,7 +109,7 @@ index 000000000..9bf27d5ce
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalService.java b/src/main/java/pw/valaria/api/services/InternalService.java
 new file mode 100644
-index 000000000..eb15d53e3
+index 000000000..d9f58faf0
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/InternalService.java
 @@ -0,0 +1,6 @@
@@ -121,7 +121,7 @@ index 000000000..eb15d53e3
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalServiceHolder.java b/src/main/java/pw/valaria/api/services/InternalServiceHolder.java
 new file mode 100644
-index 000000000..851593222
+index 000000000..00b0c04b1
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/InternalServiceHolder.java
 @@ -0,0 +1,41 @@
@@ -168,7 +168,7 @@ index 000000000..851593222
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalServicesManager.java b/src/main/java/pw/valaria/api/services/InternalServicesManager.java
 new file mode 100644
-index 000000000..b042e6342
+index 000000000..1711d7833
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/InternalServicesManager.java
 @@ -0,0 +1,19 @@
@@ -192,5 +192,5 @@ index 000000000..b042e6342
 +
 +}
 -- 
-2.19.1
+2.19.2
 
