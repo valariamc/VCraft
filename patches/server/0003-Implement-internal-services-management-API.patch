@@ -1,4 +1,4 @@
-From c6d4dfcc71cb80ad4ef77631016ec50e61273aca Mon Sep 17 00:00:00 2001
+From 1cde406417dcb0f001d16f539970e236de7f525a Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API

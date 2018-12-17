@@ -1,4 +1,4 @@
-From f04fa02fac727dc951e31591ffbb38087812ca2e Mon Sep 17 00:00:00 2001
+From ed8f54ab73eaf8233b604d6a1a2f6c4ad82e3dcf Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sat, 6 Jan 2018 14:44:38 +0000
 Subject: [PATCH] Don't tick 'unlimited' potion effects
@@ -8,7 +8,7 @@ Subject: [PATCH] Don't tick 'unlimited' potion effects
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/MobEffect.java b/src/main/java/net/minecraft/server/MobEffect.java
-index 351bf7a28c..91ebc33655 100644
+index f8c386f3be..4ff3d04941 100644
 --- a/src/main/java/net/minecraft/server/MobEffect.java
 +++ b/src/main/java/net/minecraft/server/MobEffect.java
 @@ -118,7 +118,7 @@ public class MobEffect implements Comparable<MobEffect> {

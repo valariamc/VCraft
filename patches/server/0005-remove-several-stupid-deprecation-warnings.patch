@@ -1,4 +1,4 @@
-From 4be2ea4a9b780f4c1411a921d65bf184a4c4066a Mon Sep 17 00:00:00 2001
+From 439598816e10360409420d1062a840ce8fbfdcf6 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Fri, 11 May 2018 01:46:27 +0100
 Subject: [PATCH] remove several stupid deprecation warnings
