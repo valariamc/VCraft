@@ -1,4 +1,4 @@
-From 8429e9f17bb6296db35a51e610b31c98a8b3e7a5 Mon Sep 17 00:00:00 2001
+From 4dc1f7b76439e049fae56790bab025dfee1e7e44 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
@@ -9,7 +9,7 @@ Subject: [PATCH] Update pom
  2 files changed, 22 insertions(+), 9 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 3347be41..3dd2004b 100644
+index 3ebc62871..4c9d49cff 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -4,17 +4,18 @@
@@ -36,7 +36,7 @@ index 3347be41..3dd2004b 100644
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
-@@ -24,6 +25,17 @@
+@@ -25,6 +26,17 @@
          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
      </properties>
  
@@ -52,10 +52,10 @@ index 3347be41..3dd2004b 100644
 +    </distributionManagement>
 +
      <repositories>
-         <repository>
-             <id>spigotmc-public</id>
+         <!--
+             If you are a plugin developer, please use https://hub.spigotmc.org/nexus/content/repositories/snapshots/
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-index 5cebb245..7f475dc3 100644
+index 5cebb2454..7f475dc38 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 @@ -207,8 +207,8 @@ public class VersionCommand extends BukkitCommand {
@@ -96,5 +96,5 @@ index 5cebb245..7f475dc3 100644
          try {
              HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + branch + "..." + hash).openConnection();
 -- 
-2.19.1
+2.20.1
 

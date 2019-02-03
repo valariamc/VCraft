@@ -1,4 +1,4 @@
-From 48aadd4c7ee908efa3e9dd18c097af153a997372 Mon Sep 17 00:00:00 2001
+From 3c2a78e77de43df376e1ccb094af9957056a8754 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
@@ -18,7 +18,7 @@ Subject: [PATCH] internal services management API
  create mode 100644 src/main/java/pw/valaria/api/services/InternalServicesManager.java
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 22ca2900c..f5c9e7f56 100644
+index 9fab69137..3d863c886 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
 @@ -50,6 +50,8 @@ import org.bukkit.generator.ChunkGenerator;
@@ -30,7 +30,7 @@ index 22ca2900c..f5c9e7f56 100644
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
-@@ -1507,4 +1509,14 @@ public final class Bukkit {
+@@ -1537,4 +1539,14 @@ public final class Bukkit {
      {
          return server.spigot();
      }
@@ -46,7 +46,7 @@ index 22ca2900c..f5c9e7f56 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 9c78f18f6..d17e5a191 100644
+index ae15b0e99..d5b7bab3b 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -51,6 +51,7 @@ import org.bukkit.generator.ChunkGenerator;
@@ -57,7 +57,7 @@ index 9c78f18f6..d17e5a191 100644
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
-@@ -1296,4 +1297,15 @@ public interface Server extends PluginMessageRecipient {
+@@ -1324,4 +1325,15 @@ public interface Server extends PluginMessageRecipient {
       */
      com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
      // Paper end
@@ -192,5 +192,5 @@ index 000000000..1711d7833
 +
 +}
 -- 
-2.19.2
+2.20.1
 

@@ -1,4 +1,4 @@
-From c522f7b68d7effdd4811fbe68cfaf573e86589a8 Mon Sep 17 00:00:00 2001
+From 77d36c76b0c83246f134ae322b81cbde199e3c55 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Mon, 8 Jun 2015 23:55:20 -0400
 Subject: [PATCH] SendSignEvent
