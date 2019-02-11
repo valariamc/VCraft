@@ -1,4 +1,4 @@
-From 71d0c7afcf3a172f1a49a3848c92551d4511269a Mon Sep 17 00:00:00 2001
+From 648b7fecc9b0ee9bead8c561b1e22c8c7311a923 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -26,7 +26,7 @@ index 21a05b2b21..e22bd22239 100644
              server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
              // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 0a425a193d..3a24488985 100644
+index 3bb285439c..6e3114d624 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -64,6 +64,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
@@ -37,7 +37,7 @@ index 0a425a193d..3a24488985 100644
  
  public class PlayerConnection implements PacketListenerPlayIn, ITickable {
  
-@@ -1704,73 +1705,19 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1705,73 +1706,19 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
          } else if (this.player.getChatFlags() == EntityHuman.EnumChatVisibility.SYSTEM) {
              // Do nothing, this is coming from a plugin
          } else {
@@ -122,7 +122,7 @@ index 0a425a193d..3a24488985 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 27fc7f9aab..84cdc550fd 100644
+index eeb2ddf798..d1b0af8fb2 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -163,6 +163,9 @@ import org.bukkit.craftbukkit.util.CraftNamespacedKey;
