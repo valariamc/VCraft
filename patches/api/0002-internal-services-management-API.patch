@@ -1,24 +1,24 @@
-From 4bd00fc566d557673c3adfa93cfd769227fb80df Mon Sep 17 00:00:00 2001
+From a010e23b09d329f3479d065234458bce312e09f9 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
 
 ---
- src/main/java/org/bukkit/Bukkit.java          | 12 ++++++
- src/main/java/org/bukkit/Server.java          | 12 ++++++
+ src/main/java/org/bukkit/Bukkit.java          | 13 ++++++
+ src/main/java/org/bukkit/Server.java          | 13 ++++++
  .../bukkit/plugin/SimplePluginManager.java    |  9 ++++
- .../java/pw/valaria/api/services/Chat.java    |  8 ++++
+ .../java/pw/valaria/api/services/Chat.java    |  9 ++++
  .../valaria/api/services/InternalService.java |  6 +++
- .../api/services/InternalServiceHolder.java   | 41 +++++++++++++++++++
- .../api/services/InternalServicesManager.java | 19 +++++++++
- 7 files changed, 107 insertions(+)
+ .../api/services/InternalServiceHolder.java   | 43 +++++++++++++++++++
+ .../api/services/InternalServicesManager.java | 23 ++++++++++
+ 7 files changed, 116 insertions(+)
  create mode 100644 src/main/java/pw/valaria/api/services/Chat.java
  create mode 100644 src/main/java/pw/valaria/api/services/InternalService.java
  create mode 100644 src/main/java/pw/valaria/api/services/InternalServiceHolder.java
  create mode 100644 src/main/java/pw/valaria/api/services/InternalServicesManager.java
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 5ed9726c..fb8d14e9 100644
+index 5ed9726c..19373e6b 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
 @@ -53,6 +53,8 @@ import org.bukkit.inventory.meta.ItemMeta;
@@ -30,7 +30,7 @@ index 5ed9726c..fb8d14e9 100644
  
  /**
   * Represents the Bukkit core, for version and Server singleton handling
-@@ -1638,4 +1640,14 @@ public final class Bukkit {
+@@ -1638,4 +1640,15 @@ public final class Bukkit {
      {
          return server.spigot();
      }
@@ -40,13 +40,14 @@ index 5ed9726c..fb8d14e9 100644
 +    /**
 +     * @return the internal services manager
 +     */
++    @NotNull
 +    public static InternalServicesManager getInternalServices() {
 +        return server.getInternalServices();
 +    }
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index eb23417b..434ad651 100644
+index eb23417b..c958acf9 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -54,6 +54,7 @@ import org.bukkit.inventory.meta.ItemMeta;
@@ -57,7 +58,7 @@ index eb23417b..434ad651 100644
  
  /**
   * Represents a server implementation.
-@@ -1427,4 +1428,15 @@ public interface Server extends PluginMessageRecipient {
+@@ -1427,4 +1428,16 @@ public interface Server extends PluginMessageRecipient {
      @NotNull
      com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
      // Paper end
@@ -70,6 +71,7 @@ index eb23417b..434ad651 100644
 +     *
 +     * @return the {@link InternalServicesManager} used in the server
 +     */
++    @NotNull
 +    InternalServicesManager getInternalServices();
 +    // Alphheim end
  }
@@ -95,17 +97,18 @@ index 9ec042fd..08069e0f 100644
              } catch (Throwable ex) {
 diff --git a/src/main/java/pw/valaria/api/services/Chat.java b/src/main/java/pw/valaria/api/services/Chat.java
 new file mode 100644
-index 00000000..cb146863
+index 00000000..c7381d36
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/Chat.java
-@@ -0,0 +1,8 @@
+@@ -0,0 +1,9 @@
 +package pw.valaria.api.services;
 +
 +import org.bukkit.entity.Player;
++import org.jetbrains.annotations.NotNull;
 +
 +public interface Chat extends InternalService {
 +
-+    void process(Player sender, String message);
++    void process(@NotNull Player sender, @NotNull String message);
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalService.java b/src/main/java/pw/valaria/api/services/InternalService.java
 new file mode 100644
@@ -121,29 +124,31 @@ index 00000000..d9f58faf
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalServiceHolder.java b/src/main/java/pw/valaria/api/services/InternalServiceHolder.java
 new file mode 100644
-index 00000000..00b0c04b
+index 00000000..c3e405b0
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/InternalServiceHolder.java
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,43 @@
 +package pw.valaria.api.services;
 +
-+import javax.annotation.Nullable;
 +import org.bukkit.plugin.Plugin;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
 +
 +public class InternalServiceHolder<T extends InternalService> {
 +
-+    private T internalService;
-+    private Plugin plugin;
++    @NotNull private T internalService;
++    @Nullable private Plugin plugin;
 +
-+    public InternalServiceHolder(T internalService) {
++    public InternalServiceHolder(@NotNull T internalService) {
 +        this(internalService, null);
 +    }
 +
-+    public InternalServiceHolder(T internalService, Plugin plugin) {
++    public InternalServiceHolder(@NotNull T internalService, @Nullable Plugin plugin) {
 +        this.internalService = internalService;
 +        this.plugin = plugin;
 +    }
 +
++    @NotNull
 +    public T getInternalService() {
 +        return internalService;
 +    }
@@ -168,27 +173,31 @@ index 00000000..00b0c04b
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalServicesManager.java b/src/main/java/pw/valaria/api/services/InternalServicesManager.java
 new file mode 100644
-index 00000000..1711d783
+index 00000000..6a1c05f4
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/InternalServicesManager.java
-@@ -0,0 +1,19 @@
+@@ -0,0 +1,23 @@
 +package pw.valaria.api.services;
 +
 +import org.bukkit.plugin.Plugin;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
 +
 +public interface InternalServicesManager {
-+    <T extends InternalService> void registerDefaultService(Class<T> serviceType, T service);
++    <T extends InternalService> void registerDefaultService(@NotNull Class<T> serviceType, @NotNull T service);
 +
 +
-+    <T extends InternalService> boolean registerService(Class<T> serviceType, T service, Plugin owningPlugin);
++    <T extends InternalService> boolean registerService(@NotNull Class<T> serviceType, @NotNull T service, @Nullable Plugin owningPlugin);
 +
-+    <T extends InternalService> boolean registerService(Class<T> serviceType, T service, Plugin owningPlugin, boolean force);
++    <T extends InternalService> boolean registerService(@NotNull Class<T> serviceType, @Nullable T service, @Nullable Plugin owningPlugin, boolean force);
 +
-+    <T extends InternalService> T getService(Class<T> serviceType);
++    @Nullable
++    <T extends InternalService> T getService(@NotNull Class<T> serviceType);
 +
-+    <T extends InternalService> T unregisterService(Class<T> serviceType, T service);
++    @Nullable
++    <T extends InternalService> T unregisterService(@NotNull Class<T> serviceType, @NotNull T service);
 +
-+    boolean unregisterServices(Plugin owningPlugin);
++    boolean unregisterServices(@NotNull Plugin owningPlugin);
 +
 +}
 -- 

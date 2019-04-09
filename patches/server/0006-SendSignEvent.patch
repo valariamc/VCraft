@@ -1,12 +1,12 @@
-From a76d79e172d1c5e272e46b794a5e66c97635df32 Mon Sep 17 00:00:00 2001
+From b54634d40940cb0cecf130b573bcc4521449c258 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Mon, 8 Jun 2015 23:55:20 -0400
 Subject: [PATCH] SendSignEvent
 
 ---
  .../paper/block/SendSignEventImpl.java        | 41 +++++++++++++++++++
- .../net/minecraft/server/TileEntitySign.java  | 13 ++++--
- 2 files changed, 50 insertions(+), 4 deletions(-)
+ .../net/minecraft/server/TileEntitySign.java  | 13 +++++-
+ 2 files changed, 52 insertions(+), 2 deletions(-)
  create mode 100644 src/main/java/com/destroystokyo/paper/block/SendSignEventImpl.java
 
 diff --git a/src/main/java/com/destroystokyo/paper/block/SendSignEventImpl.java b/src/main/java/com/destroystokyo/paper/block/SendSignEventImpl.java
@@ -57,7 +57,7 @@ index 000000000..dae0c4539
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/TileEntitySign.java b/src/main/java/net/minecraft/server/TileEntitySign.java
-index 0a5971d0e..6ac0e5b96 100644
+index d0a91f675..f0e2e1d5b 100644
 --- a/src/main/java/net/minecraft/server/TileEntitySign.java
 +++ b/src/main/java/net/minecraft/server/TileEntitySign.java
 @@ -1,5 +1,6 @@
@@ -67,33 +67,31 @@ index 0a5971d0e..6ac0e5b96 100644
  import com.mojang.brigadier.exceptions.CommandSyntaxException;
  import javax.annotation.Nullable;
  
-@@ -24,14 +25,14 @@ public class TileEntitySign extends TileEntity implements ICommandListener {
- 
-     // Paper start
-     public NBTTagCompound save(NBTTagCompound nbttagcompound) {
--        return save(nbttagcompound, false);
-+        return save(nbttagcompound, this.lines, false);
+@@ -23,10 +24,14 @@ public class TileEntitySign extends TileEntity implements ICommandListener {
      }
--    public NBTTagCompound save(NBTTagCompound nbttagcompound, boolean filterLines) {
-+    public NBTTagCompound save(NBTTagCompound nbttagcompound, IChatBaseComponent[] lines, boolean filterLines) {
-         // Paper end
+ 
+     public NBTTagCompound save(NBTTagCompound nbttagcompound) {
++        return save(nbttagcompound, this.lines);
++    }
++    public NBTTagCompound save(NBTTagCompound nbttagcompound, IChatBaseComponent[] lines) {
++        // Paper end
          super.save(nbttagcompound);
  
          for (int i = 0; i < 4; ++i) {
 -            String s = IChatBaseComponent.ChatSerializer.a(this.lines[i]);
 +            String s = IChatBaseComponent.ChatSerializer.a(lines[i]); // EMC
  
-             nbttagcompound.setString("Text" + (i + 1), filterLines && MAX_SIGN_LINE_LENGTH > 0 && s.length() > MAX_SIGN_LINE_LENGTH ? s.substring(0, MAX_SIGN_LINE_LENGTH): s); // Paper
+             nbttagcompound.setString("Text" + (i + 1), s);
          }
-@@ -125,7 +126,11 @@ public class TileEntitySign extends TileEntity implements ICommandListener {
+@@ -120,7 +125,11 @@ public class TileEntitySign extends TileEntity implements ICommandListener {
      }
  
      public NBTTagCompound aa_() {
--        return this.save(new NBTTagCompound(), true); // Paper - filter lines
+-        return this.save(new NBTTagCompound());
 +        // Alphheim start - EMC
 +        SendSignEventImpl event = new SendSignEventImpl(this.world, this.getPosition(), this.lines);
 +        event.callEvent();
-+        return this.save(new NBTTagCompound(), event.lines, true);
++        return this.save(new NBTTagCompound(), event.lines);
 +        // Alphheim end
      }
  

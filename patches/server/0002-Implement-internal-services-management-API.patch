@@ -1,4 +1,4 @@
-From 9409af7a5c4559ee690f7b8ce727e6b00716ea2a Mon Sep 17 00:00:00 2001
+From 79614aa9f36d71a494cabead89a647da850e1b94 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -14,7 +14,7 @@ Subject: [PATCH] Implement internal services management API
  create mode 100644 src/main/java/pw/valaria/services/defaults/VanillaChat.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 21a05b2b21..e22bd22239 100644
+index 21a05b2b2..e22bd2223 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
 @@ -232,6 +232,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
@@ -26,7 +26,7 @@ index 21a05b2b21..e22bd22239 100644
              server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
              // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 3bb285439c..6e3114d624 100644
+index 65e76491b..7ea88a303 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -64,6 +64,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
@@ -37,7 +37,7 @@ index 3bb285439c..6e3114d624 100644
  
  public class PlayerConnection implements PacketListenerPlayIn, ITickable {
  
-@@ -1705,73 +1706,19 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+@@ -1690,73 +1691,19 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
          } else if (this.player.getChatFlags() == EntityHuman.EnumChatVisibility.SYSTEM) {
              // Do nothing, this is coming from a plugin
          } else {
@@ -122,7 +122,7 @@ index 3bb285439c..6e3114d624 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 8d26f8d525..93b1e4a844 100644
+index 9c5b79920..738de052f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -163,6 +163,9 @@ import org.bukkit.craftbukkit.util.CraftNamespacedKey;
@@ -160,7 +160,7 @@ index 8d26f8d525..93b1e4a844 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -2207,4 +2214,15 @@ public final class CraftServer implements Server {
+@@ -2208,4 +2215,15 @@ public final class CraftServer implements Server {
          return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
      }
      // Paper end
@@ -178,7 +178,7 @@ index 8d26f8d525..93b1e4a844 100644
  }
 diff --git a/src/main/java/pw/valaria/services/CraftInternalServicesManager.java b/src/main/java/pw/valaria/services/CraftInternalServicesManager.java
 new file mode 100644
-index 0000000000..c7bd45647d
+index 000000000..c7bd45647
 --- /dev/null
 +++ b/src/main/java/pw/valaria/services/CraftInternalServicesManager.java
 @@ -0,0 +1,118 @@
@@ -302,7 +302,7 @@ index 0000000000..c7bd45647d
 +}
 diff --git a/src/main/java/pw/valaria/services/defaults/VanillaChat.java b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
 new file mode 100644
-index 0000000000..8f98bcebe2
+index 000000000..8f98bcebe
 --- /dev/null
 +++ b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
 @@ -0,0 +1,104 @@

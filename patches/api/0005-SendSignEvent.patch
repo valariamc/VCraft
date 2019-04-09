@@ -1,19 +1,19 @@
-From 610c793a1c900279f478481c2667859b22dd149b Mon Sep 17 00:00:00 2001
+From 898a1ad7640e003fc923d0ae24e24c1cf1318d75 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Sun, 4 Dec 2016 22:06:10 -0500
 Subject: [PATCH] SendSignEvent
 
 ---
- .../paper/block/SendSignEvent.java            | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ .../paper/block/SendSignEvent.java            | 53 +++++++++++++++++++
+ 1 file changed, 53 insertions(+)
  create mode 100644 src/main/java/com/destroystokyo/paper/block/SendSignEvent.java
 
 diff --git a/src/main/java/com/destroystokyo/paper/block/SendSignEvent.java b/src/main/java/com/destroystokyo/paper/block/SendSignEvent.java
 new file mode 100644
-index 000000000..99094e22a
+index 00000000..9b291c78
 --- /dev/null
 +++ b/src/main/java/com/destroystokyo/paper/block/SendSignEvent.java
-@@ -0,0 +1,48 @@
+@@ -0,0 +1,53 @@
 +/*
 + * Copyright (c) 2016 Starlis LLC / Daniel Ennis (Aikar) - MIT License
 + *
@@ -42,26 +42,31 @@ index 000000000..99094e22a
 +import org.bukkit.block.Block;
 +import org.bukkit.event.Event;
 +import org.bukkit.event.HandlerList;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
 +
 +public abstract class SendSignEvent extends Event {
 +
++    @NotNull
 +    public abstract Block getBlock();
 +
++    @NotNull
 +    public abstract String[] getLines();
 +
-+    public abstract void setLine(int i,  String line);
-+
++    public abstract void setLine(int i,  @Nullable String line);
 +
 +    private static final HandlerList handlers = new HandlerList();
 +
++    @NotNull
 +    public HandlerList getHandlers() {
 +        return handlers;
 +    }
 +
++    @NotNull
 +    public static HandlerList getHandlerList() {
 +        return handlers;
 +    }
 +}
 -- 
-2.20.1
+2.21.0
 
