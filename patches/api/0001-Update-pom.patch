@@ -1,4 +1,4 @@
-From 4dc1f7b76439e049fae56790bab025dfee1e7e44 Mon Sep 17 00:00:00 2001
+From 91f0ee4f647a20b3e60a8a8782314f0b7ef808fc Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
@@ -9,7 +9,7 @@ Subject: [PATCH] Update pom
  2 files changed, 22 insertions(+), 9 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 3ebc62871..4c9d49cff 100644
+index 13cdc25f..909c4cef 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -4,17 +4,18 @@
@@ -55,10 +55,10 @@ index 3ebc62871..4c9d49cff 100644
          <!--
              If you are a plugin developer, please use https://hub.spigotmc.org/nexus/content/repositories/snapshots/
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-index 5cebb2454..7f475dc38 100644
+index ee07fe5e..782ad6ec 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-@@ -207,8 +207,8 @@ public class VersionCommand extends BukkitCommand {
+@@ -214,8 +214,8 @@ public class VersionCommand extends BukkitCommand {
      private void obtainVersion() {
          String version = Bukkit.getVersion();
          if (version == null) version = "Custom";
@@ -69,7 +69,7 @@ index 5cebb2454..7f475dc38 100644
              int distance = getDistance(null, parts[0]);
              switch (distance) {
                  case -1:
-@@ -264,7 +264,7 @@ public class VersionCommand extends BukkitCommand {
+@@ -271,7 +271,7 @@ public class VersionCommand extends BukkitCommand {
              return getFromJenkins(currentVer);
          } catch (NumberFormatException ex) {
              verInfo = verInfo.replace("\"", "");
@@ -78,7 +78,7 @@ index 5cebb2454..7f475dc38 100644
          }
              /*
              BufferedReader reader = Resources.asCharSource(
-@@ -286,7 +286,7 @@ public class VersionCommand extends BukkitCommand {
+@@ -293,7 +293,7 @@ public class VersionCommand extends BukkitCommand {
      private static int getFromJenkins(int currentVer) {
          try {
              BufferedReader reader = Resources.asCharSource(
@@ -87,7 +87,7 @@ index 5cebb2454..7f475dc38 100644
                      Charsets.UTF_8
              ).openBufferedStream();
              try {
-@@ -305,6 +305,7 @@ public class VersionCommand extends BukkitCommand {
+@@ -312,6 +312,7 @@ public class VersionCommand extends BukkitCommand {
      }
  
      // Contributed by Techcable <Techcable@outlook.com> in GH PR #65
@@ -96,5 +96,5 @@ index 5cebb2454..7f475dc38 100644
          try {
              HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + branch + "..." + hash).openConnection();
 -- 
-2.20.1
+2.21.0
 

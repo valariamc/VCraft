@@ -1,4 +1,4 @@
-From 2ae701d7b907cc02c0f8758d831722e1ea547826 Mon Sep 17 00:00:00 2001
+From 0387f12c8ffb7e1913aa3aa8b13c6829f03d26cd Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
@@ -10,7 +10,7 @@ Subject: [PATCH] Update POM
  3 files changed, 10 insertions(+), 11 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 2b5e20764b..069094d379 100644
+index a8ee1c097..aae0ac451 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,10 +1,10 @@
@@ -66,10 +66,10 @@ index 2b5e20764b..069094d379 100644
                  </configuration>
                  <executions>
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 4e648ee735..a0f598bda1 100644
+index ce39ea09e..7d620e0a8 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1340,7 +1340,7 @@ public abstract class MinecraftServer implements IAsyncTaskHandler, IMojangStati
+@@ -1341,7 +1341,7 @@ public abstract class MinecraftServer implements IAsyncTaskHandler, IMojangStati
      }
  
      public String getServerModName() {
@@ -79,7 +79,7 @@ index 4e648ee735..a0f598bda1 100644
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 674096cab1..9bf2f3351e 100644
+index 674096cab..9bf2f3351 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -10,8 +10,7 @@ import org.bukkit.Bukkit;
@@ -93,5 +93,5 @@ index 674096cab1..9bf2f3351e 100644
  
          if (stream != null) {
 -- 
-2.20.1
+2.21.0
 
