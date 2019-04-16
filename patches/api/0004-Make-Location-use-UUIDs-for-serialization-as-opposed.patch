@@ -1,4 +1,4 @@
-From 0979e03f0cd548be6ce8f2c29065a1b8e7308612 Mon Sep 17 00:00:00 2001
+From ea1c5fd662d41845ab0c0ecfcd5c756f8a543e47 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Thu, 27 Sep 2018 03:11:41 +0100
 Subject: [PATCH] Make Location use UUIDs for serialization as opposed to
@@ -9,10 +9,10 @@ Subject: [PATCH] Make Location use UUIDs for serialization as opposed to
  1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/Location.java
-index b4f3e8ce..9f100ec2 100644
+index f1263600..cf530d8a 100644
 --- a/src/main/java/org/bukkit/Location.java
 +++ b/src/main/java/org/bukkit/Location.java
-@@ -36,6 +36,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
+@@ -35,6 +35,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
      private double z;
      private float pitch;
      private float yaw;
@@ -20,7 +20,7 @@ index b4f3e8ce..9f100ec2 100644
  
      /**
       * Constructs a new Location with the given coordinates
-@@ -1032,6 +1033,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
+@@ -1057,6 +1058,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
      public Map<String, Object> serialize() {
          Map<String, Object> data = new HashMap<String, Object>();
          data.put("world", this.world.getName());
@@ -28,7 +28,7 @@ index b4f3e8ce..9f100ec2 100644
  
          data.put("x", this.x);
          data.put("y", this.y);
-@@ -1053,7 +1055,18 @@ public class Location implements Cloneable, ConfigurationSerializable {
+@@ -1078,7 +1080,18 @@ public class Location implements Cloneable, ConfigurationSerializable {
       */
      @NotNull
      public static Location deserialize(@NotNull Map<String, Object> args) {
