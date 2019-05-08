@@ -1,0 +1,27 @@
+From bb73cc13d6f4106decf528086c7bf8dc22d3f99f Mon Sep 17 00:00:00 2001
+From: Shane Freeder <theboyetronic@gmail.com>
+Date: Wed, 8 May 2019 04:48:57 +0100
+Subject: [PATCH] experimental shim for MC-148830
+
+This prevents the CME caused by MC-148830, but may introduce
+inconsistencies with ticking (However, unexpected)
+---
+ src/main/java/net/minecraft/server/TickListServer.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main/java/net/minecraft/server/TickListServer.java b/src/main/java/net/minecraft/server/TickListServer.java
+index b48e5b51a..9f9839319 100644
+--- a/src/main/java/net/minecraft/server/TickListServer.java
++++ b/src/main/java/net/minecraft/server/TickListServer.java
+@@ -22,7 +22,7 @@ public class TickListServer<T> implements TickList<T> {
+     // protected final Set<NextTickListEntry<T>> nextTickListHash = Sets.newHashSet();
+     protected final HashTreeSet<NextTickListEntry> nextTickList = new HashTreeSet<>(); // CraftBukkit - HashTreeSet
+     private final WorldServer f;
+-    private final List<NextTickListEntry<T>> g = Lists.newArrayList();
++    private final java.util.Collection<NextTickListEntry<T>> g = new java.util.concurrent.LinkedBlockingDeque<>(); // Alphheim
+     private final Consumer<NextTickListEntry<T>> h;
+ 
+     public TickListServer(WorldServer worldserver, Predicate<T> predicate, Function<T, MinecraftKey> function, Function<MinecraftKey, T> function1, Consumer<NextTickListEntry<T>> consumer, String timingsType) { // Paper
+-- 
+2.21.0
+
