@@ -85,6 +85,16 @@ case "$1" in
 	"s" | "server")
 		cd "$basedir/${FORK_NAME}-Server"
 	;;
+	"t" | "test" | "testserver")
+	(
+		cd "$basedir"
+		shift
+		scripts/testServer.sh "$basedir" "$@"
+	)
+	;;
+	"td" | "testdir")
+        	cd "${ACRAFT_TEST_DIR:-$basedir/work/test-server}"
+	;;
 	"setup")
 		if [[ -f ~/.bashrc ]] ; then
 			NAME="ec"
