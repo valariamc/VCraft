@@ -1,18 +1,18 @@
-From ea1c5fd662d41845ab0c0ecfcd5c756f8a543e47 Mon Sep 17 00:00:00 2001
+From 66836ef4d82b2fd1ceb1dc9ad285dd96d74b9cee Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Thu, 27 Sep 2018 03:11:41 +0100
 Subject: [PATCH] Make Location use UUIDs for serialization as opposed to
  relying on world names
 
 ---
- src/main/java/org/bukkit/Location.java | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ src/main/java/org/bukkit/Location.java | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
 diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/Location.java
-index f1263600..cf530d8a 100644
+index 3e1ca4c9f..346503ac6 100644
 --- a/src/main/java/org/bukkit/Location.java
 +++ b/src/main/java/org/bukkit/Location.java
-@@ -35,6 +35,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
+@@ -37,6 +37,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
      private double z;
      private float pitch;
      private float yaw;
@@ -20,34 +20,42 @@ index f1263600..cf530d8a 100644
  
      /**
       * Constructs a new Location with the given coordinates
-@@ -1057,6 +1058,7 @@ public class Location implements Cloneable, ConfigurationSerializable {
-     public Map<String, Object> serialize() {
-         Map<String, Object> data = new HashMap<String, Object>();
-         data.put("world", this.world.getName());
-+        data.put("world-uuid", this.world.getUID().toString()); // Alphheim
+@@ -1094,8 +1095,10 @@ public class Location implements Cloneable, ConfigurationSerializable {
  
+         if (this.world != null) {
+             data.put("world", getWorld().getName());
++            data.put("world-uuid", this.getWorld().getUID().toString()); // Alphheim
+         }
+ 
++
          data.put("x", this.x);
          data.put("y", this.y);
-@@ -1078,7 +1080,18 @@ public class Location implements Cloneable, ConfigurationSerializable {
+         data.put("z", this.z);
+@@ -1116,12 +1119,20 @@ public class Location implements Cloneable, ConfigurationSerializable {
       */
      @NotNull
      public static Location deserialize(@NotNull Map<String, Object> args) {
--        World world = Bukkit.getWorld((String) args.get("world"));
 +        // alphheim start - use UUIDs
-+        World world = null;
+         World world = null;
+-        if (args.containsKey("world")) {
 +        String worldUUID = (String) args.get("world-uuid");
 +        if (worldUUID != null) {
 +            world = Bukkit.getWorld(java.util.UUID.fromString(worldUUID));
 +        }
 +
 +        if (world == null) {
-+            world = Bukkit.getWorld((String) args.get("world"));
+             world = Bukkit.getWorld((String) args.get("world"));
+-            if (world == null) {
+-                throw new IllegalArgumentException("unknown world");
+-            }
 +        }
 +
 +        // Alphheim end - location world UUID
-         if (world == null) {
-             throw new IllegalArgumentException("unknown world");
++        if (world == null) {
++            throw new IllegalArgumentException("unknown world");
          }
+ 
+         return new Location(world, NumberConversions.toDouble(args.get("x")), NumberConversions.toDouble(args.get("y")), NumberConversions.toDouble(args.get("z")), NumberConversions.toFloat(args.get("yaw")), NumberConversions.toFloat(args.get("pitch")));
 -- 
 2.21.0
 

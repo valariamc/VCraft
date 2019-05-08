@@ -1,27 +1,19 @@
-From 35ca537c3bdf25478d8b4b67bf239fd60a840db6 Mon Sep 17 00:00:00 2001
+From 92b9c4c9687de28329d1f9250bc3e81e7e3023f5 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Thu, 27 Sep 2018 04:22:36 +0100
 Subject: [PATCH] implement equals/hashcode on Chunk
 
 ---
- .../org/bukkit/craftbukkit/CraftChunk.java     | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ .../java/org/bukkit/craftbukkit/CraftChunk.java | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
-index 9ba2fa5de0..1905d7c0db 100644
+index f1db08c88..51439390b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
-@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
- import java.lang.ref.WeakReference;
- import java.util.Arrays;
- 
-+import java.util.Objects;
- import java.util.Random;
- import net.minecraft.server.*;
- 
-@@ -302,4 +303,21 @@ public class CraftChunk implements Chunk {
+@@ -330,4 +330,21 @@ public class CraftChunk implements Chunk {
      static {
-         Arrays.fill(emptySkyLight, (byte) 0xFF);
+         Arrays.fill(emptyLight, (byte) 0xFF);
      }
 +
 +    // Alphheim start
@@ -37,10 +29,10 @@ index 9ba2fa5de0..1905d7c0db 100644
 +
 +    @Override
 +    public int hashCode() {
-+        return Objects.hash(worldServer, x, z);
++        return java.util.Objects.hash(worldServer, x, z);
 +    }
 +    // Alphheim end
  }
 -- 
-2.20.1
+2.21.0
 

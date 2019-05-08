@@ -1,4 +1,4 @@
-From b54634d40940cb0cecf130b573bcc4521449c258 Mon Sep 17 00:00:00 2001
+From f6bfeefda1b3b33f09dfe32a573232fa748dde24 Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Mon, 8 Jun 2015 23:55:20 -0400
 Subject: [PATCH] SendSignEvent
@@ -57,7 +57,7 @@ index 000000000..dae0c4539
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/TileEntitySign.java b/src/main/java/net/minecraft/server/TileEntitySign.java
-index d0a91f675..f0e2e1d5b 100644
+index 713bb4cd5..c1bb3595e 100644
 --- a/src/main/java/net/minecraft/server/TileEntitySign.java
 +++ b/src/main/java/net/minecraft/server/TileEntitySign.java
 @@ -1,5 +1,6 @@
@@ -67,9 +67,9 @@ index d0a91f675..f0e2e1d5b 100644
  import com.mojang.brigadier.exceptions.CommandSyntaxException;
  import javax.annotation.Nullable;
  
-@@ -23,10 +24,14 @@ public class TileEntitySign extends TileEntity implements ICommandListener {
-     }
+@@ -28,10 +29,14 @@ public class TileEntitySign extends TileEntity implements ICommandListener { //
  
+     @Override
      public NBTTagCompound save(NBTTagCompound nbttagcompound) {
 +        return save(nbttagcompound, this.lines);
 +    }
@@ -83,10 +83,10 @@ index d0a91f675..f0e2e1d5b 100644
  
              nbttagcompound.setString("Text" + (i + 1), s);
          }
-@@ -120,7 +125,11 @@ public class TileEntitySign extends TileEntity implements ICommandListener {
-     }
+@@ -131,7 +136,11 @@ public class TileEntitySign extends TileEntity implements ICommandListener { //
  
-     public NBTTagCompound aa_() {
+     @Override
+     public NBTTagCompound b() {
 -        return this.save(new NBTTagCompound());
 +        // Alphheim start - EMC
 +        SendSignEventImpl event = new SendSignEventImpl(this.world, this.getPosition(), this.lines);
@@ -95,7 +95,7 @@ index d0a91f675..f0e2e1d5b 100644
 +        // Alphheim end
      }
  
-     public boolean isFilteredNBT() {
+     @Override
 -- 
 2.21.0
 

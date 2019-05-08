@@ -23,7 +23,7 @@ if [ ! -d ".git" ]; then
 fi
 
 rm src/net/minecraft/server/*.java
-cp $basedir/$decompile/net/minecraft/server/*.java src/net/minecraft/server
+find $basedir/$decompile/net/minecraft/server -iname *.java -exec cp -v \{} src/net/minecraft/server \;
 
 base="$basedir/Paper/Paper-Server/src/main/java/net/minecraft/server"
 

@@ -1,18 +1,18 @@
-From 91f0ee4f647a20b3e60a8a8782314f0b7ef808fc Mon Sep 17 00:00:00 2001
+From 2d0df0019a8bf6c55004170c45ac3e700be47e89 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
 
 ---
- pom.xml                                       | 22 ++++++++++++++-----
+ pom.xml                                       | 23 ++++++++++++++-----
  .../command/defaults/VersionCommand.java      |  9 ++++----
- 2 files changed, 22 insertions(+), 9 deletions(-)
+ 2 files changed, 22 insertions(+), 10 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 13cdc25f..909c4cef 100644
+index 81aefdf74..90c2692d7 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -4,17 +4,18 @@
+@@ -4,18 +4,18 @@
      <modelVersion>4.0.0</modelVersion>
  
      <parent>
@@ -23,10 +23,11 @@ index 13cdc25f..909c4cef 100644
          <version>dev-SNAPSHOT</version>
      </parent>
  
+-    <groupId>com.destroystokyo.paper</groupId>
 -    <artifactId>paper-api</artifactId>
 +    <groupId>pw.valaria</groupId>
 +    <artifactId>alphheimcraft-api</artifactId>
-     <version>1.13.2-R0.1-SNAPSHOT</version>
+     <version>1.14-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>
  
 -    <name>Paper-API</name>
@@ -36,7 +37,7 @@ index 13cdc25f..909c4cef 100644
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
-@@ -25,6 +26,17 @@
+@@ -26,6 +26,17 @@
          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
      </properties>
  
@@ -55,10 +56,10 @@ index 13cdc25f..909c4cef 100644
          <!--
              If you are a plugin developer, please use https://hub.spigotmc.org/nexus/content/repositories/snapshots/
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-index ee07fe5e..782ad6ec 100644
+index ece8d1c8a..7bfab9e2d 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 +++ b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
-@@ -214,8 +214,8 @@ public class VersionCommand extends BukkitCommand {
+@@ -211,8 +211,8 @@ public class VersionCommand extends BukkitCommand {
      private void obtainVersion() {
          String version = Bukkit.getVersion();
          if (version == null) version = "Custom";
@@ -69,25 +70,25 @@ index ee07fe5e..782ad6ec 100644
              int distance = getDistance(null, parts[0]);
              switch (distance) {
                  case -1:
-@@ -271,7 +271,7 @@ public class VersionCommand extends BukkitCommand {
+@@ -268,7 +268,7 @@ public class VersionCommand extends BukkitCommand {
              return getFromJenkins(currentVer);
          } catch (NumberFormatException ex) {
              verInfo = verInfo.replace("\"", "");
--            return getFromRepo("PaperMC/Paper", "master", verInfo);
+-            return getFromRepo("PaperMC/Paper", "ver/1.14", verInfo); // Just for now
 +            return getFromRepo("Alphheim/AlphheimCraft", BRANCH, verInfo);
          }
              /*
              BufferedReader reader = Resources.asCharSource(
-@@ -293,7 +293,7 @@ public class VersionCommand extends BukkitCommand {
+@@ -290,7 +290,7 @@ public class VersionCommand extends BukkitCommand {
      private static int getFromJenkins(int currentVer) {
          try {
              BufferedReader reader = Resources.asCharSource(
--                    new URL("https://ci.destroystokyo.com/job/Paper-1.13/lastSuccessfulBuild/buildNumber"), // Paper
+-                    new URL("https://ci.destroystokyo.com/job/Paper-1.14/lastSuccessfulBuild/buildNumber"), // Paper
 +                    new URL("https://atlas.valaria.pw/jenkins/job/Alphheim-Future/lastSuccessfulBuild/buildNumber"), // Alphheim
                      Charsets.UTF_8
              ).openBufferedStream();
              try {
-@@ -312,6 +312,7 @@ public class VersionCommand extends BukkitCommand {
+@@ -309,6 +309,7 @@ public class VersionCommand extends BukkitCommand {
      }
  
      // Contributed by Techcable <Techcable@outlook.com> in GH PR #65

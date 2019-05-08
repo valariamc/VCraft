@@ -1,4 +1,4 @@
-From 79614aa9f36d71a494cabead89a647da850e1b94 Mon Sep 17 00:00:00 2001
+From b5609e4dbe2bccbc1122e2d46270f6f8fa13c11f Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -6,39 +6,39 @@ Subject: [PATCH] Implement internal services management API
 ---
  .../net/minecraft/server/DedicatedServer.java |   1 +
  .../minecraft/server/PlayerConnection.java    |  75 ++---------
- .../org/bukkit/craftbukkit/CraftServer.java   |  18 +++
+ .../org/bukkit/craftbukkit/CraftServer.java   |  17 +++
  .../CraftInternalServicesManager.java         | 118 ++++++++++++++++++
  .../services/defaults/VanillaChat.java        | 104 +++++++++++++++
- 5 files changed, 252 insertions(+), 64 deletions(-)
+ 5 files changed, 251 insertions(+), 64 deletions(-)
  create mode 100644 src/main/java/pw/valaria/services/CraftInternalServicesManager.java
  create mode 100644 src/main/java/pw/valaria/services/defaults/VanillaChat.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 21a05b2b2..e22bd2223 100644
+index 3d452fe0e..a94cd5546 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -232,6 +232,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -213,6 +213,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
  
-             // CraftBukkit start
-             // this.a((PlayerList) (new DedicatedPlayerList(this))); // Spigot - moved up
-+            server.initInternalServices(); // Alphheim
-             server.loadPlugins();
-             server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
-             // CraftBukkit end
+         // CraftBukkit start
+         // this.a((PlayerList) (new DedicatedPlayerList(this))); // Spigot - moved up
++        server.initInternalServices(); // Alphheim
+         server.loadPlugins();
+         server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
+         // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 65e76491b..7ea88a303 100644
+index 3587f73e1..ef929cf95 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -64,6 +64,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
+@@ -63,6 +63,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
  import com.destroystokyo.paper.event.player.PlayerJumpEvent; // Paper
  import co.aikar.timings.MinecraftTimings; // Paper
  // CraftBukkit end
 +import pw.valaria.api.services.Chat; // Alphheim
  
- public class PlayerConnection implements PacketListenerPlayIn, ITickable {
+ public class PlayerConnection implements PacketListenerPlayIn {
  
-@@ -1690,73 +1691,19 @@ public class PlayerConnection implements PacketListenerPlayIn, ITickable {
-         } else if (this.player.getChatFlags() == EntityHuman.EnumChatVisibility.SYSTEM) {
+@@ -1733,73 +1734,19 @@ public class PlayerConnection implements PacketListenerPlayIn {
+         } else if (this.player.getChatFlags() == EnumChatVisibility.SYSTEM) {
              // Do nothing, this is coming from a plugin
          } else {
 -            Player player = this.getPlayer();
@@ -122,29 +122,28 @@ index 65e76491b..7ea88a303 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 9c5b79920..738de052f 100644
+index d18a530a4..8a5da802b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -163,6 +163,9 @@ import org.bukkit.craftbukkit.util.CraftNamespacedKey;
- import org.bukkit.event.server.ServerLoadEvent;
- import org.bukkit.event.server.TabCompleteEvent;
- import net.md_5.bungee.api.chat.BaseComponent;
-+import pw.valaria.api.services.Chat;
+@@ -195,6 +195,9 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
+ import org.yaml.snakeyaml.error.MarkedYAMLException;
+ 
+ import net.md_5.bungee.api.chat.BaseComponent; // Spigot
++import pw.valaria.api.services.Chat; // Alphheim
 +import pw.valaria.services.CraftInternalServicesManager; // Alphheim
-+import pw.valaria.services.defaults.VanillaChat;
++import pw.valaria.services.defaults.VanillaChat; // Alphheim
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
-@@ -208,6 +211,8 @@ public final class CraftServer implements Server {
+@@ -236,6 +239,7 @@ public final class CraftServer implements Server {
      public int reloadCount;
      public static Exception excessiveVelEx; // Paper - Velocity warnings
  
 +    private final CraftInternalServicesManager internalServices = new CraftInternalServicesManager(); // Alphheim
-+
-     private final class BooleanWrapper {
-         private boolean value = true;
-     }
-@@ -813,6 +818,7 @@ public final class CraftServer implements Server {
+     static {
+         ConfigurationSerialization.registerClass(CraftOfflinePlayer.class);
+         CraftItemFactory.instance();
+@@ -808,6 +812,7 @@ public final class CraftServer implements Server {
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
          pluginManager.clearPlugins();
@@ -152,7 +151,7 @@ index 9c5b79920..738de052f 100644
          commandMap.clearCommands();
  
          // Paper start
-@@ -854,6 +860,7 @@ public final class CraftServer implements Server {
+@@ -849,6 +854,7 @@ public final class CraftServer implements Server {
                  "This plugin is not properly shutting down its async tasks when it is being reloaded.  This may cause conflicts with the newly loaded version of the plugin"
              ));
          }
@@ -160,7 +159,7 @@ index 9c5b79920..738de052f 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -2208,4 +2215,15 @@ public final class CraftServer implements Server {
+@@ -2154,4 +2160,15 @@ public final class CraftServer implements Server {
          return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
      }
      // Paper end

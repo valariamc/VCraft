@@ -1,4 +1,4 @@
-From a010e23b09d329f3479d065234458bce312e09f9 Mon Sep 17 00:00:00 2001
+From 339e0a8f9c86c6f217552d869a7d099e85930272 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
@@ -18,10 +18,10 @@ Subject: [PATCH] internal services management API
  create mode 100644 src/main/java/pw/valaria/api/services/InternalServicesManager.java
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 5ed9726c..19373e6b 100644
+index bb03a0f46..4dff9dabd 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -53,6 +53,8 @@ import org.bukkit.inventory.meta.ItemMeta;
+@@ -50,6 +50,8 @@ import org.bukkit.util.CachedServerIcon;
  import org.jetbrains.annotations.Contract;
  import org.jetbrains.annotations.NotNull;
  import org.jetbrains.annotations.Nullable;
@@ -30,7 +30,7 @@ index 5ed9726c..19373e6b 100644
  
  /**
   * Represents the Bukkit core, for version and Server singleton handling
-@@ -1638,4 +1640,15 @@ public final class Bukkit {
+@@ -1608,4 +1610,15 @@ public final class Bukkit {
      {
          return server.spigot();
      }
@@ -47,10 +47,10 @@ index 5ed9726c..19373e6b 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index eb23417b..c958acf9 100644
+index 0e7b48f2d..ea763c461 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -54,6 +54,7 @@ import org.bukkit.inventory.meta.ItemMeta;
+@@ -51,6 +51,7 @@ import org.bukkit.util.CachedServerIcon;
  import org.jetbrains.annotations.Contract;
  import org.jetbrains.annotations.NotNull;
  import org.jetbrains.annotations.Nullable;
@@ -58,7 +58,7 @@ index eb23417b..c958acf9 100644
  
  /**
   * Represents a server implementation.
-@@ -1427,4 +1428,16 @@ public interface Server extends PluginMessageRecipient {
+@@ -1401,4 +1402,16 @@ public interface Server extends PluginMessageRecipient {
      @NotNull
      com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
      // Paper end
@@ -76,10 +76,10 @@ index eb23417b..c958acf9 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index 9ec042fd..08069e0f 100644
+index 583f8ee40..f1ee9642d 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -461,6 +461,15 @@ public final class SimplePluginManager implements PluginManager {
+@@ -469,6 +469,15 @@ public final class SimplePluginManager implements PluginManager {
                          + plugin.getDescription().getFullName() + " (Is it up to date?)", ex, plugin); // Paper
              }
  
@@ -97,7 +97,7 @@ index 9ec042fd..08069e0f 100644
              } catch (Throwable ex) {
 diff --git a/src/main/java/pw/valaria/api/services/Chat.java b/src/main/java/pw/valaria/api/services/Chat.java
 new file mode 100644
-index 00000000..c7381d36
+index 000000000..c7381d360
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/Chat.java
 @@ -0,0 +1,9 @@
@@ -112,7 +112,7 @@ index 00000000..c7381d36
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalService.java b/src/main/java/pw/valaria/api/services/InternalService.java
 new file mode 100644
-index 00000000..d9f58faf
+index 000000000..d9f58faf0
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/InternalService.java
 @@ -0,0 +1,6 @@
@@ -124,7 +124,7 @@ index 00000000..d9f58faf
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalServiceHolder.java b/src/main/java/pw/valaria/api/services/InternalServiceHolder.java
 new file mode 100644
-index 00000000..c3e405b0
+index 000000000..c3e405b05
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/InternalServiceHolder.java
 @@ -0,0 +1,43 @@
@@ -173,7 +173,7 @@ index 00000000..c3e405b0
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalServicesManager.java b/src/main/java/pw/valaria/api/services/InternalServicesManager.java
 new file mode 100644
-index 00000000..6a1c05f4
+index 000000000..6a1c05f40
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/InternalServicesManager.java
 @@ -0,0 +1,23 @@
