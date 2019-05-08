@@ -1,7 +1,7 @@
 [submodule "work/Paper"]
 	path = Paper
 	url = https://github.com/PaperMC/Paper.git
-	branch = master
+	branch = ver/1.14
 [submodule "mc-dev"]
 	path = mc-dev
 	url = https://electronicboy@atlas.valaria.pw/stash/scm/al/mc-dev.git
