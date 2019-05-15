@@ -1,20 +1,20 @@
-From 2d0df0019a8bf6c55004170c45ac3e700be47e89 Mon Sep 17 00:00:00 2001
+From 3faadddcc2298b3a5cd2ba2e9d8a957729ab81fc Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
 
 ---
- pom.xml                                       | 23 ++++++++++++++-----
- .../command/defaults/VersionCommand.java      |  9 ++++----
- 2 files changed, 22 insertions(+), 10 deletions(-)
+ pom.xml                                       | 24 +++++++++++++------
+ .../command/defaults/VersionCommand.java      |  9 +++----
+ 2 files changed, 22 insertions(+), 11 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 81aefdf74..90c2692d7 100644
+index dbbb5c72f..3b41755ba 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -4,18 +4,18 @@
+@@ -3,18 +3,17 @@
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
      <modelVersion>4.0.0</modelVersion>
- 
      <parent>
 -        <groupId>com.destroystokyo.paper</groupId>
 -        <artifactId>paper-parent</artifactId>
@@ -27,8 +27,8 @@ index 81aefdf74..90c2692d7 100644
 -    <artifactId>paper-api</artifactId>
 +    <groupId>pw.valaria</groupId>
 +    <artifactId>alphheimcraft-api</artifactId>
-     <version>1.14-R0.1-SNAPSHOT</version>
-     <packaging>jar</packaging>
+     <version>1.14.1-R0.1-SNAPSHOT</version>
+-    <packaging>jar</packaging>
  
 -    <name>Paper-API</name>
 -    <url>https://github.com/PaperMC/Paper</url>
@@ -37,7 +37,7 @@ index 81aefdf74..90c2692d7 100644
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
-@@ -26,6 +26,17 @@
+@@ -25,6 +24,17 @@
          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
      </properties>
  

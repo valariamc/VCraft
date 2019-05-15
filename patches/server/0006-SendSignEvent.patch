@@ -1,4 +1,4 @@
-From f6bfeefda1b3b33f09dfe32a573232fa748dde24 Mon Sep 17 00:00:00 2001
+From 4abcfa6428e55ef07ccd1f734c78cc9f0dbbdc8e Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Mon, 8 Jun 2015 23:55:20 -0400
 Subject: [PATCH] SendSignEvent
@@ -57,7 +57,7 @@ index 000000000..dae0c4539
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/TileEntitySign.java b/src/main/java/net/minecraft/server/TileEntitySign.java
-index 713bb4cd5..c1bb3595e 100644
+index 91c99222d..4dc516a13 100644
 --- a/src/main/java/net/minecraft/server/TileEntitySign.java
 +++ b/src/main/java/net/minecraft/server/TileEntitySign.java
 @@ -1,5 +1,6 @@
@@ -83,7 +83,7 @@ index 713bb4cd5..c1bb3595e 100644
  
              nbttagcompound.setString("Text" + (i + 1), s);
          }
-@@ -131,7 +136,11 @@ public class TileEntitySign extends TileEntity implements ICommandListener { //
+@@ -130,7 +135,11 @@ public class TileEntitySign extends TileEntity implements ICommandListener { //
  
      @Override
      public NBTTagCompound b() {
