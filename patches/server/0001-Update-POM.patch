@@ -1,4 +1,4 @@
-From 1b081596ff92b6b73bedc23858f526d7e4d07b60 Mon Sep 17 00:00:00 2001
+From 9cc49ed899eda6040d9784f19a59166303492de5 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
@@ -66,10 +66,10 @@ index e01d95f17d..6f67ca471d 100644
                  </configuration>
                  <executions>
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index f1cd38d421..1622e8d058 100644
+index 184f1b00f0..b9014e9f60 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1396,7 +1396,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1408,7 +1408,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
