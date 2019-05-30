@@ -1,4 +1,4 @@
-From 75738c86fb57d68a0e9a8eb67ed44e13c9d432d4 Mon Sep 17 00:00:00 2001
+From d6cc2df5f780e17cda43e71b2e8ad718b1e11a40 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -26,7 +26,7 @@ index 3d452fe0e3..a94cd55462 100644
          server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
          // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index e517e9f9fc..7f57455d56 100644
+index 01c268a584..73e5f83971 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -63,6 +63,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
@@ -37,7 +37,7 @@ index e517e9f9fc..7f57455d56 100644
  
  public class PlayerConnection implements PacketListenerPlayIn {
  
-@@ -1734,73 +1735,19 @@ public class PlayerConnection implements PacketListenerPlayIn {
+@@ -1738,73 +1739,19 @@ public class PlayerConnection implements PacketListenerPlayIn {
          } else if (this.player.getChatFlags() == EnumChatVisibility.SYSTEM) {
              // Do nothing, this is coming from a plugin
          } else {

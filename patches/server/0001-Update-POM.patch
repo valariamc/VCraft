@@ -1,16 +1,17 @@
-From 9cc49ed899eda6040d9784f19a59166303492de5 Mon Sep 17 00:00:00 2001
+From 22d178bee031aca5defc08a6219e894cce546a74 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
 
 ---
  pom.xml                                          | 16 ++++++++--------
+ .../destroystokyo/paper/PaperVersionFetcher.java |  8 ++++----
  .../net/minecraft/server/MinecraftServer.java    |  2 +-
  .../org/bukkit/craftbukkit/util/Versioning.java  |  3 +--
- 3 files changed, 10 insertions(+), 11 deletions(-)
+ 4 files changed, 14 insertions(+), 15 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index e01d95f17d..6f67ca471d 100644
+index 2cb84223e6..73f7b18f98 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,10 +1,10 @@
@@ -20,7 +21,7 @@ index e01d95f17d..6f67ca471d 100644
 -    <artifactId>paper</artifactId>
 +    <artifactId>alphheimcraft</artifactId>
      <packaging>jar</packaging>
-     <version>1.14.1-R0.1-SNAPSHOT</version>
+     <version>1.14.2-R0.1-SNAPSHOT</version>
 -    <name>Paper</name>
 +    <name>AlphheimCraft</name>
      <url>https://papermc.io</url>
@@ -65,6 +66,39 @@ index e01d95f17d..6f67ca471d 100644
                      <scmDirectory>..</scmDirectory>
                  </configuration>
                  <executions>
+diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+index e0bd79f60b..ca3a1a5be2 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
++++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+@@ -13,7 +13,7 @@ import java.net.URL;
+ 
+ public class PaperVersionFetcher implements VersionFetcher {
+     private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
+-    private static final String GITHUB_BRANCH_NAME = "ver/1.14";
++    private static final String GITHUB_BRANCH_NAME = "master";
+     private static @Nullable String mcVer;
+ 
+     @Override
+@@ -24,8 +24,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+     @Nonnull
+     @Override
+     public String getVersionMessage(@Nonnull String serverVersion) {
+-        String[] parts = serverVersion.substring("git-Paper-".length()).split("[-\\s]");
+-        String updateMessage = getUpdateStatusMessage("PaperMC/Paper", GITHUB_BRANCH_NAME, parts[0]);
++        String[] parts = serverVersion.substring("git-AlphheimCraft-".length()).split("[-\\s]"); // Alphheim
++        String updateMessage = getUpdateStatusMessage("electronicboy/AlphheimCraft", GITHUB_BRANCH_NAME, parts[0]); // Alphheim
+ 
+         return getHistory() + "\n" + updateMessage;
+     }
+@@ -37,7 +37,7 @@ public class PaperVersionFetcher implements VersionFetcher {
+                 String result = matcher.group();
+                 mcVer = result.substring(0, result.length() - 2); // strip 'R' anchor and trailing '-'
+             } else {
+-                org.bukkit.Bukkit.getLogger().warning("Unable to match version to pattern! Report to PaperMC!");
++                org.bukkit.Bukkit.getLogger().warning("Unable to match version to pattern!"); // Alphheim - Don't blame paper
+                 org.bukkit.Bukkit.getLogger().warning("Pattern: " + VER_PATTERN.toString());
+                 org.bukkit.Bukkit.getLogger().warning("Version: " + org.bukkit.Bukkit.getBukkitVersion());
+             }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 index 184f1b00f0..b9014e9f60 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
