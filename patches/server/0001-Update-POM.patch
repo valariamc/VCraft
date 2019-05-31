@@ -1,4 +1,4 @@
-From 22d178bee031aca5defc08a6219e894cce546a74 Mon Sep 17 00:00:00 2001
+From e3d79319c102750b0138fc33cfe3bab0af13aa66 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
@@ -67,7 +67,7 @@ index 2cb84223e6..73f7b18f98 100644
                  </configuration>
                  <executions>
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index e0bd79f60b..ca3a1a5be2 100644
+index 513cddb9bd..5bbfd01b93 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -13,7 +13,7 @@ import java.net.URL;
@@ -87,10 +87,10 @@ index e0bd79f60b..ca3a1a5be2 100644
 -        String updateMessage = getUpdateStatusMessage("PaperMC/Paper", GITHUB_BRANCH_NAME, parts[0]);
 +        String[] parts = serverVersion.substring("git-AlphheimCraft-".length()).split("[-\\s]"); // Alphheim
 +        String updateMessage = getUpdateStatusMessage("electronicboy/AlphheimCraft", GITHUB_BRANCH_NAME, parts[0]); // Alphheim
+         String history = getHistory();
  
-         return getHistory() + "\n" + updateMessage;
-     }
-@@ -37,7 +37,7 @@ public class PaperVersionFetcher implements VersionFetcher {
+         return history != null ? history + "\n" + updateMessage : updateMessage;
+@@ -38,7 +38,7 @@ public class PaperVersionFetcher implements VersionFetcher {
                  String result = matcher.group();
                  mcVer = result.substring(0, result.length() - 2); // strip 'R' anchor and trailing '-'
              } else {
