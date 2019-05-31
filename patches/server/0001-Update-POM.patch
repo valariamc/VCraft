@@ -1,4 +1,4 @@
-From e3d79319c102750b0138fc33cfe3bab0af13aa66 Mon Sep 17 00:00:00 2001
+From 0f0f0e4fac4f8263e0a95ffb5b2f35cfa5cd8086 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
@@ -67,7 +67,7 @@ index 2cb84223e6..73f7b18f98 100644
                  </configuration>
                  <executions>
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 513cddb9bd..5bbfd01b93 100644
+index 513cddb9bd..33cc7d1cd2 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -13,7 +13,7 @@ import java.net.URL;
@@ -86,7 +86,7 @@ index 513cddb9bd..5bbfd01b93 100644
 -        String[] parts = serverVersion.substring("git-Paper-".length()).split("[-\\s]");
 -        String updateMessage = getUpdateStatusMessage("PaperMC/Paper", GITHUB_BRANCH_NAME, parts[0]);
 +        String[] parts = serverVersion.substring("git-AlphheimCraft-".length()).split("[-\\s]"); // Alphheim
-+        String updateMessage = getUpdateStatusMessage("electronicboy/AlphheimCraft", GITHUB_BRANCH_NAME, parts[0]); // Alphheim
++        String updateMessage = getUpdateStatusMessage("Alphheim/AlphheimCraft", GITHUB_BRANCH_NAME, parts[0]); // Alphheim
          String history = getHistory();
  
          return history != null ? history + "\n" + updateMessage : updateMessage;
