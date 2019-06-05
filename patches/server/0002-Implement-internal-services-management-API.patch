@@ -1,4 +1,4 @@
-From 4090a782a42ee73e7e0b83e642b4f60b440de6e8 Mon Sep 17 00:00:00 2001
+From c62438e22ce59f22d68afd6b958c9877220a7a87 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -122,7 +122,7 @@ index a0b644801a..504d212a23 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 59611846c6..3f47d67efe 100644
+index 5884d92f8d..20812143f4 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -195,6 +195,9 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
@@ -301,7 +301,7 @@ index 0000000000..c7bd45647d
 +}
 diff --git a/src/main/java/pw/valaria/services/defaults/VanillaChat.java b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
 new file mode 100644
-index 0000000000..8f98bcebe2
+index 0000000000..ba97f56eaf
 --- /dev/null
 +++ b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
 @@ -0,0 +1,104 @@
@@ -342,7 +342,7 @@ index 0000000000..8f98bcebe2
 +
 +        CraftPlayer player = (CraftPlayer) sender;
 +
-+        boolean async = Bukkit.getServer().isPrimaryThread();
++        boolean async = !Bukkit.getServer().isPrimaryThread();
 +        AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(async, sender, message, new LazyPlayerSet(server.getServer()));
 +        server.getPluginManager().callEvent(event);
 +
