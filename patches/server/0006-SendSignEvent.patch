@@ -1,17 +1,17 @@
-From 4abcfa6428e55ef07ccd1f734c78cc9f0dbbdc8e Mon Sep 17 00:00:00 2001
+From a66db96b2abbd6a0ae86333a9686a94c1cc00f5a Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Mon, 8 Jun 2015 23:55:20 -0400
 Subject: [PATCH] SendSignEvent
 
 ---
  .../paper/block/SendSignEventImpl.java        | 41 +++++++++++++++++++
- .../net/minecraft/server/TileEntitySign.java  | 13 +++++-
- 2 files changed, 52 insertions(+), 2 deletions(-)
+ .../net/minecraft/server/TileEntitySign.java  | 17 +++++++-
+ 2 files changed, 56 insertions(+), 2 deletions(-)
  create mode 100644 src/main/java/com/destroystokyo/paper/block/SendSignEventImpl.java
 
 diff --git a/src/main/java/com/destroystokyo/paper/block/SendSignEventImpl.java b/src/main/java/com/destroystokyo/paper/block/SendSignEventImpl.java
 new file mode 100644
-index 000000000..dae0c4539
+index 0000000000..dae0c4539d
 --- /dev/null
 +++ b/src/main/java/com/destroystokyo/paper/block/SendSignEventImpl.java
 @@ -0,0 +1,41 @@
@@ -57,7 +57,7 @@ index 000000000..dae0c4539
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/TileEntitySign.java b/src/main/java/net/minecraft/server/TileEntitySign.java
-index 91c99222d..4dc516a13 100644
+index dd7889a4f9..ef96df3292 100644
 --- a/src/main/java/net/minecraft/server/TileEntitySign.java
 +++ b/src/main/java/net/minecraft/server/TileEntitySign.java
 @@ -1,5 +1,6 @@
@@ -83,15 +83,19 @@ index 91c99222d..4dc516a13 100644
  
              nbttagcompound.setString("Text" + (i + 1), s);
          }
-@@ -130,7 +135,11 @@ public class TileEntitySign extends TileEntity implements ICommandListener { //
+@@ -130,7 +135,15 @@ public class TileEntitySign extends TileEntity implements ICommandListener { //
  
      @Override
      public NBTTagCompound b() {
 -        return this.save(new NBTTagCompound());
 +        // Alphheim start - EMC
-+        SendSignEventImpl event = new SendSignEventImpl(this.world, this.getPosition(), this.lines);
-+        event.callEvent();
-+        return this.save(new NBTTagCompound(), event.lines);
++        if (world != null) {
++            SendSignEventImpl event = new SendSignEventImpl(this.world, this.getPosition(), this.lines);
++            event.callEvent();
++            return this.save(new NBTTagCompound(), event.lines);
++        } else {
++            return this.save(new NBTTagCompound());
++        }
 +        // Alphheim end
      }
  
