@@ -1,24 +1,17 @@
-From a0fb09efc0aac3575c31ca6aeb8510807d504ce9 Mon Sep 17 00:00:00 2001
+From 7aeb3d548649a68097b7a6139695a29e8c3c0d13 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
 
 ---
- pom.xml | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ pom.xml | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 4b8334d62..db03bc2a5 100644
+index df8fc517..c86f46f9 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -3,18 +3,18 @@
-          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-     <modelVersion>4.0.0</modelVersion>
-     <parent>
--        <groupId>com.destroystokyo.paper</groupId>
--        <artifactId>paper-parent</artifactId>
-+        <groupId>pw.valaria</groupId>
-+        <artifactId>alphheimcraft-parent</artifactId>
+@@ -8,14 +8,14 @@
          <version>dev-SNAPSHOT</version>
      </parent>
  
@@ -26,13 +19,14 @@ index 4b8334d62..db03bc2a5 100644
 -    <artifactId>paper-api</artifactId>
 +    <groupId>pw.valaria</groupId>
 +    <artifactId>alphheimcraft-api</artifactId>
-     <version>1.14.2-R0.1-SNAPSHOT</version>
+     <version>1.14.3-R0.1-SNAPSHOT</version>
+ 
      <packaging>jar</packaging>
  
 -    <name>Paper-API</name>
 -    <url>https://github.com/PaperMC/Paper</url>
-+    <name>Alphheim-API</name>
-+    <url>https://hub.spigotmc.org/stash/projects/PAPER/</url>
++    <name>AlphheimCraft-API</name>
++    <url>https://valaria.pw</url>
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
@@ -55,5 +49,5 @@ index 4b8334d62..db03bc2a5 100644
          <!--
              If you are a plugin developer, please use https://hub.spigotmc.org/nexus/content/repositories/snapshots/
 -- 
-2.21.0
+2.22.0
 

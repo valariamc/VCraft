@@ -1,4 +1,4 @@
-From 151719399eeaa4df0281f1566db1685f0c9540bd Mon Sep 17 00:00:00 2001
+From 90f343c3c8022ec9596fb032d545d48b98941811 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
@@ -18,7 +18,7 @@ Subject: [PATCH] internal services management API
  create mode 100644 src/main/java/pw/valaria/api/services/InternalServicesManager.java
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 6db691591..943b67433 100644
+index 6db69159..943b6743 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
 @@ -50,6 +50,8 @@ import org.bukkit.util.CachedServerIcon;
@@ -47,7 +47,7 @@ index 6db691591..943b67433 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 27d3b5ad7..48199e38f 100644
+index 27d3b5ad..48199e38 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -51,6 +51,7 @@ import org.bukkit.util.CachedServerIcon;
@@ -76,10 +76,10 @@ index 27d3b5ad7..48199e38f 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index 583f8ee40..f1ee9642d 100644
+index d0e735bc..ac3863dd 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -469,6 +469,15 @@ public final class SimplePluginManager implements PluginManager {
+@@ -470,6 +470,15 @@ public final class SimplePluginManager implements PluginManager {
                          + plugin.getDescription().getFullName() + " (Is it up to date?)", ex, plugin); // Paper
              }
  
@@ -97,7 +97,7 @@ index 583f8ee40..f1ee9642d 100644
              } catch (Throwable ex) {
 diff --git a/src/main/java/pw/valaria/api/services/Chat.java b/src/main/java/pw/valaria/api/services/Chat.java
 new file mode 100644
-index 000000000..c7381d360
+index 00000000..c7381d36
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/Chat.java
 @@ -0,0 +1,9 @@
@@ -112,7 +112,7 @@ index 000000000..c7381d360
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalService.java b/src/main/java/pw/valaria/api/services/InternalService.java
 new file mode 100644
-index 000000000..d9f58faf0
+index 00000000..d9f58faf
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/InternalService.java
 @@ -0,0 +1,6 @@
@@ -124,7 +124,7 @@ index 000000000..d9f58faf0
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalServiceHolder.java b/src/main/java/pw/valaria/api/services/InternalServiceHolder.java
 new file mode 100644
-index 000000000..c3e405b05
+index 00000000..c3e405b0
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/InternalServiceHolder.java
 @@ -0,0 +1,43 @@
@@ -173,7 +173,7 @@ index 000000000..c3e405b05
 +}
 diff --git a/src/main/java/pw/valaria/api/services/InternalServicesManager.java b/src/main/java/pw/valaria/api/services/InternalServicesManager.java
 new file mode 100644
-index 000000000..6a1c05f40
+index 00000000..6a1c05f4
 --- /dev/null
 +++ b/src/main/java/pw/valaria/api/services/InternalServicesManager.java
 @@ -0,0 +1,23 @@
@@ -201,5 +201,5 @@ index 000000000..6a1c05f40
 +
 +}
 -- 
-2.21.0
+2.22.0
 
