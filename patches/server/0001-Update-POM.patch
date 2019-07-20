@@ -1,4 +1,4 @@
-From a506123bd2df15219eb0e883a8bce83fb89a9aca Mon Sep 17 00:00:00 2001
+From 31304377b562eaddc4ac65ea55ef40843d9d2cc4 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
@@ -11,7 +11,7 @@ Subject: [PATCH] Update POM
  4 files changed, 14 insertions(+), 15 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 1f3571dd..ce1addc9 100644
+index 013027223..28514b211 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,10 +1,10 @@
@@ -21,7 +21,7 @@ index 1f3571dd..ce1addc9 100644
 -    <artifactId>paper</artifactId>
 +    <artifactId>alphheimcraft</artifactId>
      <packaging>jar</packaging>
-     <version>1.14.3-R0.1-SNAPSHOT</version>
+     <version>1.14.4-R0.1-SNAPSHOT</version>
 -    <name>Paper</name>
 +    <name>AlphheimCraft</name>
      <url>https://papermc.io</url>
@@ -67,7 +67,7 @@ index 1f3571dd..ce1addc9 100644
                  </configuration>
                  <executions>
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 513cddb9..33cc7d1c 100644
+index 513cddb9b..33cc7d1cd 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -13,7 +13,7 @@ import java.net.URL;
@@ -100,10 +100,10 @@ index 513cddb9..33cc7d1c 100644
                  org.bukkit.Bukkit.getLogger().warning("Version: " + org.bukkit.Bukkit.getBukkitVersion());
              }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 2b99fdc6..bf02e29e 100644
+index eb1006dda..ca7079b4f 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1423,7 +1423,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1435,7 +1435,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -113,7 +113,7 @@ index 2b99fdc6..bf02e29e 100644
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 674096ca..9bf2f335 100644
+index 674096cab..9bf2f3351 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -10,8 +10,7 @@ import org.bukkit.Bukkit;

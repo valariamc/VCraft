@@ -1,4 +1,4 @@
-From 7aeb3d548649a68097b7a6139695a29e8c3c0d13 Mon Sep 17 00:00:00 2001
+From 083994394c13fe496110fcd9a6eaa546a4ae9fac Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
@@ -8,10 +8,10 @@ Subject: [PATCH] Update pom
  1 file changed, 15 insertions(+), 4 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index df8fc517..c86f46f9 100644
+index 5088c331..825bf30f 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -8,14 +8,14 @@
+@@ -8,13 +8,13 @@
          <version>dev-SNAPSHOT</version>
      </parent>
  
@@ -19,8 +19,7 @@ index df8fc517..c86f46f9 100644
 -    <artifactId>paper-api</artifactId>
 +    <groupId>pw.valaria</groupId>
 +    <artifactId>alphheimcraft-api</artifactId>
-     <version>1.14.3-R0.1-SNAPSHOT</version>
- 
+     <version>1.14.4-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>
  
 -    <name>Paper-API</name>
@@ -30,7 +29,7 @@ index df8fc517..c86f46f9 100644
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
-@@ -25,6 +25,17 @@
+@@ -24,6 +24,17 @@
          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
      </properties>
  
