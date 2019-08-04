@@ -1,4 +1,4 @@
-From 3feeed5f215f238c721f1da13e66f54661b722ae Mon Sep 17 00:00:00 2001
+From 486dea39d05f59e23ab3ecab184063dac3d903b9 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
@@ -11,7 +11,7 @@ Subject: [PATCH] Update POM
  4 files changed, 14 insertions(+), 15 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 013027223..28514b211 100644
+index beda5dc8a..d5c5efda5 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,10 +1,10 @@
@@ -100,10 +100,10 @@ index 513cddb9b..33cc7d1cd 100644
                  org.bukkit.Bukkit.getLogger().warning("Version: " + org.bukkit.Bukkit.getBukkitVersion());
              }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index e9a497359..eec6c520f 100644
+index 6eef4592a..f59bc230f 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1433,7 +1433,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1438,7 +1438,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
