@@ -1,4 +1,4 @@
-From 153194b25eccf581f32ed0a3257a6f816f592def Mon Sep 17 00:00:00 2001
+From f65d6d5b08df547645a4d8995b6dd11d6a0e0d06 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Fri, 11 May 2018 01:46:27 +0100
 Subject: [PATCH] remove several stupid deprecation warnings
@@ -9,7 +9,7 @@ Subject: [PATCH] remove several stupid deprecation warnings
  2 files changed, 5 deletions(-)
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 3bb2ab8e..e9e0018c 100644
+index f38c4a809..c8eb7170b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -495,7 +495,6 @@ public final class CraftServer implements Server {
@@ -36,7 +36,7 @@ index 3bb2ab8e..e9e0018c 100644
      public List<Player> matchPlayer(String partialName) {
          Validate.notNull(partialName, "PartialName cannot be null");
  
-@@ -1389,7 +1386,6 @@ public final class CraftServer implements Server {
+@@ -1390,7 +1387,6 @@ public final class CraftServer implements Server {
      // Paper end
  
      @Override
@@ -45,7 +45,7 @@ index 3bb2ab8e..e9e0018c 100644
          Validate.notNull(name, "Name cannot be null");
          Validate.notEmpty(name, "Name cannot be empty");
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index c94944df..cff53ec2 100644
+index e920545df..3064b2cd5 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 @@ -835,7 +835,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
@@ -57,5 +57,5 @@ index c94944df..cff53ec2 100644
      public void updateInventory() {
          getHandle().updateInventory(getHandle().activeContainer);
 -- 
-2.22.0
+2.23.0
 

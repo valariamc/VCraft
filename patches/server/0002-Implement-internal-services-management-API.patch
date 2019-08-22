@@ -1,4 +1,4 @@
-From bca54d5a719ee7b918334e077bf055c3ca6a8984 Mon Sep 17 00:00:00 2001
+From 811cdfea9b60e3591ea46ddf2cd5af517e6ee330 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -14,10 +14,10 @@ Subject: [PATCH] Implement internal services management API
  create mode 100644 src/main/java/pw/valaria/services/defaults/VanillaChat.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 6da54a64b..fa1ea3956 100644
+index 5bc19cd08..8547b1316 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -215,6 +215,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -223,6 +223,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
  
          // CraftBukkit start
          // this.a((PlayerList) (new DedicatedPlayerList(this))); // Spigot - moved up
@@ -26,7 +26,7 @@ index 6da54a64b..fa1ea3956 100644
          server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
          // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index 9cf6cc53f..52daf63b7 100644
+index e7b8b2e99..6db28f3b5 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -63,6 +63,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
@@ -122,7 +122,7 @@ index 9cf6cc53f..52daf63b7 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index c60e90d49..d920c65e1 100644
+index 7a8ab7d40..f38c4a809 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -195,6 +195,9 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
@@ -159,7 +159,7 @@ index c60e90d49..d920c65e1 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -2161,4 +2167,15 @@ public final class CraftServer implements Server {
+@@ -2162,4 +2168,15 @@ public final class CraftServer implements Server {
          return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
      }
      // Paper end
@@ -410,5 +410,5 @@ index 000000000..ba97f56ea
 +    }
 +}
 -- 
-2.22.0
+2.23.0
 

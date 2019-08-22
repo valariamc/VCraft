@@ -1,4 +1,4 @@
-From 486dea39d05f59e23ab3ecab184063dac3d903b9 Mon Sep 17 00:00:00 2001
+From 8f10c87ee339d4f605bc7249bccdd23883670828 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
@@ -100,10 +100,10 @@ index 513cddb9b..33cc7d1cd 100644
                  org.bukkit.Bukkit.getLogger().warning("Version: " + org.bukkit.Bukkit.getBukkitVersion());
              }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 6eef4592a..f59bc230f 100644
+index d2c029973..1cf6840a7 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1438,7 +1438,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1439,7 +1439,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -127,5 +127,5 @@ index 674096cab..9bf2f3351 100644
  
          if (stream != null) {
 -- 
-2.22.0
+2.23.0
 
