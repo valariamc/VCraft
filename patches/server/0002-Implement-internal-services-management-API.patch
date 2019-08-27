@@ -1,4 +1,4 @@
-From 811cdfea9b60e3591ea46ddf2cd5af517e6ee330 Mon Sep 17 00:00:00 2001
+From 0fbe298c6c07523944e4c9a0a4f65c9a7696f251 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -177,7 +177,7 @@ index 7a8ab7d40..f38c4a809 100644
  }
 diff --git a/src/main/java/pw/valaria/services/CraftInternalServicesManager.java b/src/main/java/pw/valaria/services/CraftInternalServicesManager.java
 new file mode 100644
-index 000000000..c7bd45647
+index 000000000..d52a2753f
 --- /dev/null
 +++ b/src/main/java/pw/valaria/services/CraftInternalServicesManager.java
 @@ -0,0 +1,118 @@
@@ -244,7 +244,7 @@ index 000000000..c7bd45647
 +        Preconditions.checkArgument(InternalService.class.isAssignableFrom(serviceType), serviceType.getName() + " is not applicable to the type" + InternalService.class.getName());
 +
 +        if (!force) {
-+            InternalServiceHolder internalService = defaultServices.get(serviceType);
++            InternalServiceHolder internalService = registeredServices.get(serviceType);
 +            if (internalService != null) {
 +                throw new IllegalStateException("A default service for " + serviceType.getName() + " is already registered!");
 +            }
@@ -254,12 +254,12 @@ index 000000000..c7bd45647
 +    }
 +
 +    public <T extends InternalService> T getService(Class<T> serviceType) {
-+        InternalServiceHolder<? extends InternalService> internalServiceHolder = defaultServices.get(serviceType);
++        InternalServiceHolder<? extends InternalService> internalServiceHolder = registeredServices.get(serviceType);
 +
 +        if (internalServiceHolder != null) {
 +            return (T) internalServiceHolder.getInternalService();
 +        } else {
-+            internalServiceHolder = registeredServices.get(serviceType);
++            internalServiceHolder = defaultServices.get(serviceType);
 +            return internalServiceHolder != null ? (T) internalServiceHolder.getInternalService() : null;
 +        }
 +    }
