@@ -1,4 +1,4 @@
-From fb113bca8a42cb19ca984b0dbe78d46396f6f976 Mon Sep 17 00:00:00 2001
+From 6f193e64f12f8b247ffd648e0aab3d2d476dfc9d Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Fri, 11 May 2018 01:46:27 +0100
 Subject: [PATCH] remove several stupid deprecation warnings
@@ -9,7 +9,7 @@ Subject: [PATCH] remove several stupid deprecation warnings
  2 files changed, 5 deletions(-)
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 0e4c4f15..e4f9fcde 100644
+index 3655a01a..11723b05 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -495,7 +495,6 @@ public final class CraftServer implements Server {
@@ -36,7 +36,7 @@ index 0e4c4f15..e4f9fcde 100644
      public List<Player> matchPlayer(String partialName) {
          Validate.notNull(partialName, "PartialName cannot be null");
  
-@@ -1391,7 +1388,6 @@ public final class CraftServer implements Server {
+@@ -1390,7 +1387,6 @@ public final class CraftServer implements Server {
      // Paper end
  
      @Override
