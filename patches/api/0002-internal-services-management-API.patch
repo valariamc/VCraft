@@ -1,4 +1,4 @@
-From 90f343c3c8022ec9596fb032d545d48b98941811 Mon Sep 17 00:00:00 2001
+From c80135761c88a73d0d0929ed9811ab8a891a9678 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
@@ -18,7 +18,7 @@ Subject: [PATCH] internal services management API
  create mode 100644 src/main/java/pw/valaria/api/services/InternalServicesManager.java
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 6db69159..943b6743 100644
+index 231bc6e3..d89037c8 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
 @@ -50,6 +50,8 @@ import org.bukkit.util.CachedServerIcon;
@@ -30,7 +30,7 @@ index 6db69159..943b6743 100644
  
  /**
   * Represents the Bukkit core, for version and Server singleton handling
-@@ -1606,4 +1608,15 @@ public final class Bukkit {
+@@ -1610,4 +1612,15 @@ public final class Bukkit {
      {
          return server.spigot();
      }
@@ -47,7 +47,7 @@ index 6db69159..943b6743 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 27d3b5ad..48199e38 100644
+index 31470479..5ef3d829 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -51,6 +51,7 @@ import org.bukkit.util.CachedServerIcon;
@@ -58,9 +58,9 @@ index 27d3b5ad..48199e38 100644
  
  /**
   * Represents a server implementation.
-@@ -1399,4 +1400,16 @@ public interface Server extends PluginMessageRecipient {
-     @NotNull
-     com.destroystokyo.paper.profile.PlayerProfile createProfile(@Nullable UUID uuid, @Nullable String name);
+@@ -1406,4 +1407,16 @@ public interface Server extends PluginMessageRecipient {
+      */
+     int getCurrentTick();
      // Paper end
 +
 +    // Alphheim start
@@ -201,5 +201,5 @@ index 00000000..6a1c05f4
 +
 +}
 -- 
-2.22.0
+2.24.0
 

@@ -1,4 +1,4 @@
-From 0fbe298c6c07523944e4c9a0a4f65c9a7696f251 Mon Sep 17 00:00:00 2001
+From ec47f00ead713c557f931d6fb1d7de5830372955 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -6,15 +6,15 @@ Subject: [PATCH] Implement internal services management API
 ---
  .../net/minecraft/server/DedicatedServer.java |   1 +
  .../minecraft/server/PlayerConnection.java    |  75 ++---------
- .../org/bukkit/craftbukkit/CraftServer.java   |  17 +++
+ .../org/bukkit/craftbukkit/CraftServer.java   |  19 +++
  .../CraftInternalServicesManager.java         | 118 ++++++++++++++++++
  .../services/defaults/VanillaChat.java        | 104 +++++++++++++++
- 5 files changed, 251 insertions(+), 64 deletions(-)
+ 5 files changed, 253 insertions(+), 64 deletions(-)
  create mode 100644 src/main/java/pw/valaria/services/CraftInternalServicesManager.java
  create mode 100644 src/main/java/pw/valaria/services/defaults/VanillaChat.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 5bc19cd08..8547b1316 100644
+index 5bc19cd0..8547b131 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
 @@ -223,6 +223,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
@@ -26,7 +26,7 @@ index 5bc19cd08..8547b1316 100644
          server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
          // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index e7b8b2e99..6db28f3b5 100644
+index ae17cdf2..0db9bfa3 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -63,6 +63,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
@@ -122,7 +122,7 @@ index e7b8b2e99..6db28f3b5 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 7a8ab7d40..f38c4a809 100644
+index 105d3190..0e4c4f15 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -195,6 +195,9 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
@@ -159,11 +159,19 @@ index 7a8ab7d40..f38c4a809 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -2162,4 +2168,15 @@ public final class CraftServer implements Server {
-         return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
+@@ -1380,6 +1386,7 @@ public final class CraftServer implements Server {
+             profile = new GameProfile(UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8)), name);
+         }
+         return profile != null ? profile.getId() : null;
++<<<<<<< found
      }
      // Paper end
-+    // Alphheim start
+ 
+@@ -2162,6 +2169,18 @@ public final class CraftServer implements Server {
+         return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
+     }
+ 
++    // Valaria start
 +
 +    @Override
 +    public CraftInternalServicesManager getInternalServices() {
@@ -173,11 +181,14 @@ index 7a8ab7d40..f38c4a809 100644
 +    public void initInternalServices() {
 +        getInternalServices().registerDefaultService(Chat.class, new VanillaChat());
 +    }
-+    // Alphheim end
- }
++    // Valaria end
++
+     @Override
+     public int getCurrentTick() {
+         return net.minecraft.server.MinecraftServer.currentTick;
 diff --git a/src/main/java/pw/valaria/services/CraftInternalServicesManager.java b/src/main/java/pw/valaria/services/CraftInternalServicesManager.java
 new file mode 100644
-index 000000000..d52a2753f
+index 00000000..d52a2753
 --- /dev/null
 +++ b/src/main/java/pw/valaria/services/CraftInternalServicesManager.java
 @@ -0,0 +1,118 @@
@@ -301,7 +312,7 @@ index 000000000..d52a2753f
 +}
 diff --git a/src/main/java/pw/valaria/services/defaults/VanillaChat.java b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
 new file mode 100644
-index 000000000..ba97f56ea
+index 00000000..ba97f56e
 --- /dev/null
 +++ b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
 @@ -0,0 +1,104 @@
@@ -410,5 +421,5 @@ index 000000000..ba97f56ea
 +    }
 +}
 -- 
-2.23.0
+2.24.0
 
