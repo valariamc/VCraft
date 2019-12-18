@@ -1,4 +1,4 @@
-From 9f20a56eec2e643eaa8cb9be389a559ea5b2e9ba Mon Sep 17 00:00:00 2001
+From 7553cf17a3fe69855f570d3431845347e14118e7 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -8,8 +8,8 @@ Subject: [PATCH] Implement internal services management API
  .../minecraft/server/PlayerConnection.java    |  75 ++---------
  .../org/bukkit/craftbukkit/CraftServer.java   |  18 +++
  .../CraftInternalServicesManager.java         | 118 ++++++++++++++++++
- .../services/defaults/VanillaChat.java        | 106 ++++++++++++++++
- 5 files changed, 254 insertions(+), 64 deletions(-)
+ .../services/defaults/VanillaChat.java        | 107 ++++++++++++++++
+ 5 files changed, 255 insertions(+), 64 deletions(-)
  create mode 100644 src/main/java/pw/valaria/services/CraftInternalServicesManager.java
  create mode 100644 src/main/java/pw/valaria/services/defaults/VanillaChat.java
 
@@ -304,13 +304,12 @@ index 000000000..d52a2753f
 +}
 diff --git a/src/main/java/pw/valaria/services/defaults/VanillaChat.java b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
 new file mode 100644
-index 000000000..0ada4220d
+index 000000000..6ad765afb
 --- /dev/null
 +++ b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
-@@ -0,0 +1,106 @@
+@@ -0,0 +1,107 @@
 +package pw.valaria.services.defaults;
 +
-+import com.sun.istack.internal.NotNull;
 +
 +import net.minecraft.server.EntityPlayer;
 +import net.minecraft.server.EnumChatFormat;
@@ -335,11 +334,13 @@ index 000000000..0ada4220d
 +import java.util.Set;
 +import java.util.concurrent.ExecutionException;
 +
++import javax.annotation.Nonnull;
++
 +public class VanillaChat implements Chat {
 +    private CraftServer server = (CraftServer) Bukkit.getServer(); // Easiest way without using a deprecated singleton..
 +
 +    @Override
-+    public void process(@NotNull Player sender, @NotNull String message) {
++    public void process(@Nonnull Player sender, @Nonnull String message) {
 +        if (!(sender instanceof CraftPlayer)) {
 +            server.getLogger().warning( sender.getName() + " is not a CraftPlayer but tried to chat?!");
 +            return;
