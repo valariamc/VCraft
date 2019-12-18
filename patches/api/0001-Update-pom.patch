@@ -1,35 +1,41 @@
-From 083994394c13fe496110fcd9a6eaa546a4ae9fac Mon Sep 17 00:00:00 2001
+From 6f1799866cf0357b289bd2ae008a72341aaea584 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
 
 ---
- pom.xml | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ pom.xml | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 5088c331..825bf30f 100644
+index 252ddd22..2e00e7d4 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -8,13 +8,13 @@
+@@ -3,18 +3,17 @@
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+     <parent>
+-        <groupId>com.destroystokyo.paper</groupId>
+-        <artifactId>paper-parent</artifactId>
++        <groupId>pw.valaria</groupId>
++        <artifactId>vcraft-parent</artifactId>
          <version>dev-SNAPSHOT</version>
      </parent>
  
 -    <groupId>com.destroystokyo.paper</groupId>
 -    <artifactId>paper-api</artifactId>
-+    <groupId>pw.valaria</groupId>
-+    <artifactId>alphheimcraft-api</artifactId>
-     <version>1.14.4-R0.1-SNAPSHOT</version>
++    <artifactId>vcraft-api</artifactId>
+     <version>1.15.1-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>
  
 -    <name>Paper-API</name>
 -    <url>https://github.com/PaperMC/Paper</url>
-+    <name>AlphheimCraft-API</name>
++    <name>VCraft-API</name>
 +    <url>https://valaria.pw</url>
      <description>An enhanced plugin API for Minecraft servers.</description>
  
      <properties>
-@@ -24,6 +24,17 @@
+@@ -24,6 +23,17 @@
          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
      </properties>
  
@@ -48,5 +54,5 @@ index 5088c331..825bf30f 100644
          <!--
              If you are a plugin developer, please use https://hub.spigotmc.org/nexus/content/repositories/snapshots/
 -- 
-2.22.0
+2.24.1
 

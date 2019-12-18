@@ -10,11 +10,11 @@
     </parent>
 
     <groupId>pw.valaria</groupId>
-    <artifactId>alphheimcraft-parent</artifactId>
+    <artifactId>vcraft-parent</artifactId>
     <version>dev-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>AlphheimCraft-Parent</name>
+    <name>VCraft-Parent</name>
     <description>Parent project for all Paper modules.</description>
     <url>https://github.com/PaperMC/Paper</url>
 

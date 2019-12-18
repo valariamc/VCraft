@@ -1,4 +1,4 @@
-From 75c82ce196a455d05942feff22f2d70540bdb30b Mon Sep 17 00:00:00 2001
+From 7eb823ea3ca9f0b6503bed75da6f1b0abf487d09 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Thu, 27 Sep 2018 04:22:36 +0100
 Subject: [PATCH] implement equals/hashcode on Chunk
@@ -8,10 +8,10 @@ Subject: [PATCH] implement equals/hashcode on Chunk
  1 file changed, 17 insertions(+)
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
-index b45516140..08818ba55 100644
+index 9cff8b88b..21678e0db 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
-@@ -383,4 +383,21 @@ public class CraftChunk implements Chunk {
+@@ -335,4 +335,21 @@ public class CraftChunk implements Chunk {
      static {
          Arrays.fill(emptyLight, (byte) 0xFF);
      }
@@ -34,5 +34,5 @@ index b45516140..08818ba55 100644
 +    // Alphheim end
  }
 -- 
-2.23.0
+2.24.1
 

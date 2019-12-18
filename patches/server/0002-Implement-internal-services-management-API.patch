@@ -1,4 +1,4 @@
-From 28d970e0ba61fc9e5545f552da562b35f6a266c7 Mon Sep 17 00:00:00 2001
+From 9f20a56eec2e643eaa8cb9be389a559ea5b2e9ba Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:07:57 +0000
 Subject: [PATCH] Implement internal services management API
@@ -8,13 +8,13 @@ Subject: [PATCH] Implement internal services management API
  .../minecraft/server/PlayerConnection.java    |  75 ++---------
  .../org/bukkit/craftbukkit/CraftServer.java   |  18 +++
  .../CraftInternalServicesManager.java         | 118 ++++++++++++++++++
- .../services/defaults/VanillaChat.java        | 104 +++++++++++++++
- 5 files changed, 252 insertions(+), 64 deletions(-)
+ .../services/defaults/VanillaChat.java        | 106 ++++++++++++++++
+ 5 files changed, 254 insertions(+), 64 deletions(-)
  create mode 100644 src/main/java/pw/valaria/services/CraftInternalServicesManager.java
  create mode 100644 src/main/java/pw/valaria/services/defaults/VanillaChat.java
 
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 5bc19cd0..8547b131 100644
+index 3ed74ae0e..23f988dcb 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
 @@ -223,6 +223,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
@@ -26,7 +26,7 @@ index 5bc19cd0..8547b131 100644
          server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
          // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index ae17cdf2..0db9bfa3 100644
+index a1ce2d2e0..d0630826e 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
 @@ -63,6 +63,7 @@ import com.destroystokyo.paper.event.player.IllegalPacketEvent; // Paper
@@ -37,7 +37,7 @@ index ae17cdf2..0db9bfa3 100644
  
  public class PlayerConnection implements PacketListenerPlayIn {
  
-@@ -1708,73 +1709,19 @@ public class PlayerConnection implements PacketListenerPlayIn {
+@@ -1728,73 +1729,19 @@ public class PlayerConnection implements PacketListenerPlayIn {
          } else if (this.player.getChatFlags() == EnumChatVisibility.SYSTEM) {
              // Do nothing, this is coming from a plugin
          } else {
@@ -91,7 +91,7 @@ index ae17cdf2..0db9bfa3 100644
 -                // Paper Start - (Meh) Support for vanilla world scoreboard name coloring
 -                String displayName = event.getPlayer().getDisplayName();
 -                if (this.player.getWorld().paperConfig.useVanillaScoreboardColoring) {
--                    IChatBaseComponent nameFromTeam = ScoreboardTeam.a(this.player.getScoreboardTeam(),((CraftPlayer) player).getHandle().getDisplayName());
+-                    IChatBaseComponent nameFromTeam = ScoreboardTeam.a(this.player.getScoreboardTeam(), ((CraftPlayer) player).getHandle().getDisplayName());
 -                    // Explicitly add a RESET here, vanilla uses components for this now...
 -                    displayName = CraftChatMessage.fromComponent(nameFromTeam, EnumChatFormat.WHITE) + org.bukkit.ChatColor.RESET;
 -                }
@@ -122,10 +122,10 @@ index ae17cdf2..0db9bfa3 100644
          }
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 105d3190..3655a01a 100644
+index f3da3a82d..70f0b26e9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -195,6 +195,9 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
+@@ -196,6 +196,9 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
  import org.yaml.snakeyaml.error.MarkedYAMLException;
  
  import net.md_5.bungee.api.chat.BaseComponent; // Spigot
@@ -135,7 +135,7 @@ index 105d3190..3655a01a 100644
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
-@@ -237,6 +240,7 @@ public final class CraftServer implements Server {
+@@ -238,6 +241,7 @@ public final class CraftServer implements Server {
      public int reloadCount;
      public static Exception excessiveVelEx; // Paper - Velocity warnings
  
@@ -143,7 +143,7 @@ index 105d3190..3655a01a 100644
      static {
          ConfigurationSerialization.registerClass(CraftOfflinePlayer.class);
          CraftItemFactory.instance();
-@@ -813,6 +817,7 @@ public final class CraftServer implements Server {
+@@ -814,6 +818,7 @@ public final class CraftServer implements Server {
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
          pluginManager.clearPlugins();
@@ -151,7 +151,7 @@ index 105d3190..3655a01a 100644
          commandMap.clearCommands();
  
          // Paper start
-@@ -854,6 +859,7 @@ public final class CraftServer implements Server {
+@@ -855,6 +860,7 @@ public final class CraftServer implements Server {
                  "This plugin is not properly shutting down its async tasks when it is being reloaded.  This may cause conflicts with the newly loaded version of the plugin"
              ));
          }
@@ -159,7 +159,7 @@ index 105d3190..3655a01a 100644
          loadPlugins();
          enablePlugins(PluginLoadOrder.STARTUP);
          enablePlugins(PluginLoadOrder.POSTWORLD);
-@@ -2162,6 +2168,18 @@ public final class CraftServer implements Server {
+@@ -2165,6 +2171,18 @@ public final class CraftServer implements Server {
          return new com.destroystokyo.paper.profile.CraftPlayerProfile(uuid, name);
      }
  
@@ -180,7 +180,7 @@ index 105d3190..3655a01a 100644
          return net.minecraft.server.MinecraftServer.currentTick;
 diff --git a/src/main/java/pw/valaria/services/CraftInternalServicesManager.java b/src/main/java/pw/valaria/services/CraftInternalServicesManager.java
 new file mode 100644
-index 00000000..d52a2753
+index 000000000..d52a2753f
 --- /dev/null
 +++ b/src/main/java/pw/valaria/services/CraftInternalServicesManager.java
 @@ -0,0 +1,118 @@
@@ -304,11 +304,13 @@ index 00000000..d52a2753
 +}
 diff --git a/src/main/java/pw/valaria/services/defaults/VanillaChat.java b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
 new file mode 100644
-index 00000000..ba97f56e
+index 000000000..0ada4220d
 --- /dev/null
 +++ b/src/main/java/pw/valaria/services/defaults/VanillaChat.java
-@@ -0,0 +1,104 @@
+@@ -0,0 +1,106 @@
 +package pw.valaria.services.defaults;
++
++import com.sun.istack.internal.NotNull;
 +
 +import net.minecraft.server.EntityPlayer;
 +import net.minecraft.server.EnumChatFormat;
@@ -337,7 +339,7 @@ index 00000000..ba97f56e
 +    private CraftServer server = (CraftServer) Bukkit.getServer(); // Easiest way without using a deprecated singleton..
 +
 +    @Override
-+    public void process(Player sender, String message) {
++    public void process(@NotNull Player sender, @NotNull String message) {
 +        if (!(sender instanceof CraftPlayer)) {
 +            server.getLogger().warning( sender.getName() + " is not a CraftPlayer but tried to chat?!");
 +            return;
@@ -413,5 +415,5 @@ index 00000000..ba97f56e
 +    }
 +}
 -- 
-2.24.0
+2.24.1
 

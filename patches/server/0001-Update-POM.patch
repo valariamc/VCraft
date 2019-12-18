@@ -1,17 +1,17 @@
-From 61d4783b736a480d7fe3bf035fe79b04048100d9 Mon Sep 17 00:00:00 2001
+From fc93480cd54fd9ce6fb346c0ac5f2cff5ccd5058 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
 
 ---
  pom.xml                                       | 25 +++++++++++++------
- .../paper/PaperVersionFetcher.java            |  8 +++---
+ .../paper/PaperVersionFetcher.java            |  6 ++---
  .../net/minecraft/server/MinecraftServer.java |  2 +-
  .../bukkit/craftbukkit/util/Versioning.java   |  3 +--
- 4 files changed, 23 insertions(+), 15 deletions(-)
+ 4 files changed, 22 insertions(+), 14 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index beda5dc8a..469907a84 100644
+index 495e11f0f..4cf356739 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,10 +1,10 @@
@@ -21,7 +21,7 @@ index beda5dc8a..469907a84 100644
 -    <artifactId>paper</artifactId>
 +    <artifactId>alphheimcraft</artifactId>
      <packaging>jar</packaging>
-     <version>1.14.4-R0.1-SNAPSHOT</version>
+     <version>1.15.1-R0.1-SNAPSHOT</version>
 -    <name>Paper</name>
 +    <name>AlphheimCraft</name>
      <url>https://papermc.io</url>
@@ -34,7 +34,7 @@ index beda5dc8a..469907a84 100644
 -        <groupId>com.destroystokyo.paper</groupId>
 -        <artifactId>paper-parent</artifactId>
 +        <groupId>pw.valaria</groupId>
-+       <artifactId>alphheimcraft-parent</artifactId>
++       <artifactId>vcraft-parent</artifactId>
          <version>dev-SNAPSHOT</version>
          <relativePath>../pom.xml</relativePath>
      </parent>
@@ -44,7 +44,7 @@ index beda5dc8a..469907a84 100644
 -            <groupId>com.destroystokyo.paper</groupId>
 -            <artifactId>paper-api</artifactId>
 +            <groupId>pw.valaria</groupId>
-+            <artifactId>alphheimcraft-api</artifactId>
++            <artifactId>vcraft-api</artifactId>
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
@@ -57,7 +57,7 @@ index beda5dc8a..469907a84 100644
          <dependency>
              <groupId>mysql</groupId>
              <artifactId>mysql-connector-java</artifactId>
-             <version>5.1.47</version>
+             <version>5.1.48</version>
              <scope>runtime</scope>
          </dependency>
 +        -->
@@ -89,18 +89,9 @@ index beda5dc8a..469907a84 100644
                  </configuration>
                  <executions>
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 513cddb9b..33cc7d1cd 100644
+index 49a38c660..33cc7d1cd 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -13,7 +13,7 @@ import java.net.URL;
- 
- public class PaperVersionFetcher implements VersionFetcher {
-     private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
--    private static final String GITHUB_BRANCH_NAME = "ver/1.14";
-+    private static final String GITHUB_BRANCH_NAME = "master";
-     private static @Nullable String mcVer;
- 
-     @Override
 @@ -24,8 +24,8 @@ public class PaperVersionFetcher implements VersionFetcher {
      @Nonnull
      @Override
@@ -122,10 +113,10 @@ index 513cddb9b..33cc7d1cd 100644
                  org.bukkit.Bukkit.getLogger().warning("Version: " + org.bukkit.Bukkit.getBukkitVersion());
              }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 0b0058138..d2c7deed4 100644
+index 664c48d68..ddc59b62b 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1462,7 +1462,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1473,7 +1473,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -149,5 +140,5 @@ index 674096cab..9bf2f3351 100644
  
          if (stream != null) {
 -- 
-2.23.0
+2.24.1
 
