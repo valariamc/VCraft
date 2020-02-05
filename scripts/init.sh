@@ -5,7 +5,7 @@ cd ${basedir:-$sourceBase}
 basedir=$(pwd -P)
 cd -
 
-FORK_NAME="AlphheimCraft"
+FORK_NAME="VCraft"
 API_REPO="https://electronicboy@atlas.valaria.pw/stash/scm/al/alphheimcraft-api.git"
 SERVER_REPO="https://electronicboy@atlas.valaria.pw/stash/scm/al/alphheimcraft-server.git"
 PAPER_API_REPO="https://electronicboy@atlas.valaria.pw/stash/scm/al/paper-api.git"

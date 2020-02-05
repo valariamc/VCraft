@@ -1,4 +1,4 @@
-From 6f1799866cf0357b289bd2ae008a72341aaea584 Mon Sep 17 00:00:00 2001
+From 8189ee1d2904c9eba51404722325845004ad2a51 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:24:36 +0000
 Subject: [PATCH] Update pom
@@ -8,7 +8,7 @@ Subject: [PATCH] Update pom
  1 file changed, 16 insertions(+), 6 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 252ddd22..2e00e7d4 100644
+index 2cb97140..cafba4dc 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -3,18 +3,17 @@
@@ -25,7 +25,7 @@ index 252ddd22..2e00e7d4 100644
 -    <groupId>com.destroystokyo.paper</groupId>
 -    <artifactId>paper-api</artifactId>
 +    <artifactId>vcraft-api</artifactId>
-     <version>1.15.1-R0.1-SNAPSHOT</version>
+     <version>1.15.2-R0.1-SNAPSHOT</version>
      <packaging>jar</packaging>
  
 -    <name>Paper-API</name>
@@ -54,5 +54,5 @@ index 252ddd22..2e00e7d4 100644
          <!--
              If you are a plugin developer, please use https://hub.spigotmc.org/nexus/content/repositories/snapshots/
 -- 
-2.24.1
+2.25.0
 

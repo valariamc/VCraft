@@ -1,4 +1,4 @@
-From fc93480cd54fd9ce6fb346c0ac5f2cff5ccd5058 Mon Sep 17 00:00:00 2001
+From 08e31fccbd2b1a5fc087047e25ee40c2fbbe57c3 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Wed, 13 Dec 2017 11:35:55 +0000
 Subject: [PATCH] Update POM
@@ -11,7 +11,7 @@ Subject: [PATCH] Update POM
  4 files changed, 22 insertions(+), 14 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
-index 495e11f0f..4cf356739 100644
+index 55679af92..eb597482d 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,10 +1,10 @@
@@ -21,7 +21,7 @@ index 495e11f0f..4cf356739 100644
 -    <artifactId>paper</artifactId>
 +    <artifactId>alphheimcraft</artifactId>
      <packaging>jar</packaging>
-     <version>1.15.1-R0.1-SNAPSHOT</version>
+     <version>1.15.2-R0.1-SNAPSHOT</version>
 -    <name>Paper</name>
 +    <name>AlphheimCraft</name>
      <url>https://papermc.io</url>
@@ -49,7 +49,7 @@ index 495e11f0f..4cf356739 100644
              <scope>compile</scope>
          </dependency>
 @@ -100,12 +100,21 @@
-             <version>3.28.0</version>
+             <version>3.30.1</version>
              <scope>runtime</scope>
          </dependency>
 +        <!-- vcraft start -->
@@ -113,10 +113,10 @@ index 49a38c660..33cc7d1cd 100644
                  org.bukkit.Bukkit.getLogger().warning("Version: " + org.bukkit.Bukkit.getBukkitVersion());
              }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 664c48d68..ddc59b62b 100644
+index 346664cee..91fa939dc 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1473,7 +1473,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1484,7 +1484,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -140,5 +140,5 @@ index 674096cab..9bf2f3351 100644
  
          if (stream != null) {
 -- 
-2.24.1
+2.25.0
 

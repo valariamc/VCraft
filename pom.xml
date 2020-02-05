@@ -19,8 +19,8 @@
     <url>https://github.com/PaperMC/Paper</url>
 
     <modules>
-        <module>AlphheimCraft-Server</module>
-        <module>AlphheimCraft-API</module>
+        <module>VCraft-Server</module>
+        <module>VCraft-API</module>
     </modules>
 
     <build>

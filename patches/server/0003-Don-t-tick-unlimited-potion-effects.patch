@@ -1,4 +1,4 @@
-From 740c0c4fe61d35c762f7e26445d0efab51d55c4b Mon Sep 17 00:00:00 2001
+From daa8f1e98fbd4c92a5e248c193110374d7837f75 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sat, 6 Jan 2018 14:44:38 +0000
 Subject: [PATCH] Don't tick 'unlimited' potion effects
@@ -8,18 +8,18 @@ Subject: [PATCH] Don't tick 'unlimited' potion effects
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/main/java/net/minecraft/server/MobEffect.java b/src/main/java/net/minecraft/server/MobEffect.java
-index 0c34a9eda..6c4b87e36 100644
+index 7211d7f93..907aae525 100644
 --- a/src/main/java/net/minecraft/server/MobEffect.java
 +++ b/src/main/java/net/minecraft/server/MobEffect.java
-@@ -120,7 +120,7 @@ public class MobEffect implements Comparable<MobEffect> {
-     }
+@@ -154,7 +154,7 @@ public class MobEffect implements Comparable<MobEffect> {
+             this.hiddenEffect.i();
+         }
  
-     private int i() {
 -        return --this.duration;
 +        return duration == Integer.MAX_VALUE ? Integer.MAX_VALUE : --this.duration; // Alphheim - don't reduce the duration of 'unlimited' effects
      }
  
-     public void b(EntityLiving entityliving) {
+     public void a(EntityLiving entityliving) {
 -- 
-2.22.0
+2.25.0
 

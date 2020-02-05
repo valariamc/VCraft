@@ -1,4 +1,4 @@
-From c80135761c88a73d0d0929ed9811ab8a891a9678 Mon Sep 17 00:00:00 2001
+From 787406a6f6ef879e533bf4f8b4ddf834e097cf55 Mon Sep 17 00:00:00 2001
 From: Shane Freeder <theboyetronic@gmail.com>
 Date: Sun, 17 Dec 2017 08:13:55 +0000
 Subject: [PATCH] internal services management API
@@ -18,7 +18,7 @@ Subject: [PATCH] internal services management API
  create mode 100644 src/main/java/pw/valaria/api/services/InternalServicesManager.java
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index 231bc6e3..d89037c8 100644
+index 355bd2e2..8ca37b97 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
 @@ -50,6 +50,8 @@ import org.bukkit.util.CachedServerIcon;
@@ -30,8 +30,8 @@ index 231bc6e3..d89037c8 100644
  
  /**
   * Represents the Bukkit core, for version and Server singleton handling
-@@ -1610,4 +1612,15 @@ public final class Bukkit {
-     {
+@@ -1623,4 +1625,15 @@ public final class Bukkit {
+     public static Server.Spigot spigot() {
          return server.spigot();
      }
 +
@@ -47,7 +47,7 @@ index 231bc6e3..d89037c8 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 31470479..5ef3d829 100644
+index 98e7ba90..e5948951 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -51,6 +51,7 @@ import org.bukkit.util.CachedServerIcon;
@@ -58,7 +58,7 @@ index 31470479..5ef3d829 100644
  
  /**
   * Represents a server implementation.
-@@ -1406,4 +1407,16 @@ public interface Server extends PluginMessageRecipient {
+@@ -1416,4 +1417,16 @@ public interface Server extends PluginMessageRecipient {
       */
      int getCurrentTick();
      // Paper end
@@ -76,10 +76,10 @@ index 31470479..5ef3d829 100644
 +    // Alphheim end
  }
 diff --git a/src/main/java/org/bukkit/plugin/SimplePluginManager.java b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-index d0e735bc..ac3863dd 100644
+index 8d54d561..bbebf972 100644
 --- a/src/main/java/org/bukkit/plugin/SimplePluginManager.java
 +++ b/src/main/java/org/bukkit/plugin/SimplePluginManager.java
-@@ -470,6 +470,15 @@ public final class SimplePluginManager implements PluginManager {
+@@ -485,6 +485,15 @@ public final class SimplePluginManager implements PluginManager {
                          + plugin.getDescription().getFullName() + " (Is it up to date?)", ex, plugin); // Paper
              }
  
@@ -201,5 +201,5 @@ index 00000000..6a1c05f4
 +
 +}
 -- 
-2.24.0
+2.25.0
 

@@ -75,6 +75,7 @@ done
 
 # import Foo
 import PacketPlayOutTileEntityData
+import MobEffect
 ################
 (
 	cd Paper/Paper-Server/
