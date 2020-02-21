@@ -1,4 +1,4 @@
-From 1f8c80b1f33d1a07b9fff772d3274c2dbfc7e61b Mon Sep 17 00:00:00 2001
+From 353adedf04c8ec07aa00da9caae850b83ff0f85f Mon Sep 17 00:00:00 2001
 From: Aikar <aikar@aikar.co>
 Date: Mon, 8 Jun 2015 23:55:20 -0400
 Subject: [PATCH] SendSignEvent
@@ -57,7 +57,7 @@ index 000000000..dae0c4539
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/TileEntitySign.java b/src/main/java/net/minecraft/server/TileEntitySign.java
-index 5eb86c434..bcc8d55ed 100644
+index 0e9a90b70..e2d9db0ac 100644
 --- a/src/main/java/net/minecraft/server/TileEntitySign.java
 +++ b/src/main/java/net/minecraft/server/TileEntitySign.java
 @@ -1,5 +1,6 @@
@@ -67,7 +67,7 @@ index 5eb86c434..bcc8d55ed 100644
  import com.mojang.brigadier.exceptions.CommandSyntaxException;
  import javax.annotation.Nullable;
  
-@@ -25,10 +26,14 @@ public class TileEntitySign extends TileEntity implements ICommandListener { //
+@@ -20,10 +21,14 @@ public class TileEntitySign extends TileEntity implements ICommandListener { //
  
      @Override
      public NBTTagCompound save(NBTTagCompound nbttagcompound) {
@@ -83,7 +83,7 @@ index 5eb86c434..bcc8d55ed 100644
  
              nbttagcompound.setString("Text" + (i + 1), s);
          }
-@@ -127,7 +132,15 @@ public class TileEntitySign extends TileEntity implements ICommandListener { //
+@@ -97,7 +102,15 @@ public class TileEntitySign extends TileEntity implements ICommandListener { //
  
      @Override
      public NBTTagCompound b() {
@@ -101,5 +101,5 @@ index 5eb86c434..bcc8d55ed 100644
  
      @Override
 -- 
-2.24.1
+2.25.0
 
